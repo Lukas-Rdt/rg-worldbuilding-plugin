@@ -221,6 +221,7 @@ Run these research agents:
     await fs.writeFile(configPath, JSON.stringify({ previous: true }, null, 2))
 
     const bundle: PiBundle = {
+      pluginName: "rg-engineering",
       prompts: [],
       skillDirs: [],
       generatedSkills: [],

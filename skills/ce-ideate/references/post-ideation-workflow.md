@@ -53,7 +53,7 @@ The ideation artifact is produced **automatically** — persistence is not opt-i
    - Extension follows `OUTPUT_FORMAT` (`.html` default, `.md` on override).
    - **Repo mode:** ensure `docs/ideation/` exists (create if absent).
    - **Elsewhere mode with `docs/ideation/` already present:** use it.
-   - **Otherwise (no repo, or elsewhere with no `docs/ideation/`):** write into the run's CE temp area — the `<scratch-dir>` resolved in Phase 1 (`/tmp/compound-engineering/ce-ideate/<run-id>/`). Do **not** write into the user's current working directory, and do **not** create a `docs/ideation/` tree for a subject unrelated to the repo. Announce the absolute path and note it is temporary (`/tmp` is cleared on reboot — move it to keep it).
+   - **Otherwise (no repo, or elsewhere with no `docs/ideation/`):** write into the run's CE temp area — the `<scratch-dir>` resolved in Phase 1 (`/tmp/rg-engineering/ce-ideate/<run-id>/`). Do **not** write into the user's current working directory, and do **not** create a `docs/ideation/` tree for a subject unrelated to the repo. Announce the absolute path and note it is temporary (`/tmp` is cleared on reboot — move it to keep it).
 2. **Choose the file path:** `<dir>/YYYY-MM-DD-<topic>-ideation.<ext>` (or `<dir>/YYYY-MM-DD-open-ideation.<ext>` when no focus exists).
 3. **Load the section contract and rendering reference** (deferred from Phase 0.0): read `references/ideation-sections.md` and the format-rendering reference matching `OUTPUT_FORMAT` — `references/markdown-rendering.md` for `md`, `references/html-rendering.md` for `html`.
 4. **Write the document** per those references. `ideation-sections.md` defines the section contract (metadata, Grounding Context, Topic Axes, Ranked Ideas with per-idea fields, Rejection Summary); the rendering reference defines how the resolved format presents it. Content is identical across formats; only presentation differs.
@@ -103,7 +103,7 @@ If the user already named what they want to work on inline (e.g. "brainstorm the
 - **Markdown — Publish to Proof.** The local markdown file already exists (Phase 4) and stays canonical; Proof is a one-way published copy, not a sync target. Load the `ce-proof` skill to publish, passing:
   - **source file:** the saved `.md` file from Phase 4.
   - **doc title:** `Ideation: <topic>` or the doc's H1.
-  - **identity:** `ai:compound-engineering` / `Compound Engineering`.
+  - **identity:** `ai:rg-engineering` / `Compound Engineering`.
 
   ce-proof creates a shared Proof doc (Create and Share workflow) and returns the share URL. Surface it to the user, then return to the Phase 5 menu — nothing syncs back to disk. If the Proof handoff fails after the proof skill's internal retry plus one orchestrator-side retry (~2s pause, narrated as "Retrying Proof... attempt 2/2"), tell the user Proof is unavailable and that the local file is intact at `<path>`, then return to the menu — the deliverable was never at risk (it was written in Phase 4). *(If the user explicitly asked for Proof during an HTML run: Proof is markdown-only and cannot ingest HTML, so render a throwaway markdown copy of the survivors as the Proof source and do not upload the `.html`.)*
 

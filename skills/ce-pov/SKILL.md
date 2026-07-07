@@ -69,7 +69,7 @@ On `HIT`, load the profile JSON — that is your agnostic project orientation; d
 Create the scratch dir once, and reuse the echoed path for every scout this run:
 
 ```bash
-SCRATCH_DIR="/tmp/compound-engineering/ce-pov/$(openssl rand -hex 4)"
+SCRATCH_DIR="/tmp/rg-engineering/ce-pov/$(openssl rand -hex 4)"
 mkdir -p "$SCRATCH_DIR"
 echo "$SCRATCH_DIR"
 ```

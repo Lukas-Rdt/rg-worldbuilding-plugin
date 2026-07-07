@@ -39,13 +39,13 @@ type CleanupResult = {
 export default defineCommand({
   meta: {
     name: "cleanup",
-    description: "Back up stale compound-engineering artifacts from previous installs",
+    description: "Back up stale rg-engineering artifacts from previous installs",
   },
   args: {
     plugin: {
       type: "positional",
       required: false,
-      description: "Plugin name or local plugin path (default: compound-engineering)",
+      description: "Plugin name or local plugin path (default: rg-engineering)",
     },
     target: {
       type: "string",
@@ -250,7 +250,7 @@ async function cleanupCodex(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>
     // and user-authored prompts. A filename match against the historical CE
     // allow-list is not a strong enough signal — a user who creates
     // `~/.codex/prompts/ce-plan.md` for their own workflow would otherwise see
-    // it swept into `compound-engineering/legacy-backup/` on every cleanup run.
+    // it swept into `rg-engineering/legacy-backup/` on every cleanup run.
     // Mirror the body + frontmatter check used by `cleanupStalePrompts` so
     // install-time and standalone cleanup paths treat ownership identically.
     // "unknown" (no fingerprint on record) falls through so fully-retired
@@ -335,7 +335,7 @@ async function cleanupCodexSharedAgents(
     codexIncludeSkills: true,
   })
   const artifacts = getLegacyCodexArtifacts(bundle)
-  const managedDir = path.join(agentsRoot, "compound-engineering")
+  const managedDir = path.join(agentsRoot, "rg-engineering")
   const agentsSkillsDir = path.join(agentsRoot, "skills")
   const managedRoots = await resolveCodexManagedRoots(codexRoot, plugin.manifest.name)
   let moved = 0
@@ -377,7 +377,7 @@ async function cleanupOpenCode(plugin: Awaited<ReturnType<typeof loadClaudePlugi
     permissions: "none",
   })
   const artifacts = getLegacyOpenCodeArtifacts(bundle)
-  const managedDir = path.join(opencodeRoot, "compound-engineering")
+  const managedDir = path.join(opencodeRoot, "rg-engineering")
   let moved = 0
   for (const skillName of artifacts.skills) {
     moved += await moveLegacySkillIfOwned(managedDir, "skills", path.join(opencodeRoot, "skills"), skillName, "OpenCode")
@@ -398,7 +398,7 @@ async function cleanupPi(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>, p
     permissions: "none",
   })
   const artifacts = getLegacyPiArtifacts(bundle)
-  const managedDir = path.join(piRoot, "compound-engineering")
+  const managedDir = path.join(piRoot, "rg-engineering")
   let moved = 0
   for (const skillName of artifacts.skills) {
     moved += await moveLegacySkillIfOwned(managedDir, "skills", path.join(piRoot, "skills"), skillName, "Pi")
@@ -428,7 +428,7 @@ async function cleanupKiro(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>,
     ...artifacts.agents,
     ...bundle.agents.map((agent) => sanitizePathName(agent.name)),
   ])
-  const managedDir = path.join(kiroRoot, "compound-engineering")
+  const managedDir = path.join(kiroRoot, "rg-engineering")
   let moved = 0
   for (const skillName of skillNames) {
     moved += await moveLegacySkillIfOwned(managedDir, "skills", path.join(kiroRoot, "skills"), skillName, "Kiro")
@@ -458,7 +458,7 @@ async function cleanupCopilot(plugin: Awaited<ReturnType<typeof loadClaudePlugin
     permissions: "none",
   })
   const artifacts = getLegacyCopilotArtifacts(bundle)
-  const managedDir = path.join(copilotRoot, "compound-engineering")
+  const managedDir = path.join(copilotRoot, "rg-engineering")
   let moved = 0
   for (const skillName of artifacts.skills) {
     moved += await moveLegacySkillIfOwned(managedDir, "skills", path.join(copilotRoot, "skills"), skillName, "Copilot")
@@ -483,7 +483,7 @@ async function cleanupDroid(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>
     permissions: "none",
   })
   const artifacts = getLegacyDroidArtifacts(bundle)
-  const managedDir = path.join(droidRoot, "compound-engineering")
+  const managedDir = path.join(droidRoot, "rg-engineering")
   let moved = 0
   for (const skillName of artifacts.skills) {
     moved += await moveLegacySkillIfOwned(managedDir, "skills", path.join(droidRoot, "skills"), skillName, "Droid")
@@ -566,7 +566,7 @@ async function isLegacyQwenExtensionInstall(qwenRoot: string, pluginName: string
 
 async function cleanupWindsurf(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>, windsurfRoot: string): Promise<CleanupResult> {
   const artifacts = getLegacyWindsurfArtifacts(plugin)
-  const managedDir = path.join(windsurfRoot, "compound-engineering")
+  const managedDir = path.join(windsurfRoot, "rg-engineering")
   let moved = 0
   for (const skillName of artifacts.skills) {
     moved += await moveLegacySkillIfOwned(managedDir, "skills", path.join(windsurfRoot, "skills"), skillName, "Windsurf")

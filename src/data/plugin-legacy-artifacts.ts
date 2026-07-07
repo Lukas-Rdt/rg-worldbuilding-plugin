@@ -358,7 +358,7 @@ export function getLegacyCodexArtifacts(bundle: CodexBundle): LegacyTargetArtifa
   // plugin bundle (`bundle.skillDirs`, `bundle.generatedSkills`, `bundle.agents`).
   // That was unsafe: on a first install, any user-authored skill at a flat
   // `~/.codex/skills/<name>` path that happened to share a name with a current
-  // CE skill or agent would be swept into `compound-engineering/legacy-backup`
+  // CE skill or agent would be swept into `rg-engineering/legacy-backup`
   // even though it was never part of CE.
   //
   // The historical allow-list already enumerates every skill/agent/command name
@@ -591,7 +591,7 @@ export function getLegacyWindsurfArtifacts(plugin: ClaudePlugin): LegacyWindsurf
   // Any user-authored skill/workflow at a flat Windsurf path that happened to
   // share a name with a current CE skill/agent/command (e.g.
   // `skills/ce-debug` or `global_workflows/ce-plan.md`) would otherwise be
-  // swept into `compound-engineering/legacy-backup` even though it was never
+  // swept into `rg-engineering/legacy-backup` even though it was never
   // installed by CE.
   //
   // The historical allow-list already enumerates every skill/agent/command

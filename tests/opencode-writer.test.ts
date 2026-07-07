@@ -523,9 +523,9 @@ describe("writeOpenCodeBundle", () => {
 
     // Seed the legacy shared manifest at the OLD path, recording artifacts
     // that the previous coding-tutor install placed in the root.
-    await fs.mkdir(path.join(outputRoot, "rg-engineering"), { recursive: true })
+    await fs.mkdir(path.join(outputRoot, "compound-engineering"), { recursive: true })
     await fs.writeFile(
-      path.join(outputRoot, "rg-engineering", "install-manifest.json"),
+      path.join(outputRoot, "compound-engineering", "install-manifest.json"),
       JSON.stringify({
         version: 1,
         pluginName: "coding-tutor",

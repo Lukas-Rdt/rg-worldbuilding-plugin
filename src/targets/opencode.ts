@@ -152,7 +152,7 @@ function resolveOpenCodePaths(outputRoot: string, pluginName?: string, scope?: s
   // Namespace the managed install directory per plugin so multiple plugins
   // installed into the same OpenCode root do not share (and overwrite) each
   // other's install manifests. `resolveManagedSegment` falls back to the
-  // legacy "compound-engineering" segment when no plugin name is supplied.
+  // legacy "rg-engineering" segment when no plugin name is supplied.
   const managedSegment = resolveManagedSegment(pluginName)
   const base = path.basename(outputRoot)
   // Global layout: explicit scope="global" (from OPENCODE_CONFIG_DIR or the XDG

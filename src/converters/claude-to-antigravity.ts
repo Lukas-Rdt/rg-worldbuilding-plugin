@@ -98,7 +98,7 @@ function convertCommand(command: ClaudeCommand, usedNames: Set<string>): Antigra
 export function transformContentForAntigravity(body: string): string {
   let result = body
 
-  // 1. Transform Task agent calls (supports namespaced names like compound-engineering:research:agent-name)
+  // 1. Transform Task agent calls (supports namespaced names like rg-engineering:research:agent-name)
   const taskPattern = /^(\s*-?\s*)Task\s+([a-z][a-z0-9:-]*)\(([^)]*)\)/gm
   result = result.replace(taskPattern, (_match, prefix: string, agentName: string, args: string) => {
     const finalSegment = agentName.includes(":") ? agentName.split(":").pop()! : agentName

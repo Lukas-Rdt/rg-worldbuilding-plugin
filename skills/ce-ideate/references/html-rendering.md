@@ -105,7 +105,7 @@ these locations, first match wins:
 
 1. Worktree root (resolve via `git rev-parse --show-toplevel`).
 2. `docs/DESIGN.md`.
-3. `.compound-engineering/DESIGN.md`.
+3. `.rg-engineering/DESIGN.md`.
 
 Read once at compose time. Absent → fall through to the fallback default.
 

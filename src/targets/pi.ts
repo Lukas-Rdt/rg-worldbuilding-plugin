@@ -138,7 +138,7 @@ function resolvePiPaths(outputRoot: string, pluginName?: string): PiPaths {
   // Namespace the managed install directory per plugin so multiple plugins
   // installed into the same Pi root do not share (and overwrite) each other's
   // install manifests. `resolveManagedSegment` falls back to the legacy
-  // "compound-engineering" segment when no plugin name is supplied.
+  // "rg-engineering" segment when no plugin name is supplied.
   const managedSegment = resolveManagedSegment(pluginName)
   const base = path.basename(outputRoot)
 
@@ -418,14 +418,14 @@ async function cleanupCurrentManagedAgentFile(
 // from readInstallManifestWithLegacyFallback and would otherwise leak the file
 // on upgrade. This list is the safety net for that case.
 const LEGACY_PI_EXTENSIONS_BY_PLUGIN: Record<string, string[]> = {
-  "compound-engineering": ["compound-engineering-compat.ts"],
+  "rg-engineering": ["rg-engineering-compat.ts"],
 }
 
 // Plugins that historically shipped an mcporter.json (via the now-removed
 // compat extension) but no longer do when `bundle.mcporterConfig` is absent.
 // The per-plugin guard keeps us from touching mcporter configs owned by
 // plugins that still legitimately emit one.
-const LEGACY_PI_MCPORTER_PLUGINS = new Set<string>(["compound-engineering"])
+const LEGACY_PI_MCPORTER_PLUGINS = new Set<string>(["rg-engineering", "rg-engineering"])
 
 type LegacyArtifactKind = "skills" | "prompts" | "extensions" | "agents" | "mcporter"
 

@@ -133,7 +133,7 @@ The opening goes under `## Summary` if the body uses any `##` headings; bare par
 ```markdown
 ---
 
-[![Compound Engineering](https://img.shields.io/badge/Built_with-Compound_Engineering-6366f1)](https://github.com/EveryInc/compound-engineering-plugin)
+[![Compound Engineering](https://img.shields.io/badge/Built_with-Compound_Engineering-6366f1)](https://github.com/EveryInc/rg-engineering-plugin)
 ![HARNESS](https://img.shields.io/badge/MODEL_SLUG-COLOR?logo=LOGO&logoColor=white)
 ```
 

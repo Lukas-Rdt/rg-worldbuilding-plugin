@@ -16,7 +16,7 @@ Ask each question below using the platform's blocking question tool: `AskUserQue
 
 ### Step 1: Determine Plugin Version
 
-Detect the installed compound-engineering plugin version by reading the plugin metadata or manifest when the platform exposes it. If the version cannot be determined, skip this step.
+Detect the installed rg-engineering plugin version by reading the plugin metadata or manifest when the platform exposes it. If the version cannot be determined, skip this step.
 
 If a version is found, pass it to the check script via `--version`. Otherwise omit the flag.
 
@@ -45,9 +45,9 @@ If the script is unavailable, perform the inline equivalent:
 
 1. Check optional tools with `command -v`: `agent-browser`, `gh`, `jq`, `ast-grep`, `ffmpeg`.
 2. If inside a git repo, resolve the repo root with `git rev-parse --show-toplevel`.
-3. Check for obsolete `compound-engineering.local.md` at the repo root.
-4. Check whether `.compound-engineering/config.local.yaml` exists and, if it does, whether `git check-ignore -q .compound-engineering/config.local.yaml` succeeds.
-5. Compare `.compound-engineering/config.local.example.yaml` with `references/config-template.yaml` when the template is readable; otherwise report that the example refresh must be done manually.
+3. Check for obsolete `rg-engineering.local.md` at the repo root.
+4. Check whether `.rg-engineering/config.local.yaml` exists and, if it does, whether `git check-ignore -q .rg-engineering/config.local.yaml` succeeds.
+5. Compare `.rg-engineering/config.local.example.yaml` with `references/config-template.yaml` when the template is readable; otherwise report that the example refresh must be done manually.
 
 Display the diagnostic output to the user. Missing optional tools are not setup failures.
 
@@ -55,9 +55,9 @@ Display the diagnostic output to the user. Missing optional tools are not setup 
 
 Proceed to Phase 2 only if one or more repo-local project issues exist:
 
-- obsolete `compound-engineering.local.md`
-- `.compound-engineering/config.local.yaml` exists but is not safely gitignored
-- `.compound-engineering/config.local.example.yaml` is missing or outdated
+- obsolete `rg-engineering.local.md`
+- `.rg-engineering/config.local.yaml` exists but is not safely gitignored
+- `.rg-engineering/config.local.example.yaml` is missing or outdated
 
 If no project issues exist, report:
 
@@ -78,19 +78,19 @@ Resolve the repository root (`git rev-parse --show-toplevel`). All paths below a
 
 ### Step 4: Remove Obsolete Local Config
 
-If `compound-engineering.local.md` exists at the repo root, explain that it is obsolete because review-agent selection is automatic and surviving machine-local settings now live in `.compound-engineering/config.local.yaml`.
+If `rg-engineering.local.md` exists at the repo root, explain that it is obsolete because review-agent selection is automatic and surviving machine-local settings now live in `.rg-engineering/config.local.yaml`.
 
 Ask whether to delete it now. Delete only if the user approves.
 
 ### Step 5: Refresh Example Config
 
-Copy `references/config-template.yaml` to `<repo-root>/.compound-engineering/config.local.example.yaml`, creating the directory if needed. This file is committed to the repo and should always reflect the latest available settings.
+Copy `references/config-template.yaml` to `<repo-root>/.rg-engineering/config.local.example.yaml`, creating the directory if needed. This file is committed to the repo and should always reflect the latest available settings.
 
 If the bundled template cannot be located by the current platform, print the source template path that failed and tell the user the example config could not be refreshed automatically.
 
 ### Step 6: Create Local Config If Wanted
 
-If `.compound-engineering/config.local.yaml` does not exist, ask:
+If `.rg-engineering/config.local.yaml` does not exist, ask:
 
 ```text
 Set up a local config file for this project?
@@ -101,14 +101,14 @@ Everything starts commented out -- you only enable what you need.
 2. No thanks
 ```
 
-If the user approves, copy `references/config-template.yaml` to `<repo-root>/.compound-engineering/config.local.yaml`.
+If the user approves, copy `references/config-template.yaml` to `<repo-root>/.rg-engineering/config.local.yaml`.
 
 ### Step 7: Ensure Local Config Is Gitignored
 
-If `.compound-engineering/config.local.yaml` exists and is not covered by `.gitignore`, offer to add:
+If `.rg-engineering/config.local.yaml` exists and is not covered by `.gitignore`, offer to add:
 
 ```text
-.compound-engineering/*.local.yaml
+.rg-engineering/*.local.yaml
 ```
 
 Append the entry to the repo-root `.gitignore` only if the user approves. Do not overwrite unrelated `.gitignore` content.

@@ -1,6 +1,6 @@
 # Sweep First-Run Interview
 
-Loaded by `SKILL.md` when `/ce-sweep` runs with no `feedback_sources` configured. Captures the setup that will be merged into `<repo-root>/.compound-engineering/config.local.yaml` (the unified CE local config, gitignored, machine-local) and re-read on every subsequent run.
+Loaded by `SKILL.md` when `/ce-sweep` runs with no `feedback_sources` configured. Captures the setup that will be merged into `<repo-root>/.rg-engineering/config.local.yaml` (the unified CE local config, gitignored, machine-local) and re-read on every subsequent run.
 
 This interview is **interactive only**. The caller refuses first-run setup in headless mode — a scheduled or piped run with no config aborts and tells the user to run `/ce-sweep` interactively once. Do not attempt to infer sources, actions, or approvals without asking.
 
@@ -87,7 +87,7 @@ For email sources there are no source-side actions, so approval is moot — reco
 Ask where the sweep's state file lives:
 
 - **Committed to the repo** (recommended when multiple agents or machines share branches — one source of truth everyone reads and writes). Sets `sweep_state_path` to the committed default `docs/feedback-sweep/state.yml`.
-- **Machine-local under `/tmp`** (solo setups; keeps sweep bookkeeping out of the repo, no commit noise). Sets `sweep_state_path` to `/tmp/compound-engineering/ce-sweep/<repo-slug>/state.yml`, where `<repo-slug>` is derived from the repo (e.g. the basename of the repo root).
+- **Machine-local under `/tmp`** (solo setups; keeps sweep bookkeeping out of the repo, no commit noise). Sets `sweep_state_path` to `/tmp/rg-engineering/ce-sweep/<repo-slug>/state.yml`, where `<repo-slug>` is derived from the repo (e.g. the basename of the repo root).
 
 Let the user override the path if they want a different location. If they pick machine-local, note that a fresh checkout or a teammate's machine will not see this state — it is per-machine by design.
 
@@ -136,11 +136,11 @@ Offer to seed state from an existing legacy feedback-tracking file so prior work
 
 ## 8. Write config
 
-Merge the captured settings into `<repo-root>/.compound-engineering/config.local.yaml`. Resolve the repo root with `git rev-parse --show-toplevel`.
+Merge the captured settings into `<repo-root>/.rg-engineering/config.local.yaml`. Resolve the repo root with `git rev-parse --show-toplevel`.
 
-- If the directory or file does not exist, create `.compound-engineering/` and write the file.
+- If the directory or file does not exist, create `.rg-engineering/` and write the file.
 - If the file exists, merge the sweep keys into the existing YAML, **preserving every unrelated key untouched** (e.g. `work_delegate_*`, `pulse_*`, `plan_*`). Only add or update the sweep keys.
-- If `.compound-engineering/config.local.yaml` is not already covered by the repo's `.gitignore`, offer to add the entry before writing.
+- If `.rg-engineering/config.local.yaml` is not already covered by the repo's `.gitignore`, offer to add the entry before writing.
 
 Write these keys (see "Config File Shape" below for the exact form):
 
@@ -168,7 +168,7 @@ Declining a schedule leaves on-demand use fully working.
 
 ## Config File Shape
 
-After the interview completes, merge these flat keys into `<repo-root>/.compound-engineering/config.local.yaml`, preserving any unrelated keys already present.
+After the interview completes, merge these flat keys into `<repo-root>/.rg-engineering/config.local.yaml`, preserving any unrelated keys already present.
 
 ~~~yaml
 # --- Sweep (ce-sweep) ---

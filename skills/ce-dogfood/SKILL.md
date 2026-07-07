@@ -26,7 +26,7 @@ This workflow drives the browser exclusively through the `agent-browser` CLI. Do
 
   If not installed, stop and tell the user to install `agent-browser` (run `/ce-setup` to print the current install command), then re-run this skill — this workflow cannot function without it.
 
-## Reusing Compound-Engineering Skills
+## Reusing rg-engineering Skills
 
 `ce-dogfood` is an orchestrator. Prefer delegating to existing CE skills over re-deriving their behavior:
 

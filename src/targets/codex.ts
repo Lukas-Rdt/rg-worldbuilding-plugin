@@ -315,7 +315,7 @@ async function cleanupKnownLegacyCodexArtifacts(codexRoot: string, bundle: Codex
     // and user-authored prompts. A filename match against the legacy allow-list
     // is not a strong enough signal to move a file — a user who creates
     // `~/.codex/prompts/ce-plan.md` for their own workflow would otherwise see
-    // it swept into `compound-engineering/legacy-backup/` on every install.
+    // it swept into `rg-engineering/legacy-backup/` on every install.
     // Mirror the body + frontmatter check used by the standalone
     // `cleanupStalePrompts` helper. "unknown" (no fingerprint on record, e.g.
     // fully-retired wrappers like `reproduce-bug.md`) falls through to the
@@ -356,7 +356,7 @@ async function cleanupLegacyAgentSkillDirs(
     // previously been installed under the flat-alias name (`ce-foo`) by an
     // earlier plugin layout. Seeding the flat alias as a cleanup candidate
     // sweeps that orphan skill dir on upgrade. For flat-only layouts (such as
-    // compound-engineering itself) `agent.name` has no embedded `-ce-` and
+    // rg-engineering itself) `agent.name` has no embedded `-ce-` and
     // this produces harmless non-matching candidates like `ce-ce-<name>`.
     if (agent.name.includes("-ce-")) {
       const finalSegment = agent.name.split("-ce-").pop()

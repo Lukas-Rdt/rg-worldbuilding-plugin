@@ -42,7 +42,7 @@ Parse a `mode:headless` token from anywhere in the arguments, strip it, and trea
 **Resolve the repo root.** Pre-resolved at skill load:
 !`git rev-parse --show-toplevel 2>/dev/null || true`
 
-If the line above is an absolute path, use it as `<repo-root>`. If it is empty or still shows a backtick command string (a harness that did not pre-resolve), run `git rev-parse --show-toplevel` with the shell tool. Read `<repo-root>/.compound-engineering/config.local.yaml` with the native file-read tool.
+If the line above is an absolute path, use it as `<repo-root>`. If it is empty or still shows a backtick command string (a harness that did not pre-resolve), run `git rev-parse --show-toplevel` with the shell tool. Read `<repo-root>/.rg-engineering/config.local.yaml` with the native file-read tool.
 
 **Route:**
 - Config file missing, or it has no `feedback_sources` key -> first run -> Phase 1.
@@ -58,7 +58,7 @@ If the line above is an absolute path, use it as `<repo-root>`. If it is empty o
 
 ### Phase 1: First-Run Setup
 
-Read `references/interview.md` and follow it. Setup is interactive-only: if the run is headless, report `first run requires interactive setup` and stop. The interview writes `feedback_sources` and the `sweep_*` keys into `<repo-root>/.compound-engineering/config.local.yaml` and offers a scheduling handoff. When it completes, continue into Phase 2.
+Read `references/interview.md` and follow it. Setup is interactive-only: if the run is headless, report `first run requires interactive setup` and stop. The interview writes `feedback_sources` and the `sweep_*` keys into `<repo-root>/.rg-engineering/config.local.yaml` and offers a scheduling handoff. When it completes, continue into Phase 2.
 
 ### Phase 2: Sweep Run
 
@@ -118,7 +118,7 @@ A failed ack write -> upsert the item as `ack_deferred` and hold the cursor (do 
 #### 2e. Media
 
 For each new item carrying `media`:
-- Download attachments into scratch `/tmp/compound-engineering/ce-sweep/<run-id>/`; raw media is never committed. A download failure -> set the item `needs_download` and continue.
+- Download attachments into scratch `/tmp/rg-engineering/ce-sweep/<run-id>/`; raw media is never committed. A download failure -> set the item `needs_download` and continue.
 - Dispatch one generic subagent per recording, in parallel, at the **generation tier**, using `references/subagent-template.md` filled from `references/agents/media-analyzer.md`. Fill the template's `{skill_dir}` slot with the same absolute ce-sweep skill directory you resolve for your own `SKILL_DIR` Bash calls (a fresh subagent does not inherit your shell state, so it cannot run the bundled analyzer without being told the path). Pass the absolute media PATHS, a scratch artifact path, and the item's `sensitive` flag; collect the compact 1-2 line summary each returns. A subagent failure -> set the item `needs_analysis`, retain the media, and continue.
 - Track attempts on the item (a `media_attempts` count upserted on each try). After 3 failed attempts across runs (`needs_download`/`needs_analysis`), set the item `manual_stuck` and list it separately — out of the routine nag.
 

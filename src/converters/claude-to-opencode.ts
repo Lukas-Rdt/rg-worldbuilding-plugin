@@ -274,7 +274,7 @@ function renderHookHandlers(
 
   // Wrap tool.execute.before handlers in try-catch to prevent a failing hook
   // from crashing parallel tool call batches (causes API 400 errors).
-  // See: https://github.com/EveryInc/compound-engineering-plugin/issues/85
+  // See: https://github.com/EveryInc/rg-engineering-plugin/issues/85
   const isPreToolUse = event === "tool.execute.before"
   const note = options.note ? `    // ${options.note}\n` : ""
   if (isPreToolUse) {
@@ -335,10 +335,10 @@ function rewriteClaudePaths(body: string): string {
  *
  * OpenCode resolves agents by flat filename, so fully-qualified agent
  * references must be flattened. Both 3-segment legacy refs
- * (`compound-engineering:document-review:coherence-reviewer` -> `coherence-reviewer`)
+ * (`rg-engineering:document-review:coherence-reviewer` -> `coherence-reviewer`)
  * and 2-segment category-qualified refs (`review:ce-correctness-reviewer` ->
  * `ce-correctness-reviewer`) are handled. 2-segment skill references without
- * `ce-` prefix (e.g. `compound-engineering:document-review`) are left unchanged.
+ * `ce-` prefix (e.g. `rg-engineering:document-review`) are left unchanged.
  * See #477.
  */
 export function transformSkillContentForOpenCode(body: string): string {

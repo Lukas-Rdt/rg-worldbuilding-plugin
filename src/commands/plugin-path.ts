@@ -12,7 +12,7 @@ export default defineCommand({
     plugin: {
       type: "positional",
       required: true,
-      description: "Plugin name (e.g. compound-engineering)",
+      description: "Plugin name (e.g. rg-engineering)",
     },
     branch: {
       type: "string",

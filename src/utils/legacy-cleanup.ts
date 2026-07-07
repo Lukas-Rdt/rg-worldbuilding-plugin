@@ -1,5 +1,5 @@
 /**
- * One-time cleanup of stale compound-engineering files from previous installs.
+ * One-time cleanup of stale rg-engineering files from previous installs.
  *
  * The v3 rename changed all skill and agent names (e.g., git-commit -> ce-commit,
  * adversarial-reviewer -> ce-adversarial-reviewer). Target writers create new
@@ -370,7 +370,7 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
     "Build and test iOS apps on simulator using XcodeBuildMCP. Use after making iOS code changes, before creating a PR, or when verifying app behavior and checking for crashes on simulator.",
   ],
   setup: [
-    "Configure project-level settings for compound-engineering workflows. Currently a placeholder — review agent selection is handled automatically by ce:review.",
+    "Configure project-level settings for rg-engineering workflows. Currently a placeholder — review agent selection is handled automatically by ce:review.",
     "Check Compound Engineering health and repo-local config. Reports optional tool capabilities, removes obsolete local config, refreshes the config example, and helps safely gitignore machine-local settings. Use when verifying setup, troubleshooting missing optional tools, or onboarding a repo.",
   ],
 }
@@ -384,7 +384,7 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
  * plugin's same-named wrapper from a shared `~/.codex/prompts/` directory.
  *
  * Each entry is the exact frontmatter description string from a shipped
- * compound-engineering release (all skill rewords across versions, including
+ * rg-engineering release (all skill rewords across versions, including
  * the ce:/ce- prefix transition). The current shipped description for the
  * renamed skill is also accepted automatically via `loadLegacyFingerprints`,
  * so only historical values need to live here.
@@ -434,7 +434,7 @@ const LEGACY_PROMPT_DESCRIPTION_ALIASES: Record<string, string[]> = {
   ],
 }
 
-/** The compound-engineering skill whose current description should also be
+/** The rg-engineering skill whose current description should also be
  * accepted as an ownership signal for a given stale prompt file. Provides the
  * "current shipped description" leg of the two-signal check so that the alias
  * map above does not need to be touched on every routine description edit. */
@@ -514,15 +514,15 @@ const LEGACY_ONLY_SKILL_DESCRIPTIONS: Record<string, string> = {
   "ce-gemini-imagegen":
     "This skill should be used when generating and editing images using the Gemini API (Nano Banana Pro). It applies when creating images from text prompts, editing existing images, applying style transfers, generating logos with text, creating stickers, product mockups, or any image generation/manipulation task. Supports text-to-image, image editing, multi-turn refinement, and composition from multiple reference images.",
   "ce-release-notes":
-    "Summarize recent compound-engineering plugin releases, or answer a specific question about a past release with a version citation. Use when the user types `/ce-release-notes` or asks \"what changed in compound-engineering recently?\" or \"what happened to `<skill-name>`?\".",
+    "Summarize recent rg-engineering plugin releases, or answer a specific question about a past release with a version citation. Use when the user types `/ce-release-notes` or asks \"what changed in rg-engineering recently?\" or \"what happened to `<skill-name>`?\".",
   "ce-report-bug":
-    "Report a bug in the compound-engineering plugin",
+    "Report a bug in the rg-engineering plugin",
   "ce-sessions":
     "Search and ask questions about coding agent session history across Claude Code, Codex, and Cursor. Use when asking what was worked on, what was tried before, how a problem was investigated across sessions, what happened recently, or any question about past agent sessions. Also use when the user references prior sessions, previous attempts, or past investigations — even without saying 'sessions' explicitly.",
   "ce-slack-research":
     "Search Slack for interpreted organizational context -- decisions, constraints, and discussion arcs -- and produce a synthesized research digest with cross-cutting analysis. Use when the user says 'search slack for', 'what did we discuss about', 'slack context for', or 'what does the team think about'. Differs from slack:find-discussions, which returns raw message results without synthesis.",
   "ce-update":
-    "Check if the compound-engineering plugin is up to date and recommend the\nupdate command if not. Use when the user says \"update compound engineering\",\n\"check compound engineering version\", \"ce update\", \"is compound engineering\nup to date\", \"update ce plugin\", or reports issues that might stem from a\nstale compound-engineering plugin version. This skill only works in Claude\nCode — it relies on the plugin harness cache layout.\n",
+    "Check if the rg-engineering plugin is up to date and recommend the\nupdate command if not. Use when the user says \"update compound engineering\",\n\"check compound engineering version\", \"ce update\", \"is compound engineering\nup to date\", \"update ce plugin\", or reports issues that might stem from a\nstale rg-engineering plugin version. This skill only works in Claude\nCode — it relies on the plugin harness cache layout.\n",
 }
 
 /**
@@ -729,7 +729,7 @@ async function findRepoRoot(startDir: string): Promise<string | null> {
   while (true) {
     const rootPluginManifest = path.join(current, ".claude-plugin", "plugin.json")
     if (await pathExists(rootPluginManifest)) return current
-    const legacyPluginRoot = path.join(current, "plugins", "compound-engineering")
+    const legacyPluginRoot = path.join(current, "plugins", "rg-engineering")
     if (await pathExists(legacyPluginRoot)) return current
     const parent = path.dirname(current)
     if (parent === current) return null
@@ -837,7 +837,7 @@ async function loadLegacyFingerprints(): Promise<LegacyFingerprints> {
       const rootPluginManifest = path.join(repoRoot, ".claude-plugin", "plugin.json")
       const pluginRoot = await pathExists(rootPluginManifest)
         ? repoRoot
-        : path.join(repoRoot, "plugins", "compound-engineering")
+        : path.join(repoRoot, "plugins", "rg-engineering")
       const [skillIndex, agentIndex] = await Promise.all([
         buildSkillIndex(path.join(pluginRoot, "skills")),
         buildAgentIndex(path.join(pluginRoot, "agents")),
@@ -990,7 +990,7 @@ export async function isLegacySkillArtifactOwned(
  *   - `Use the ce-plan skill for this workflow and follow its instructions exactly.`
  *     (post-rename workflow-form wrapper)
  *
- * The "command" form is NOT exclusive to compound-engineering. `renderPrompt`
+ * The "command" form is NOT exclusive to rg-engineering. `renderPrompt`
  * in `src/converters/claude-to-codex.ts` emits the same sentence (with a
  * different skill name) for every plugin that ships invocable commands. A
  * third-party plugin that happens to ship a same-named prompt wrapper (for
@@ -1000,10 +1000,10 @@ export async function isLegacySkillArtifactOwned(
  * **Signal 2 — description ownership.** To avoid deleting another plugin's
  * wrapper out of a shared `~/.codex/prompts/` directory, we additionally
  * require the frontmatter `description:` to match either (a) the current
- * shipped description of the corresponding compound-engineering skill, or
+ * shipped description of the corresponding rg-engineering skill, or
  * (b) one of the historical descriptions we have shipped in a prior release
  * (`LEGACY_PROMPT_DESCRIPTION_ALIASES`). A wrapper with our body fingerprint
- * but a description that has never appeared in any compound-engineering
+ * but a description that has never appeared in any rg-engineering
  * release is treated as NOT ours.
  *
  * Trade-off: adding a new release that reworks a prompt-related skill's
@@ -1134,7 +1134,7 @@ export async function cleanupStaleAgents(
  * Only applies to targets that used to generate workflow prompt wrappers (Codex).
  *
  * Ownership uses the two-signal check documented on `isLegacyPromptWrapper`:
- * the body must contain one of the compound-engineering-specific instruction
+ * the body must contain one of the rg-engineering-specific instruction
  * sentences AND the frontmatter description must match either the current
  * shipped description of the corresponding ce-* skill or a known historical
  * alias. This prevents deleting a sibling plugin's same-named wrapper from a
@@ -1156,11 +1156,11 @@ export async function cleanupStalePrompts(promptsDir: string): Promise<number> {
  * Ownership verdict for an individual Codex prompt file at a shared path like
  * `~/.codex/prompts/<file>.md`. Used by callers in the Codex install and
  * standalone-cleanup paths to gate legacy-name allow-list moves before
- * renaming a file into `compound-engineering/legacy-backup/`.
+ * renaming a file into `rg-engineering/legacy-backup/`.
  *
  * Verdicts:
  *   - `"ce-owned"`: body + frontmatter fingerprint match a known
- *     compound-engineering prompt-wrapper shape. Safe to move.
+ *     rg-engineering prompt-wrapper shape. Safe to move.
  *   - `"foreign"`: we have a fingerprint on record for this filename and the
  *     file does NOT match it. A user or sibling plugin authored this file —
  *     leave it alone. `~/.codex/prompts/` is a cross-plugin directory, so a

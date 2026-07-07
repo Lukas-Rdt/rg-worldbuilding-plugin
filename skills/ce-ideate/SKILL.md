@@ -70,7 +70,7 @@ Unlike `ce-plan` and `ce-brainstorm` (which default to `md`), ce-ideate defaults
 **Read config.** The repo root is pre-resolved at skill load:
 !`git rev-parse --show-toplevel 2>/dev/null || true`
 
-If the line above is an absolute path, use it as `<repo-root>`. If it is empty or still shows a backtick command string (a non-Claude harness that did not run the pre-resolution), resolve `<repo-root>` at runtime by running `git rev-parse --show-toplevel` with the shell tool. Then read `<repo-root>/.compound-engineering/config.local.yaml` with the native file-read tool. If the root cannot be resolved (not a git repo) or the file does not exist, fall through to the defaults below.
+If the line above is an absolute path, use it as `<repo-root>`. If it is empty or still shows a backtick command string (a non-Claude harness that did not run the pre-resolution), resolve `<repo-root>` at runtime by running `git rev-parse --show-toplevel` with the shell tool. Then read `<repo-root>/.rg-engineering/config.local.yaml` with the native file-read tool. If the root cannot be resolved (not a git repo) or the file does not exist, fall through to the defaults below.
 
 Resolution steps:
 
@@ -86,7 +86,7 @@ Resolution steps:
 
 **Defer loading the format-rendering reference.** The deliverable is written at Phase 4 (after generation), so `references/ideation-sections.md` and the format-rendering references (`markdown-rendering.md` / `html-rendering.md`) are only needed then — loading them at Phase 0.0 would carry them through the entire grounding and ideation dispatch for no benefit. Resolve `OUTPUT_FORMAT` now, but load the section contract and the matching rendering reference at write time (see `references/post-ideation-workflow.md` §4.1).
 
-The `output:` preference does NOT auto-propagate to `ce-brainstorm` on handoff (Phase 5) — ce-brainstorm re-resolves its own `brainstorm_output` config independently. Asymmetric output (`ideation.html` + unified-plan markdown) is acceptable; users who want HTML for both set both keys in `.compound-engineering/config.local.yaml`.
+The `output:` preference does NOT auto-propagate to `ce-brainstorm` on handoff (Phase 5) — ce-brainstorm re-resolves its own `brainstorm_output` config independently. Asymmetric output (`ideation.html` + unified-plan markdown) is acceptable; users who want HTML for both set both keys in `.rg-engineering/config.local.yaml`.
 
 #### 0.1 Check for Recent Ideation Work
 
@@ -255,12 +255,12 @@ Generate a `<run-id>` once at the start of Phase 1 (8 hex chars). Reuse it for t
 **Pre-resolve the scratch directory path.** Scratch lives directly under `/tmp` (not under `$TMPDIR` and not under `.context/`). `$TMPDIR` on macOS resolves to an obscure per-user path like `/var/folders/64/.../T/` that is hostile for users who want to inspect checkpoints, copy them elsewhere, or reference them later — `/tmp` is universally accessible on macOS, Linux, and WSL, and the per-user isolation `$TMPDIR` provides is not valuable for ephemeral ideation scratch. Run one bash command to create the directory and capture its absolute path for downstream use.
 
 ```bash
-SCRATCH_DIR="/tmp/compound-engineering/ce-ideate/<run-id>"
+SCRATCH_DIR="/tmp/rg-engineering/ce-ideate/<run-id>"
 mkdir -p "$SCRATCH_DIR"
 echo "$SCRATCH_DIR"
 ```
 
-Use the echoed absolute path (`/tmp/compound-engineering/ce-ideate/<run-id>`) as `<scratch-dir>` for every subsequent checkpoint write and cache read in this run. The run directory is not deleted on completion — the V15 cache is session-scoped and reused across run-ids, the checkpoints follow the cross-invocation-reusable convention, and in the no-repo case the deliverable itself is written here (see `references/post-ideation-workflow.md` Phase 4 and §5.5).
+Use the echoed absolute path (`/tmp/rg-engineering/ce-ideate/<run-id>`) as `<scratch-dir>` for every subsequent checkpoint write and cache read in this run. The run directory is not deleted on completion — the V15 cache is session-scoped and reused across run-ids, the checkpoints follow the cross-invocation-reusable convention, and in the no-repo case the deliverable itself is written here (see `references/post-ideation-workflow.md` Phase 4 and §5.5).
 
 Run grounding agents in parallel in the **foreground** (do not background — results are needed before Phase 2):
 

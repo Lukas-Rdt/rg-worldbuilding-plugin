@@ -44,7 +44,7 @@ Read `references/intake.md` now and classify the request into one of the four in
 Match grounding to the input shape. Create the run directory first — every run gets one, before any artifact exists:
 
 ```bash
-RUN_DIR="/tmp/compound-engineering/ce-explain/$(date +%Y%m%d)-$(openssl rand -hex 3)"
+RUN_DIR="/tmp/rg-engineering/ce-explain/$(date +%Y%m%d)-$(openssl rand -hex 3)"
 mkdir -p "$RUN_DIR"
 echo "$RUN_DIR"
 ```
