@@ -1,0 +1,29 @@
+{
+  "name": "rg-engineering-plugin",
+  "owner": {
+    "name": "Lukas-Rdt"
+  },
+  "metadata": {
+    "description": "Plugin marketplace for Claude Code and Codex extensions",
+    "version": "1.0.3"
+  },
+  "plugins": [
+    {
+      "name": "rg-engineering",
+      "description": "Brainstorm, plan, debug, review, and compound learnings with AI agents",
+      "author": {
+        "name": "Lukas-Rdt"
+      },
+      "homepage": "https://github.com/Lukas-Rdt/rg-engineering-plugin",
+      "tags": [
+        "ai-powered",
+        "rg-engineering",
+        "workflow-automation",
+        "code-review",
+        "quality",
+        "knowledge-management"
+      ],
+      "source": "./"
+    }
+  ]
+}

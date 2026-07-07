@@ -1,0 +1,25 @@
+{
+  "name": "rg-engineering",
+  "version": "3.18.0",
+  "description": "Brainstorm, plan, debug, review, and compound learnings with AI agents",
+  "keywords": [
+    "brainstorming",
+    "code-review",
+    "rg-engineering",
+    "debugging",
+    "ideation",
+    "workflows",
+    "workflow-automation"
+  ],
+  "author": "Lukas-Rdt",
+  "homepage": "https://github.com/Lukas-Rdt/rg-engineering-plugin",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "RG Engineering",
+    "shortDescription": "Brainstorm, plan, debug, review, and compound learnings with AI agents",
+    "longDescription": "RG Engineering guides AI agents through the full engineering loop: strategy, ideation, requirements, planning, execution, debugging, review, PR feedback, and captured learnings that make future work easier.",
+    "developerName": "Lukas-Rdt",
+    "websiteURL": "https://github.com/Lukas-Rdt/rg-engineering-plugin"
+  }
+}

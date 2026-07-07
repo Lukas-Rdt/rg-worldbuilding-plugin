@@ -1,0 +1,19 @@
+{
+  "name": "rg-engineering",
+  "owner": {
+    "name": "Lukas-Rdt",
+    "email": "",
+    "url": "https://github.com/Lukas-Rdt"
+  },
+  "metadata": {
+    "description": "Cursor plugin marketplace for RG Engineering plugins",
+    "version": "1.0.2"
+  },
+  "plugins": [
+    {
+      "name": "rg-engineering",
+      "source": ".",
+      "description": "Brainstorm, plan, debug, review, and compound learnings with AI agents"
+    }
+  ]
+}

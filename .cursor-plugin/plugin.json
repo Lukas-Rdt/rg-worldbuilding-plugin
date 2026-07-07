@@ -1,0 +1,25 @@
+{
+  "name": "rg-engineering",
+  "displayName": "RG Engineering",
+  "version": "3.18.0",
+  "description": "Brainstorm, plan, debug, review, and compound learnings with AI agents",
+  "author": {
+    "name": "Lukas-Rdt"
+  },
+  "homepage": "https://github.com/Lukas-Rdt/rg-engineering-plugin",
+  "repository": "https://github.com/Lukas-Rdt/rg-engineering-plugin",
+  "license": "MIT",
+  "keywords": [
+    "cursor",
+    "plugin",
+    "ai-powered",
+    "rg-engineering",
+    "workflow-automation",
+    "code-review",
+    "rails",
+    "ruby",
+    "python",
+    "typescript",
+    "knowledge-management"
+  ]
+}
