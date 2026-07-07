@@ -7,31 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  pr-title:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-
-    steps:
-      - name: Validate PR title
-        uses: amannn/action-semantic-pull-request@v6.1.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          requireScope: false
-          types: |
-            feat
-            fix
-            docs
-            refactor
-            chore
-            test
-            ci
-            build
-            perf
-            revert
-
   test:
     runs-on: ubuntu-latest
 

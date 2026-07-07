@@ -576,7 +576,7 @@ describe("writeOpenCodeBundle", () => {
 
     // The legacy shared manifest must be archived so it doesn't keep
     // misleading a future install (and must no longer exist at the old path).
-    expect(await exists(path.join(outputRoot, "rg-engineering", "install-manifest.json"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "compound-engineering", "install-manifest.json"))).toBe(false)
     expect(await exists(path.join(outputRoot, "coding-tutor", "legacy-backup"))).toBe(true)
   })
 
