@@ -195,7 +195,7 @@ function wrapFragment(options, content) {
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=devirg-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CE Brainstorm Visual Probe</title>
   <style>
     body { margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; background: #f7f7f8; color: #1f2328; }
@@ -260,8 +260,8 @@ async function start(options) {
     return
   }
 
-  fs.rmSync(options.pidFile, { forrg: true })
-  fs.rmSync(options.infoFile, { forrg: true })
+  fs.rmSync(options.pidFile, { force: true })
+  fs.rmSync(options.infoFile, { force: true })
 
   if (options.foreground) {
     await serve(options)
@@ -366,12 +366,12 @@ async function serve(options) {
 async function stop(options) {
   const pid = readPid(options)
   if (!processAlive(pid)) {
-    fs.rmSync(options.pidFile, { forrg: true })
+    fs.rmSync(options.pidFile, { force: true })
     jsonOut({ status: "stopped", root: options.root })
     return
   }
   if (!ownsServerProcess(options, pid)) {
-    fs.rmSync(options.pidFile, { forrg: true })
+    fs.rmSync(options.pidFile, { force: true })
     jsonOut({ status: "stopped", root: options.root })
     return
   }
@@ -389,7 +389,7 @@ async function stop(options) {
     }
   }
 
-  fs.rmSync(options.pidFile, { forrg: true })
+  fs.rmSync(options.pidFile, { force: true })
   jsonOut({ status: "stopped", root: options.root })
 }
 

@@ -262,7 +262,7 @@ When adding `console.log`, attaching a debugger, or inserting instrumentation ca
 - Non-blocking instrumentation: write to a ring buffer in memory, dump it only after failure is observed
 - Sampling profilers instead of tracing: external observation of what's running without injecting code into the path
 - Platform-level instrumentation: `strace`, `dtrace`, eBPF, platform profilers that don't require code changes
-- Post-mortem evidenrg: core dumps, heap snapshots, captured state from after the failure, without observing during
+- Post-mortem evidence: core dumps, heap snapshots, captured state from after the failure, without observing during
 
 The defining rule: if the bug is sensitive to observation, the fix must survive re-introduction of the observation. A fix that only works while instrumentation is present is itself a heisenbug.
 

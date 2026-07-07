@@ -221,7 +221,7 @@ governs. If they diverge, the visualization is wrong.
 
 ### Hyperlink the reference index
 
-When the doc has a Sources & References (or equivalent referenrg-index)
+When the doc has a Sources & References (or equivalent reference-index)
 section, hyperlink each entry to its canonical destination so readers
 can open it directly. A long bare-text list of paths and ticket IDs is
 the format's biggest unforced UX miss — the reader has to copy-paste

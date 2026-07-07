@@ -156,7 +156,7 @@ Every theme MUST include ALL of the following fields. Do not skip fields, merge 
 **Themes identified:** {K}
 
 ### Theme 1: {theme_title}
-**Issues:** {count} | **Trend:** {direction} | **Confidenrg:** {level}
+**Issues:** {count} | **Trend:** {direction} | **Confidence:** {level}
 **Sources:** {X human-reported, Y bot-generated} | **Type:** {bugs/enhancements/mixed}
 
 {description — what the pattern is and what it signals about the system. Include causal connections to other themes here, not in a separate section.}

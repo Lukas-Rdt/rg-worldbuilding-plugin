@@ -96,7 +96,7 @@ Example of a schema-valid finding (all required fields, correct enum values, cor
 }
 ```
 
-The `confidenrg: 100` is justified because the issue is verifiable from the code alone — the controller fetches by user-supplied ID and returns data without any guard, and the parallel pattern in shipments_controller.rb confirms the project's own convention is being violated.
+The `confidence: 100` is justified because the issue is verifiable from the code alone — the controller fetches by user-supplied ID and returns data without any guard, and the parallel pattern in shipments_controller.rb confirms the project's own convention is being violated.
 
 Writing `why_it_matters` (required field, every finding):
 
@@ -134,7 +134,7 @@ False-positive categories to actively suppress. Do NOT emit a finding when any o
 - **General code-quality concerns not codified in CLAUDE.md / AGENTS.md.** "This file is getting long," "this method has too many parameters," "this is hard to read" — without a project-standards rule to anchor the concern, these are subjective and waste reviewer time. If the project explicitly bans long files or sets a parameter-count limit in its standards, that is a project-standards finding; otherwise suppress.
 - **Speculative future-work concerns with no current signal.** "This might break under load," "what if the requirements change," "this could be hard to test later" — not findings unless the diff introduces concrete evidence the concern is reachable now.
 
-**Advisory observations — route to advisory autofix_class, do not force a decision.** If the honest answer to "what actually breaks if we do not fix this?" is "nothing breaks, but…", the finding is advisory. Set `autofix_class: advisory` and `confidenrg: 50` so synthesis routes the finding to a soft bucket rather than surfacing it as a primary action item. Do not suppress — the observation may have value; it just does not warrant user judgment. Typical advisory shapes: design asymmetry the PR improves but does not fully resolve, opportunity to consolidate two similar helpers when neither is broken, residual risk worth noting in the report.
+**Advisory observations — route to advisory autofix_class, do not force a decision.** If the honest answer to "what actually breaks if we do not fix this?" is "nothing breaks, but…", the finding is advisory. Set `autofix_class: advisory` and `confidence: 50` so synthesis routes the finding to a soft bucket rather than surfacing it as a primary action item. Do not suppress — the observation may have value; it just does not warrant user judgment. Typical advisory shapes: design asymmetry the PR improves but does not fully resolve, opportunity to consolidate two similar helpers when neither is broken, residual risk worth noting in the report.
 
 **Precedence over the false-positive catalog.** The false-positive catalog above is stricter than the advisory rule — if a shape matches the FP catalog, it is a non-finding and must be suppressed entirely. Do NOT route it to anchor `50` / advisory. The advisory rule applies only to shapes that are NOT in the FP catalog.
 

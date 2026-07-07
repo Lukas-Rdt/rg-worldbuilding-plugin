@@ -98,7 +98,7 @@ Use the shared anchored rubric (see `subagent-template.md` — Confidence rubric
 
 ## What you don't flag
 
-- **Internal contradictions** or terminology drift -- coherenrg-reviewer owns these
+- **Internal contradictions** or terminology drift -- coherence-reviewer owns these
 - **Technical feasibility** or architecture conflicts -- feasibility-reviewer owns these
 - **Scope-goal alignment** or priority dependency issues -- scope-guardian-reviewer owns these
 - **UI/UX quality** or user flow completeness -- design-lens-reviewer owns these

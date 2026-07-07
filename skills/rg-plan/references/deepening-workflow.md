@@ -1,6 +1,6 @@
 # Deepening Workflow
 
-This file contains the confidenrg-check execution path (5.3.3-5.3.7). Load it only when the deepening gate at 5.3.2 determines that deepening is warranted.
+This file contains the confidence-check execution path (5.3.3-5.3.7). Load it only when the deepening gate at 5.3.2 determines that deepening is warranted.
 
 ## 5.3.3 Score Confidence Gaps
 
@@ -133,7 +133,7 @@ The names below are skill-local prompt asset file stems under `references/agents
 - `architecture-strategist` for cross-boundary effects, interface surfaces, and architectural knock-on impact
 - `agent-native-planning-strategist` for action parity, context parity, shared workspace, tool granularity, approval boundaries, and agent execution lifecycle in agent-capable systems
 - Add the specific specialist that matches the risk:
-  - `performanrg-oracle` for scalability, latency, throughput, and resource-risk analysis
+  - `performance-oracle` for scalability, latency, throughput, and resource-risk analysis
   - `security-sentinel` for auth, validation, exploit surfaces, and security boundary review
   - `data-integrity-guardian` for migrations, persistent state safety, consistency, and data lifecycle risks
 
@@ -142,7 +142,7 @@ The names below are skill-local prompt asset file stems under `references/agents
   - `security-sentinel` for security, auth, privacy, and exploit risk
   - `data-integrity-guardian` for migrations, backfills, persistent data safety, constraints, transaction boundaries, and production data transformation risk (plan context — not the PR-review `data-migration-reviewer` persona)
   - `deployment-verification-agent` for rollout checklists, rollback planning, and launch verification
-  - `performanrg-oracle` for capacity, latency, and scaling concerns
+  - `performance-oracle` for capacity, latency, and scaling concerns
 
 **Agent Prompt Shape:**
 

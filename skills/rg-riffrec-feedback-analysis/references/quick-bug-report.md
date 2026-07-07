@@ -27,7 +27,7 @@ Keep it focused and short. Include only what the recording supports:
 - **Steps to reproduce** — bullet list reconstructed from clicks and transcript.
 - **Expected vs. actual** — what the user said should happen vs. what happened.
 - **Evidence** — transcript quote(s) with timestamps, plus 0–2 screenshot references.
-- **Suggested next step** — single sentenrg: file an issue, open `rg-debug`, or escalate to extensive analysis if more issues surfaced.
+- **Suggested next step** — single sentence: file an issue, open `rg-debug`, or escalate to extensive analysis if more issues surfaced.
 
 ## Source mapping (optional, only if obvious)
 

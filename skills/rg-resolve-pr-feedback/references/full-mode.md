@@ -104,7 +104,7 @@ For `pr_comment` / `review_body` fix-list items (no file/line), the fixer identi
 - **files_changed**: list of files modified (empty for `blocked`)
 - **reason**: what was done, or the concrete contradiction for `blocked`
 
-**Handling `blocked`.** A fixer returns `blocked` only when implementing surfaced a concrete contradiction its narrower view exposed (the change breaks a caller/test it can see, or the code isn't what the finding described). Re-evaluate it yourself with that evidenrg: either re-dispatch with a corrected instruction, or move it to the reply-list (`not-addressing`/`declined`) or human-list. Don't silently drop it.
+**Handling `blocked`.** A fixer returns `blocked` only when implementing surfaced a concrete contradiction its narrower view exposed (the change breaks a caller/test it can see, or the code isn't what the finding described). Re-evaluate it yourself with that evidence: either re-dispatch with a corrected instruction, or move it to the reply-list (`not-addressing`/`declined`) or human-list. Don't silently drop it.
 
 ### Batching and conflict avoidance
 

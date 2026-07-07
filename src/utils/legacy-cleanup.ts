@@ -92,112 +92,112 @@ export const STALE_SKILL_DIRS = [
   "rg-dogfood-beta",
 
   // Removed skills (no replacement)
-  "rg-andrew-kane-gem-writer",
-  "rg-agent-native-architecture",
-  "rg-agent-native-audit",
-  "rg-changelog",
-  "rg-clean-gone-branches",
-  "rg-deploy-docs",
-  "rg-demo-reel",
-  "rg-dhh-rails-style",
-  "rg-dspy-ruby",
-  "rg-every-style-editor",
-  "rg-frontend-design",
-  "rg-gemini-imagegen",
-  "rg-onboarding",
-  "rg-pr-description",
-  "rg-release-notes",
-  "rg-report-bug",
-  "rg-sessions",
-  "rg-slack-research",
-  "rg-update",
-  "rg-work-beta",
+  "ce-andrew-kane-gem-writer",
+  "ce-agent-native-architecture",
+  "ce-agent-native-audit",
+  "ce-changelog",
+  "ce-clean-gone-branches",
+  "ce-deploy-docs",
+  "ce-demo-reel",
+  "ce-dhh-rails-style",
+  "ce-dspy-ruby",
+  "ce-every-style-editor",
+  "ce-frontend-design",
+  "ce-gemini-imagegen",
+  "ce-onboarding",
+  "ce-pr-description",
+  "ce-release-notes",
+  "ce-report-bug",
+  "ce-sessions",
+  "ce-slack-research",
+  "ce-update",
+  "ce-work-beta",
 
   // rg-session-inventory and rg-session-extract were script-host skills called
   // only from rg-session-historian via the Skill tool. That dispatch path
   // deadlocked on Claude Code (subagents cannot invoke Skill — issue #794), so
   // their scripts moved into rg-compound/scripts/session-history/ and the skills were removed.
-  "rg-session-inventory",
-  "rg-session-extract",
+  "ce-session-inventory",
+  "ce-session-extract",
 
   // Renamed v4 rg-* -> rg-* skills
-  "rg-brainstorm",
-  "rg-code-review",
-  "rg-commit",
-  "rg-commit-push-pr",
-  "rg-compound",
-  "rg-compound-refresh",
-  "rg-debug",
-  "rg-doc-review",
-  "rg-dogfood",
-  "rg-explain",
-  "rg-ideate",
-  "rg-optimize",
-  "rg-plan",
-  "rg-polish",
-  "rg-pov",
-  "rg-product-pulse",
-  "rg-promote",
-  "rg-proof",
-  "rg-resolve-pr-feedback",
-  "rg-riffrec-feedback-analysis",
-  "rg-setup",
-  "rg-simplify-code",
-  "rg-strategy",
-  "rg-sweep",
-  "rg-test-browser",
-  "rg-test-xcode",
-  "rg-work",
-  "rg-worktree",
+  "ce-brainstorm",
+  "ce-code-review",
+  "ce-commit",
+  "ce-commit-push-pr",
+  "ce-compound",
+  "ce-compound-refresh",
+  "ce-debug",
+  "ce-doc-review",
+  "ce-dogfood",
+  "ce-explain",
+  "ce-ideate",
+  "ce-optimize",
+  "ce-plan",
+  "ce-polish",
+  "ce-pov",
+  "ce-product-pulse",
+  "ce-promote",
+  "ce-proof",
+  "ce-resolve-pr-feedback",
+  "ce-riffrec-feedback-analysis",
+  "ce-setup",
+  "ce-simplify-code",
+  "ce-strategy",
+  "ce-sweep",
+  "ce-test-browser",
+  "ce-test-xcode",
+  "ce-work",
+  "ce-worktree",
 ]
 
 /** Old agent names (used as generated skill dirs or flat .md files). */
 const STALE_AGENT_NAMES = [
   // Current rg-* standalone agent names removed by the agentless surface
   // reduction. Surviving behavior now lives as skill-local prompt assets.
-  "rg-adversarial-document-reviewer",
-  "rg-adversarial-reviewer",
-  "rg-agent-native-reviewer",
-  "rg-ankane-readme-writer",
-  "rg-api-contract-reviewer",
-  "rg-architecture-strategist",
-  "rg-best-practices-researcher",
-  "rg-code-simplicity-reviewer",
-  "rg-coherence-reviewer",
-  "rg-correctness-reviewer",
-  "rg-data-integrity-guardian",
-  "rg-data-migration-reviewer",
-  "rg-deployment-verification-agent",
-  "rg-design-implementation-reviewer",
-  "rg-design-iterator",
-  "rg-design-lens-reviewer",
-  "rg-feasibility-reviewer",
-  "rg-figma-design-sync",
-  "rg-framework-docs-researcher",
-  "rg-git-history-analyzer",
-  "rg-issue-intelligence-analyst",
-  "rg-julik-frontend-races-reviewer",
-  "rg-learnings-researcher",
-  "rg-maintainability-reviewer",
-  "rg-pattern-recognition-specialist",
-  "rg-performance-oracle",
-  "rg-performance-reviewer",
-  "rg-previous-comments-reviewer",
-  "rg-pr-comment-resolver",
-  "rg-product-lens-reviewer",
-  "rg-project-standards-reviewer",
-  "rg-reliability-reviewer",
-  "rg-repo-research-analyst",
-  "rg-scope-guardian-reviewer",
-  "rg-security-lens-reviewer",
-  "rg-security-reviewer",
-  "rg-security-sentinel",
-  "rg-session-historian",
-  "rg-slack-researcher",
-  "rg-spec-flow-analyzer",
-  "rg-swift-ios-reviewer",
-  "rg-testing-reviewer",
-  "rg-web-researcher",
+  "ce-adversarial-document-reviewer",
+  "ce-adversarial-reviewer",
+  "ce-agent-native-reviewer",
+  "ce-ankane-readme-writer",
+  "ce-api-contract-reviewer",
+  "ce-architecture-strategist",
+  "ce-best-practices-researcher",
+  "ce-code-simplicity-reviewer",
+  "ce-coherence-reviewer",
+  "ce-correctness-reviewer",
+  "ce-data-integrity-guardian",
+  "ce-data-migration-reviewer",
+  "ce-deployment-verification-agent",
+  "ce-design-implementation-reviewer",
+  "ce-design-iterator",
+  "ce-design-lens-reviewer",
+  "ce-feasibility-reviewer",
+  "ce-figma-design-sync",
+  "ce-framework-docs-researcher",
+  "ce-git-history-analyzer",
+  "ce-issue-intelligence-analyst",
+  "ce-julik-frontend-races-reviewer",
+  "ce-learnings-researcher",
+  "ce-maintainability-reviewer",
+  "ce-pattern-recognition-specialist",
+  "ce-performance-oracle",
+  "ce-performance-reviewer",
+  "ce-previous-comments-reviewer",
+  "ce-pr-comment-resolver",
+  "ce-product-lens-reviewer",
+  "ce-project-standards-reviewer",
+  "ce-reliability-reviewer",
+  "ce-repo-research-analyst",
+  "ce-scope-guardian-reviewer",
+  "ce-security-lens-reviewer",
+  "ce-security-reviewer",
+  "ce-security-sentinel",
+  "ce-session-historian",
+  "ce-slack-researcher",
+  "ce-spec-flow-analyzer",
+  "ce-swift-ios-reviewer",
+  "ce-testing-reviewer",
+  "ce-web-researcher",
 
   // Legacy agent names that were renamed from <name> to rg-<name>
   "adversarial-document-reviewer",
@@ -265,18 +265,18 @@ const STALE_AGENT_NAMES = [
 
 /** Old prompt wrapper names (we no longer generate workflow prompts). */
 const STALE_PROMPT_FILES = [
-  "rg-brainstorm.md",
-  "rg-compound.md",
-  "rg-compound-refresh.md",
-  "rg-ideate.md",
-  "rg-plan.md",
-  "rg-review.md",
-  "rg-work.md",
+  "ce-brainstorm.md",
+  "ce-compound.md",
+  "ce-compound-refresh.md",
+  "ce-ideate.md",
+  "ce-plan.md",
+  "ce-review.md",
+  "ce-work.md",
   "rg-work-beta.md",
 ]
 
 const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
-  "rg-brainstorm": [
+  "ce-brainstorm": [
     "Explore requirements and approaches through collaborative dialogue, then write a right-sized requirements document. Use when the user says \"let's brainstorm\", \"what should we build\", or \"help me think through X\", presents a vague or ambitious feature request, or seems unsure about scope or direction -- even without explicitly asking to brainstorm.",
   ],
   "rg:brainstorm": [
@@ -288,7 +288,7 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
   "workflows:brainstorm": [
     "Explore requirements and approaches through collaborative dialogue, then write a right-sized requirements document. Use when the user says \"let's brainstorm\", \"what should we build\", or \"help me think through X\", presents a vague or ambitious feature request, or seems unsure about scope or direction -- even without explicitly asking to brainstorm.",
   ],
-  "rg-code-review": [
+  "ce-code-review": [
     "Structured code review using tiered persona agents, confidence-gated findings, and a merge/dedup pipeline. In interactive mode it applies safe, verified fixes and commits them when the working tree is clean (it never pushes); in mode:agent it reports only and the caller applies. Use when reviewing code changes before creating a PR.",
   ],
   "rg-review": [
@@ -300,13 +300,13 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
   "workflows:review": [
     "Structured code review using tiered persona agents, confidence-gated findings, and a merge/dedup pipeline. In interactive mode it applies safe, verified fixes and commits them when the working tree is clean (it never pushes); in mode:agent it reports only and the caller applies. Use when reviewing code changes before creating a PR.",
   ],
-  "rg-commit": [
+  "ce-commit": [
     "Create a git commit with a clear, value-communicating message. Use when the user says \"commit\", \"commit this\", \"save my changes\", \"create a commit\", or wants to commit staged or unstaged work. Produces well-structured commit messages that follow repo conventions when they exist, and defaults to conventional commit format otherwise.",
   ],
   "git-commit": [
     "Create a git commit with a clear, value-communicating message. Use when the user says \"commit\", \"commit this\", \"save my changes\", \"create a commit\", or wants to commit staged or unstaged work. Produces well-structured commit messages that follow repo conventions when they exist, and defaults to conventional commit format otherwise.",
   ],
-  "rg-plan": [
+  "ce-plan": [
     "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
   ],
   "rg:plan": [
@@ -321,7 +321,7 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
   "git-commit-push-pr": [
     "Commit, push, and open a PR with an adaptive, value-first description that scales in depth with the change. Use when the user says \"commit and PR\", \"ship this\", \"create a PR\", or \"open a pull request\". Also handles description-only flows (\"write a PR description\", \"rewrite the PR body\", \"describe this PR\") without committing or pushing.",
   ],
-  "rg-compound": [
+  "ce-compound": [
     "Document a recently solved problem to compound your team's knowledge or CONCEPTS.md, the project's shared domain vocabulary.",
   ],
   "rg:compound": [
@@ -333,13 +333,13 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
   "workflows:compound": [
     "Document a recently solved problem to compound your team's knowledge or CONCEPTS.md, the project's shared domain vocabulary.",
   ],
-  "rg-compound-refresh": [
+  "ce-compound-refresh": [
     "Refresh stale learning and pattern docs under docs/solutions/ by reviewing them against the current codebase, then updating, consolidating, or deleting drifted ones. Use when the user asks to \"refresh my learnings\", \"audit docs/solutions/\", \"clean up stale learnings\", or \"consolidate overlapping docs\", or when rg-compound flags an older doc as superseded. Do not trigger for general refactor, debugging, or code-review work unless the user has explicitly pointed at docs/solutions/.",
   ],
   "rg:compound-refresh": [
     "Refresh stale learning and pattern docs under docs/solutions/ by reviewing them against the current codebase, then updating, consolidating, or deleting drifted ones. Use when the user asks to \"refresh my learnings\", \"audit docs/solutions/\", \"clean up stale learnings\", or \"consolidate overlapping docs\", or when rg-compound flags an older doc as superseded. Do not trigger for general refactor, debugging, or code-review work unless the user has explicitly pointed at docs/solutions/.",
   ],
-  "rg-doc-review": [
+  "ce-doc-review": [
     "Review requirements or plan documents using parallel persona agents that surface role-specific issues. Use when a requirements document or plan document exists and the user wants to improve it.",
   ],
   "rg-document-review": [
@@ -348,7 +348,7 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
   "document-review": [
     "Review requirements or plan documents using parallel persona agents that surface role-specific issues. Use when a requirements document or plan document exists and the user wants to improve it.",
   ],
-  "rg-ideate": [
+  "ce-ideate": [
     "Generate and critically evaluate grounded ideas about a topic. Use when asking what to improve, requesting idea generation, exploring surprising directions, or wanting the AI to proactively suggest strong options before brainstorming one in depth. Triggers on phrases like 'what should I improve', 'give me ideas', 'ideate on X', 'surprise me', 'what would you change', or any request for AI-generated suggestions rather than refining the user's own idea.",
   ],
   "rg:ideate": [
@@ -363,13 +363,13 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
   proof: [
     "Publish, view, comment on, and edit markdown via Proof (proofeditor.ai) — create a shareable doc, read a shared doc, and make comment/suggestion/block edits over its API. Use when the user says \"view this in proof\", \"share to proof\", \"publish to proof\", or wants a shareable markdown surface for a spec, plan, or draft, including publish handoffs from rg-brainstorm, rg-ideate, or rg-plan. Do not trigger on \"proof\" meaning evidence, math proofs, proof-of-concept, or \"proofread this\".",
   ],
-  "rg-resolve-pr-feedback": [
+  "ce-resolve-pr-feedback": [
     "Resolve PR review feedback by evaluating validity and fixing issues in parallel. Use when addressing PR review comments, resolving review threads, or fixing code review feedback.",
   ],
   "resolve-pr-feedback": [
     "Resolve PR review feedback by evaluating validity and fixing issues in parallel. Use when addressing PR review comments, resolving review threads, or fixing code review feedback.",
   ],
-  "rg-work": [
+  "ce-work": [
     "Execute work efficiently while maintaining quality and finishing features",
   ],
   "rg:work": [
@@ -387,7 +387,7 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
   "rg:work-beta": [
     "[BETA] Execute work with external delegate support. Same as rg-work but includes experimental Codex delegation mode for token-conserving code implementation.",
   ],
-  "rg-worktree": [
+  "ce-worktree": [
     "Ensure work happens in an isolated git worktree without disturbing the current checkout. Use when starting work that should stay isolated, or when `rg-work` or `rg-code-review` offers a worktree option. Detects existing isolation first, prefers the harness's native worktree tool, and falls back to plain git.",
   ],
   "git-worktree": [
@@ -426,13 +426,13 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
  * (a destructive bug). Err on the side of omission.
  */
 const LEGACY_PROMPT_DESCRIPTION_ALIASES: Record<string, string[]> = {
-  "rg-plan.md": [
+  "ce-plan.md": [
     "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
     "Create structured plans for any multi-step task -- software features, research workflows, events, study plans, or any goal that benefits from structured breakdown. Also deepen existing plans with interactive review of sub-agent findings. Use for plan creation when the user says 'plan this', 'create a plan', 'write a tech plan', 'plan the implementation', 'how should we build', 'what's the approach for', 'break this down', 'plan a trip', 'create a study plan', or when a brainstorm/requirements document is ready for planning. Use for plan deepening when the user says 'deepen the plan', 'deepen my plan', 'deepening pass', or uses 'deepen' in reference to a plan.",
     "Create structured plans for any multi-step task -- software features, research workflows, events, study plans, or any goal that benefits from structured breakdown. Also deepen existing plans with interactive review of sub-agent findings.",
     "Transform feature descriptions or requirements into implementation plans grounded in repo patterns and research.",
   ],
-  "rg-work.md": [
+  "ce-work.md": [
     "Execute work efficiently while maintaining quality and finishing features",
     "Transform feature descriptions or requirements into implementation plans grounded in repo patterns and research.",
   ],
@@ -443,22 +443,22 @@ const LEGACY_PROMPT_DESCRIPTION_ALIASES: Record<string, string[]> = {
     "[BETA] Execute work with external delegate support. Same as rg-work but includes experimental Codex delegation mode for token-conserving code implementation.",
     "[BETA] Execute work with external delegate support. Same as rg:work but includes experimental Codex delegation mode for token-conserving code implementation.",
   ],
-  "rg-brainstorm.md": [
+  "ce-brainstorm.md": [
     "Explore requirements and approaches through collaborative dialogue, then write a right-sized requirements document. Use when the user says \"let's brainstorm\", \"what should we build\", or \"help me think through X\", presents a vague or ambitious feature request, or seems unsure about scope or direction -- even without explicitly asking to brainstorm.",
     "Explore requirements and approaches through collaborative dialogue before writing a right-sized requirements document and planning implementation. Use for feature ideas, problem framing, when the user says 'let's brainstorm', or when they want to think through options before deciding what to build. Also use when a user describes a vague or ambitious feature request, asks 'what should we build', 'help me think through X', presents a problem with multiple valid solutions, or seems unsure about scope or direction — even if they don't explicitly ask to brainstorm.",
   ],
-  "rg-ideate.md": [
+  "ce-ideate.md": [
     "Generate and critically evaluate grounded ideas about a topic. Use when asking what to improve, requesting idea generation, exploring surprising directions, or wanting the AI to proactively suggest strong options before brainstorming one in depth. Triggers on phrases like 'what should I improve', 'give me ideas', 'ideate on X', 'surprise me', 'what would you change', or any request for AI-generated suggestions rather than refining the user's own idea.",
   ],
-  "rg-compound.md": [
+  "ce-compound.md": [
     "Document a recently solved problem to compound your team's knowledge or CONCEPTS.md, the project's shared domain vocabulary.",
     "Document a recently solved problem to compound your team's knowledge",
   ],
-  "rg-compound-refresh.md": [
+  "ce-compound-refresh.md": [
     "Refresh stale learning and pattern docs under docs/solutions/ by reviewing them against the current codebase, then updating, consolidating, or deleting drifted ones. Use when the user asks to \"refresh my learnings\", \"audit docs/solutions/\", \"clean up stale learnings\", or \"consolidate overlapping docs\", or when rg-compound flags an older doc as superseded. Do not trigger for general refactor, debugging, or code-review work unless the user has explicitly pointed at docs/solutions/.",
     "Refresh stale or drifting learnings and pattern docs in docs/solutions/ by reviewing, updating, consolidating, replacing, or deleting them against the current codebase. Use after refactors, migrations, dependency upgrades, or when a retrieved learning feels outdated or wrong. Also use when reviewing docs/solutions/ for accuracy, when a recently solved problem contradicts an existing learning, when pattern docs no longer reflect current code, or when multiple docs seem to cover the same topic and might benefit from consolidation.",
   ],
-  "rg-review.md": [
+  "ce-review.md": [
     "Structured code review using tiered persona agents, confidence-gated findings, and a merge/dedup pipeline. In interactive mode it applies safe, verified fixes and commits them when the working tree is clean (it never pushes); in mode:agent it reports only and the caller applies. Use when reviewing code changes before creating a PR.",
     "Structured code review using tiered persona agents, confidence-gated findings, and a merge/dedup pipeline. Use when reviewing code changes before creating a PR.",
   ],
@@ -469,13 +469,13 @@ const LEGACY_PROMPT_DESCRIPTION_ALIASES: Record<string, string[]> = {
  * "current shipped description" leg of the two-signal check so that the alias
  * map above does not need to be touched on every routine description edit. */
 const LEGACY_PROMPT_CURRENT_SKILL_FOR_FILE: Record<string, string> = {
-  "rg-brainstorm.md": "rg-brainstorm",
-  "rg-compound.md": "rg-compound",
-  "rg-compound-refresh.md": "rg-compound-refresh",
-  "rg-ideate.md": "rg-ideate",
-  "rg-plan.md": "rg-plan",
-  "rg-review.md": "rg-code-review",
-  "rg-work.md": "rg-work",
+  "ce-brainstorm.md": "rg-brainstorm",
+  "ce-compound.md": "rg-compound",
+  "ce-compound-refresh.md": "rg-compound-refresh",
+  "ce-ideate.md": "rg-ideate",
+  "ce-plan.md": "rg-plan",
+  "ce-review.md": "rg-code-review",
+  "ce-work.md": "rg-work",
   "rg-work-beta.md": "rg-work-beta",
 }
 
@@ -499,59 +499,59 @@ const LEGACY_ONLY_SKILL_DESCRIPTIONS: Record<string, string> = {
     "This skill should be used when orchestrating multi-agent swarms using Claude Code's TeammateTool and Task system. It applies when coordinating multiple agents, running parallel code reviews, creating pipeline workflows with dependencies, building self-organizing task queues, or any task benefiting from divide-and-conquer patterns.",
   "reproduce-bug":
     "Systematically reproduce and investigate a bug from a GitHub issue. Use when the user provides a GitHub issue number or URL for a bug they want reproduced or investigated.",
-  "rg:plan-beta":
-    "[BETA] Transform feature descriptions or requirements into structured implementation plans grounded in repo patterns and research. Use when the user says 'plan this', 'create a plan', 'write a tech plan', 'plan the implementation', 'how should we build', 'what's the approach for', 'break this down', or when a brainstorm/requirements document is ready for technical planning. Best when requirements are at least roughly defined; for exploratory or ambiguous requests, prefer rg:brainstorm first.",
-  "rg-plan-beta":
-    "[BETA] Transform feature descriptions or requirements into structured implementation plans grounded in repo patterns and research. Use when the user says 'plan this', 'create a plan', 'write a tech plan', 'plan the implementation', 'how should we build', 'what's the approach for', 'break this down', or when a brainstorm/requirements document is ready for technical planning. Best when requirements are at least roughly defined; for exploratory or ambiguous requests, prefer rg:brainstorm first.",
-  "rg:review-beta":
+  "ce:plan-beta":
+    "[BETA] Transform feature descriptions or requirements into structured implementation plans grounded in repo patterns and research. Use when the user says 'plan this', 'create a plan', 'write a tech plan', 'plan the implementation', 'how should we build', 'what's the approach for', 'break this down', or when a brainstorm/requirements document is ready for technical planning. Best when requirements are at least roughly defined; for exploratory or ambiguous requests, prefer ce:brainstorm first.",
+  "ce-plan-beta":
+    "[BETA] Transform feature descriptions or requirements into structured implementation plans grounded in repo patterns and research. Use when the user says 'plan this', 'create a plan', 'write a tech plan', 'plan the implementation', 'how should we build', 'what's the approach for', 'break this down', or when a brainstorm/requirements document is ready for technical planning. Best when requirements are at least roughly defined; for exploratory or ambiguous requests, prefer ce:brainstorm first.",
+  "ce:review-beta":
     "[BETA] Structured code review using tiered persona agents, confidence-gated findings, and a merge/dedup pipeline. Use when reviewing code changes before creating a PR.",
-  "rg-review-beta":
+  "ce-review-beta":
     "[BETA] Structured code review using tiered persona agents, confidence-gated findings, and a merge/dedup pipeline. Use when reviewing code changes before creating a PR.",
-  "rg:work-beta":
-    "[BETA] Execute rg-work with external delegate support.",
-  "rg-work-beta":
-    "[BETA] Execute rg-work with external delegate support.",
-  "rg-onboarding":
+  "ce:work-beta":
+    "[BETA] Execute ce-work with external delegate support.",
+  "ce-work-beta":
+    "[BETA] Execute ce-work with external delegate support.",
+  "ce-onboarding":
     "Generate or regenerate ONBOARDING.md to help new contributors understand a codebase. Use when the user asks to 'create onboarding docs', 'generate ONBOARDING.md', 'document this project for new developers', 'write onboarding documentation', 'vonboard', 'vonboarding', 'prepare this repo for a new contributor', 'refresh the onboarding doc', or 'update ONBOARDING.md'. Also use when someone needs to onboard a new team member and wants a written artifact, or when a codebase lacks onboarding documentation and the user wants to generate one.",
-  "rg-andrew-kane-gem-writer":
+  "ce-andrew-kane-gem-writer":
     "This skill should be used when writing Ruby gems following Andrew Kane's proven patterns and philosophy. It applies when creating new Ruby gems, refactoring existing gems, designing gem APIs, or when clean, minimal, production-ready Ruby library code is needed. Triggers on requests like \"create a gem\", \"write a Ruby library\", \"design a gem API\", or mentions of Andrew Kane's style.",
-  "rg-changelog":
+  "ce-changelog":
     "Create engaging changelogs for recent merges to main branch",
-  "rg-deploy-docs":
+  "ce-deploy-docs":
     "Validate and prepare documentation for GitHub Pages deployment",
-  "rg-demo-reel":
+  "ce-demo-reel":
     "Capture a visual demo reel (GIF, terminal recording, screenshots) for PR descriptions. Use when shipping UI changes, CLI features, or any work with observable behavior that benefits from visual proof. Also use when asked to add a demo, record a GIF, screenshot a feature, show what changed visually, create a demo reel, capture evidence, add proof to a PR, or create a before/after comparison.",
-  "rg-dspy-ruby":
+  "ce-dspy-ruby":
     "Build type-safe LLM applications with DSPy.rb — Ruby's programmatic prompt framework with signatures, modules, agents, and optimization. Use when implementing predictable AI features, creating LLM signatures and modules, configuring language model providers, building agent systems with tools, optimizing prompts, or testing LLM-powered functionality in Ruby applications.",
-  "rg-every-style-editor":
+  "ce-every-style-editor":
     "This skill should be used when reviewing or editing copy to ensure adherence to Every's style guide. It provides a systematic line-by-line review process for grammar, punctuation, mechanics, and style guide compliance.",
-  "rg-pr-description":
-    "Write or regenerate a value-first pull-request description (title + body) for the current branch's commits or for a specified PR. Use when the user says 'write a PR description', 'refresh the PR description', 'regenerate the PR body', 'rewrite this PR', 'freshen the PR', 'update the PR description', 'draft a PR body for this diff', 'describe this PR properly', 'generate the PR title', or pastes a GitHub PR URL / #NN / number. Also used internally by rg-commit-push-pr (single-PR flow) and rg-pr-stack (per-layer stack descriptions) so all callers share one writing voice. Input is a natural-language prompt. A PR reference (a full GitHub PR URL, `pr:561`, `#561`, or a bare number alone) picks a specific PR; anything else is treated as optional steering for the default 'describe my current branch' mode. Returns structured {title, body_file} (body written to an OS temp file) for the caller to apply via gh pr edit or gh pr create — this skill never edits the PR itself and never prompts for confirmation.",
-  "rg-session-extract":
+  "ce-pr-description":
+    "Write or regenerate a value-first pull-request description (title + body) for the current branch's commits or for a specified PR. Use when the user says 'write a PR description', 'refresh the PR description', 'regenerate the PR body', 'rewrite this PR', 'freshen the PR', 'update the PR description', 'draft a PR body for this diff', 'describe this PR properly', 'generate the PR title', or pastes a GitHub PR URL / #NN / number. Also used internally by ce-commit-push-pr (single-PR flow) and ce-pr-stack (per-layer stack descriptions) so all callers share one writing voice. Input is a natural-language prompt. A PR reference (a full GitHub PR URL, `pr:561`, `#561`, or a bare number alone) picks a specific PR; anything else is treated as optional steering for the default 'describe my current branch' mode. Returns structured {title, body_file} (body written to an OS temp file) for the caller to apply via gh pr edit or gh pr create — this skill never edits the PR itself and never prompts for confirmation.",
+  "ce-session-extract":
     "Extract conversation skeleton or error signals from a single session file at a given path. Invoked by session-research agents after they have selected which sessions to deep-dive — not intended for direct user queries.",
-  "rg-session-inventory":
+  "ce-session-inventory":
     "Discover session files for a repo across Claude Code, Codex, and Cursor, and extract session metadata (timestamps, branch, cwd, size, platform). Invoked by session-research agents — not intended for direct user queries.",
-  "rg-agent-native-audit":
+  "ce-agent-native-audit":
     "Run comprehensive agent-native architecture review with scored principles",
-  "rg-agent-native-architecture":
+  "ce-agent-native-architecture":
     "Build applications where agents are first-class citizens. Use this skill when designing autonomous agents, creating MCP tools, implementing self-modifying systems, or building apps where features are outcomes achieved by agents operating in a loop.",
-  "rg-clean-gone-branches":
+  "ce-clean-gone-branches":
     "Clean up local branches whose remote tracking branch is gone. Use when the user says \"clean up branches\", \"delete gone branches\", \"prune local branches\", \"clean gone\", or wants to remove stale local branches that no longer exist on the remote. Also handles removing associated worktrees for branches that have them.",
-  "rg-dhh-rails-style":
+  "ce-dhh-rails-style":
     "This skill should be used when writing Ruby and Rails code in DHH's distinctive 37signals style. It applies when writing Ruby code, Rails applications, creating models, controllers, or any Ruby file. Triggers on Ruby/Rails code generation, refactoring requests, code review, or when the user mentions DHH, 37signals, Basecamp, HEY, or Campfire style. Embodies REST purity, fat models, thin controllers, Current attributes, Hotwire patterns, and the \"clarity over cleverness\" philosophy.",
-  "rg-frontend-design":
+  "ce-frontend-design":
     "Build web interfaces with genuine design quality, not AI slop. Use for any frontend work - landing pages, web apps, dashboards, admin panels, components, interactive experiences. Activates for both greenfield builds and modifications to existing applications. Detects existing design systems and respects them. Covers composition, typography, color, motion, and copy. Verifies results via screenshots before declaring done.",
-  "rg-gemini-imagegen":
+  "ce-gemini-imagegen":
     "This skill should be used when generating and editing images using the Gemini API (Nano Banana Pro). It applies when creating images from text prompts, editing existing images, applying style transfers, generating logos with text, creating stickers, product mockups, or any image generation/manipulation task. Supports text-to-image, image editing, multi-turn refinement, and composition from multiple reference images.",
-  "rg-release-notes":
-    "Summarize recent rg-engineering plugin releases, or answer a specific question about a past release with a version citation. Use when the user types `/rg-release-notes` or asks \"what changed in rg-engineering recently?\" or \"what happened to `<skill-name>`?\".",
-  "rg-report-bug":
+  "ce-release-notes":
+    "Summarize recent rg-engineering plugin releases, or answer a specific question about a past release with a version citation. Use when the user types `/ce-release-notes` or asks \"what changed in rg-engineering recently?\" or \"what happened to `<skill-name>`?\".",
+  "ce-report-bug":
     "Report a bug in the rg-engineering plugin",
-  "rg-sessions":
+  "ce-sessions":
     "Search and ask questions about coding agent session history across Claude Code, Codex, and Cursor. Use when asking what was worked on, what was tried before, how a problem was investigated across sessions, what happened recently, or any question about past agent sessions. Also use when the user references prior sessions, previous attempts, or past investigations — even without saying 'sessions' explicitly.",
-  "rg-slack-research":
+  "ce-slack-research":
     "Search Slack for interpreted organizational context -- decisions, constraints, and discussion arcs -- and produce a synthesized research digest with cross-cutting analysis. Use when the user says 'search slack for', 'what did we discuss about', 'slack context for', or 'what does the team think about'. Differs from slack:find-discussions, which returns raw message results without synthesis.",
-  "rg-update":
+  "ce-update":
     "Check if the rg-engineering plugin is up to date and recommend the\nupdate command if not. Use when the user says \"update compound engineering\",\n\"check compound engineering version\", \"ce update\", \"is compound engineering\nup to date\", \"update ce plugin\", or reports issues that might stem from a\nstale rg-engineering plugin version. This skill only works in Claude\nCode — it relies on the plugin harness cache layout.\n",
 }
 
@@ -561,91 +561,91 @@ const LEGACY_ONLY_SKILL_DESCRIPTIONS: Record<string, string> = {
  * contract as `LEGACY_ONLY_SKILL_DESCRIPTIONS`.
  */
 const LEGACY_ONLY_AGENT_DESCRIPTIONS: Record<string, string> = {
-  "rg-adversarial-document-reviewer":
+  "ce-adversarial-document-reviewer":
     "Conditional document-review persona for high-stakes documents -- those with significant architectural decisions, new abstractions, or more than 5 requirements. Challenges premises, surfaces unstated assumptions, and stress-tests decisions rather than evaluating document quality.",
-  "rg-adversarial-reviewer":
+  "ce-adversarial-reviewer":
     "Conditional code-review persona, selected when the diff is large (>=50 changed lines) or touches high-risk domains like auth, payments, data mutations, or external APIs. Actively constructs failure scenarios to break the implementation rather than checking against known patterns.",
-  "rg-agent-native-reviewer":
+  "ce-agent-native-reviewer":
     "Reviews code to ensure agent-native parity -- any action a user can take, an agent can also take. Use after adding UI features, agent tools, or system prompts.",
-  "rg-ankane-readme-writer":
+  "ce-ankane-readme-writer":
     "Creates or updates README files following Ankane-style template for Ruby gems. Use when writing gem documentation with imperative voice, concise prose, and standard section ordering.",
-  "rg-api-contract-reviewer":
+  "ce-api-contract-reviewer":
     "Conditional code-review persona, selected when the diff touches API routes, request/response types, serialization, versioning, or exported type signatures. Reviews code for breaking contract changes.",
-  "rg-architecture-strategist":
+  "ce-architecture-strategist":
     "Analyzes code changes from an architectural perspective for pattern compliance and design integrity. Use when reviewing PRs, adding services, or evaluating structural refactors.",
-  "rg-best-practices-researcher":
+  "ce-best-practices-researcher":
     "Researches and synthesizes external best practices, documentation, and examples for any technology or framework. Use when you need industry standards, community conventions, or implementation guidance.",
-  "rg-code-simplicity-reviewer":
+  "ce-code-simplicity-reviewer":
     "Final review pass to ensure code is as simple and minimal as possible. Use after implementation is complete to identify YAGNI violations and simplification opportunities.",
-  "rg-coherence-reviewer":
+  "ce-coherence-reviewer":
     "Reviews planning documents for internal consistency -- contradictions between sections, terminology drift, structural issues, and ambiguity where readers would diverge. Spawned by the document-review skill.",
-  "rg-correctness-reviewer":
+  "ce-correctness-reviewer":
     "Always-on code-review persona. Reviews code for logic errors, edge cases, state management bugs, error propagation failures, and intent-vs-implementation mismatches.",
-  "rg-data-integrity-guardian":
+  "ce-data-integrity-guardian":
     "Reviews database migrations, data models, and persistent data code for safety. Use when checking migration safety, data constraints, transaction boundaries, or privacy compliance.",
-  "rg-data-migration-reviewer":
+  "ce-data-migration-reviewer":
     "Conditional code-review persona for migration files, schema dumps, backfills, and data transformations. Covers schema drift, mapping correctness, deploy-window safety, and verification plans.",
-  "rg-deployment-verification-agent":
+  "ce-deployment-verification-agent":
     "Produces Go/No-Go deployment checklists with SQL verification queries, rollback procedures, and monitoring plans. Use when PRs touch production data, migrations, or risky data changes.",
-  "rg-design-implementation-reviewer":
+  "ce-design-implementation-reviewer":
     "Visually compares live UI implementation against Figma designs and provides detailed feedback on discrepancies. Use after writing or modifying HTML/CSS/React components to verify design fidelity.",
-  "rg-design-iterator":
+  "ce-design-iterator":
     "Iteratively refines UI design through N screenshot-analyze-improve cycles. Use PROACTIVELY when design changes aren't coming together after 1-2 attempts, or when user requests iterative refinement.",
-  "rg-design-lens-reviewer":
+  "ce-design-lens-reviewer":
     "Reviews planning documents for missing design decisions -- information architecture, interaction states, user flows, and AI slop risk. Uses dimensional rating to identify gaps. Spawned by the document-review skill.",
-  "rg-feasibility-reviewer":
+  "ce-feasibility-reviewer":
     "Evaluates whether proposed technical approaches in planning documents will survive contact with reality -- architecture conflicts, dependency gaps, migration risks, and implementability. Spawned by the document-review skill.",
-  "rg-figma-design-sync":
+  "ce-figma-design-sync":
     "Detects and fixes visual differences between a web implementation and its Figma design. Use iteratively when syncing implementation to match Figma specs.",
-  "rg-framework-docs-researcher":
+  "ce-framework-docs-researcher":
     "Gathers comprehensive documentation and best practices for frameworks, libraries, or dependencies. Use when you need official docs, version-specific constraints, or implementation patterns.",
-  "rg-git-history-analyzer":
+  "ce-git-history-analyzer":
     "Performs archaeological analysis of git history to trace code evolution, identify contributors, and understand why code patterns exist. Use when you need historical context for code changes.",
-  "rg-issue-intelligence-analyst":
+  "ce-issue-intelligence-analyst":
     "Fetches and analyzes GitHub issues to surface recurring themes, pain patterns, and severity trends. Use when understanding a project's issue landscape, analyzing bug patterns for ideation, or summarizing what users are reporting.",
-  "rg-julik-frontend-races-reviewer":
+  "ce-julik-frontend-races-reviewer":
     "Conditional code-review persona, selected when the diff touches async UI code, Stimulus/Turbo lifecycles, or DOM-timing-sensitive frontend behavior. Reviews code for race conditions and janky UI failure modes.",
-  "rg-learnings-researcher":
+  "ce-learnings-researcher":
     "Searches docs/solutions/ for applicable past learnings via frontmatter metadata (bugs, architecture, design patterns, conventions, workflow learnings). Use before implementing features, making decisions, or starting work in a documented area so institutional knowledge carries forward.",
-  "rg-maintainability-reviewer":
+  "ce-maintainability-reviewer":
     "Always-on code-review persona. Reviews code for structural quality, complexity deletion, coupling, naming, dead code, type-boundary leaks, and abstraction debt.",
-  "rg-pattern-recognition-specialist":
+  "ce-pattern-recognition-specialist":
     "Analyzes code for design patterns, anti-patterns, naming conventions, and duplication. Use when checking codebase consistency or verifying new code follows established patterns.",
-  "rg-performance-oracle":
+  "ce-performance-oracle":
     "Analyzes code for performance bottlenecks, algorithmic complexity, database queries, memory usage, and scalability. Use after implementing features or when performance concerns arise.",
-  "rg-performance-reviewer":
+  "ce-performance-reviewer":
     "Conditional code-review persona, selected when the diff touches database queries, loop-heavy data transforms, caching layers, or I/O-intensive paths. Reviews code for runtime performance and scalability issues.",
-  "rg-pr-comment-resolver":
+  "ce-pr-comment-resolver":
     "Evaluates and resolves one or more related PR review threads -- assesses validity, implements fixes, and returns structured summaries with reply text. Spawned by the resolve-pr-feedback skill.",
-  "rg-previous-comments-reviewer":
+  "ce-previous-comments-reviewer":
     "Conditional code-review persona, selected when reviewing a PR that has existing review comments or review threads. Checks whether prior feedback has been addressed in the current diff.",
-  "rg-product-lens-reviewer":
+  "ce-product-lens-reviewer":
     "Reviews planning documents as a senior product leader -- challenges premise claims, assesses strategic consequences (trajectory, identity, adoption, opportunity cost), and surfaces goal-work misalignment. Spawned by the document-review skill.",
-  "rg-project-standards-reviewer":
+  "ce-project-standards-reviewer":
     "Always-on code-review persona. Audits changes against the project's own CLAUDE.md and AGENTS.md standards -- frontmatter rules, reference inclusion, naming conventions, cross-platform portability, and tool selection policies.",
-  "rg-reliability-reviewer":
+  "ce-reliability-reviewer":
     "Conditional code-review persona, selected when the diff touches error handling, retries, circuit breakers, timeouts, health checks, background jobs, or async handlers. Reviews code for production reliability and failure modes.",
-  "rg-repo-research-analyst":
+  "ce-repo-research-analyst":
     "Conducts thorough research on repository structure, documentation, conventions, and implementation patterns. Use when onboarding to a new codebase or understanding project conventions.",
-  "rg-scope-guardian-reviewer":
+  "ce-scope-guardian-reviewer":
     "Reviews planning documents for scope alignment and unjustified complexity -- challenges unnecessary abstractions, premature frameworks, and scope that exceeds stated goals. Spawned by the document-review skill.",
-  "rg-security-lens-reviewer":
+  "ce-security-lens-reviewer":
     "Evaluates planning documents for security gaps at the plan level -- auth/authz assumptions, data exposure risks, API surface vulnerabilities, and missing threat model elements. Spawned by the document-review skill.",
-  "rg-security-reviewer":
+  "ce-security-reviewer":
     "Conditional code-review persona, selected when the diff touches auth middleware, public endpoints, user input handling, or permission checks. Reviews code for exploitable vulnerabilities.",
-  "rg-security-sentinel":
+  "ce-security-sentinel":
     "Performs security audits for vulnerabilities, input validation, auth/authz, hardcoded secrets, and OWASP compliance. Use when reviewing code for security issues or before deployment.",
-  "rg-session-historian":
-    "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `rg-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/rg-sessions` (or another caller that runs the full discovery + extract pipeline first).",
-  "rg-slack-researcher":
+  "ce-session-historian":
+    "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `ce-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/ce-sessions` (or another caller that runs the full discovery + extract pipeline first).",
+  "ce-slack-researcher":
     "Searches Slack for organizational context -- decisions, constraints, and discussions that may not be documented elsewhere. Use when the user explicitly asks to search Slack for context during ideation, planning, or brainstorming.",
-  "rg-spec-flow-analyzer":
+  "ce-spec-flow-analyzer":
     "Analyzes specifications and feature descriptions for user flow completeness and gap identification. Use when a spec, plan, or feature description needs flow analysis, edge case discovery, or requirements validation.",
-  "rg-swift-ios-reviewer":
+  "ce-swift-ios-reviewer":
     "Conditional code-review persona, selected when the diff touches Swift files, SwiftUI/UIKit views, iOS entitlements, privacy manifests, Core Data models, SPM manifests, storyboards/XIBs, or semantic .pbxproj changes. Reviews for SwiftUI correctness, state management, memory safety, Swift concurrency, Core Data threading, and accessibility.",
-  "rg-testing-reviewer":
+  "ce-testing-reviewer":
     "Always-on code-review persona. Reviews code for test coverage gaps, weak assertions, brittle implementation-coupled tests, and missing edge case coverage.",
-  "rg-web-researcher":
+  "ce-web-researcher":
     "Performs iterative web research and returns structured external grounding. Use when planning or ideating outside the codebase, validating prior art, scanning competitor patterns, finding cross-domain analogies, or fetching market signals. Prefer over manual web searches for structured external context.",
 
   "bug-reproduction-validator":
@@ -654,11 +654,11 @@ const LEGACY_ONLY_AGENT_DESCRIPTIONS: Record<string, string> = {
     "Use this agent when you need to run linting and code quality checks on Ruby and ERB files. Run before pushing to origin.",
   "cli-agent-readiness-reviewer":
     "Reviews CLI source code, plans, or specs for AI agent readiness using a severity-based rubric focused on whether a CLI is merely usable by agents or genuinely optimized for them.",
-  "rg-cli-agent-readiness-reviewer":
+  "ce-cli-agent-readiness-reviewer":
     "Reviews CLI source code, plans, or specs for AI agent readiness using a severity-based rubric focused on whether a CLI is merely usable by agents or genuinely optimized for them.",
   "cli-readiness-reviewer":
     "Conditional code-review persona, selected when the diff touches CLI command definitions, argument parsing, or command handler implementations. Reviews CLI code for agent readiness -- how well the CLI serves autonomous agents, not just human users.",
-  "rg-cli-readiness-reviewer":
+  "ce-cli-readiness-reviewer":
     "Conditional code-review persona, selected when the diff touches CLI command definitions, argument parsing, or command handler implementations. Reviews CLI code for agent readiness -- how well the CLI serves autonomous agents, not just human users.",
   "data-migration-expert":
     "Validates data migrations, backfills, and production data transformations against reality. Use when PRs involve ID mappings, column renames, enum conversions, or schema changes.",
@@ -674,19 +674,19 @@ const LEGACY_ONLY_AGENT_DESCRIPTIONS: Record<string, string> = {
     "Conditional code-review persona, selected when the diff touches TypeScript code. Reviews changes with Kieran's strict bar for type safety, clarity, and maintainability.",
   "schema-drift-detector":
     "Detects unrelated schema.rb changes in PRs by cross-referencing against included migrations. Use when reviewing PRs with database schema changes.",
-  "rg-data-migration-expert":
+  "ce-data-migration-expert":
     "Validates data migrations, backfills, and production data transformations against reality. Use when PRs involve ID mappings, column renames, enum conversions, or schema changes.",
-  "rg-data-migrations-reviewer":
+  "ce-data-migrations-reviewer":
     "Conditional code-review persona, selected when the diff touches migration files, schema changes, data transformations, or backfill scripts. Reviews code for data integrity and migration safety.",
-  "rg-dhh-rails-reviewer":
+  "ce-dhh-rails-reviewer":
     "Conditional code-review persona, selected when Rails diffs introduce architectural choices, abstractions, or frontend patterns that may fight the framework. Reviews code from an opinionated DHH perspective.",
-  "rg-kieran-python-reviewer":
+  "ce-kieran-python-reviewer":
     "Conditional code-review persona, selected when the diff touches Python code. Reviews changes with Kieran's strict bar for Pythonic clarity, type hints, and maintainability.",
-  "rg-kieran-rails-reviewer":
+  "ce-kieran-rails-reviewer":
     "Conditional code-review persona, selected when the diff touches Rails application code. Reviews Rails changes with Kieran's strict bar for clarity, conventions, and maintainability.",
-  "rg-kieran-typescript-reviewer":
+  "ce-kieran-typescript-reviewer":
     "Conditional code-review persona, selected when the diff touches TypeScript code. Reviews changes with Kieran's strict bar for type safety, clarity, and maintainability.",
-  "rg-schema-drift-detector":
+  "ce-schema-drift-detector":
     "Detects unrelated schema.rb changes in PRs by cross-referencing against included migrations. Use when reviewing PRs with database schema changes.",
 }
 
@@ -698,26 +698,50 @@ type LegacyFingerprints = {
 
 let legacyFingerprintsPromise: Promise<LegacyFingerprints> | null = null
 
+function ceNameForLegacy(legacyName: string): string {
+  let name = legacyName;
+  if (name.startsWith("ce:")) {
+    name = name.slice(3);
+  } else if (name.startsWith("rg:")) {
+    name = name.slice(3);
+  } else if (name.startsWith("workflows:")) {
+    name = name.slice("workflows:".length);
+  } else if (name.startsWith("workflows-")) {
+    name = name.slice("workflows-".length);
+  } else if (name.startsWith("rg-")) {
+    name = name.slice(3);
+  } else if (name.startsWith("ce-")) {
+    name = name.slice(3);
+  } else if (name.startsWith("git-")) {
+    name = name.slice(4);
+  }
+  return `ce-${name}`;
+}
+
 function currentAgentNameForLegacy(legacyName: string): string {
-  return legacyName.startsWith("rg-") ? legacyName : `rg-${legacyName}`
+  const name = legacyName.startsWith("ce-") ? `rg-${legacyName.slice(3)}` : (legacyName.startsWith("rg-") ? legacyName : `rg-${legacyName}`)
+  return name
 }
 
 function currentSkillNameForLegacy(legacyName: string): string {
-  if (legacyName === "rg:review" || legacyName === "workflows:review" || legacyName === "workflows-review") {
-    return "rg-code-review"
-  }
-  if (legacyName.startsWith("rg:")) {
-    return legacyName.replace(/^rg:/, "rg-")
-  }
-  if (legacyName.startsWith("workflows:")) {
-    return `rg-${legacyName.slice("workflows:".length)}`
-  }
-  if (legacyName.startsWith("workflows-")) {
-    return `rg-${legacyName.slice("workflows-".length)}`
+  // Normalize legacy colon/workflows formats first
+  let name = legacyName;
+  if (name.startsWith("ce:")) {
+    name = `rg-${name.slice(3)}`;
+  } else if (name.startsWith("rg:")) {
+    name = `rg-${name.slice(3)}`;
+  } else if (name.startsWith("workflows:")) {
+    name = `rg-${name.slice("workflows:".length)}`;
+  } else if (name.startsWith("workflows-")) {
+    name = `rg-${name.slice("workflows-".length)}`;
+  } else if (name.startsWith("ce-")) {
+    name = `rg-${name.slice(3)}`;
   }
 
-  switch (legacyName) {
+  // Map specific legacy names to current active skill names
+  switch (name) {
     case "git-commit":
+    case "commit":
       return "rg-commit"
     case "git-commit-push-pr":
       return "rg-commit-push-pr"
@@ -726,22 +750,27 @@ function currentSkillNameForLegacy(legacyName: string): string {
     case "git-clean-gone-branches":
       return "rg-clean-gone-branches"
     case "report-bug-ce":
+    case "report-bug":
       return "rg-report-bug"
     case "document-review":
     case "rg-document-review":
+    case "ce-document-review":
       return "rg-doc-review"
     case "rg-review":
+    case "ce-review":
+    case "review":
+    case "code-review":
       return "rg-code-review"
-    // Promoted-from-beta renames: map to the shipping stable name so cleanup
-    // seeds a fingerprint. Without this, loadLegacyFingerprints leaves the
-    // description undefined and isLegacyPluginOwned bails, so the stale beta
-    // dir is never swept on upgrade.
     case "rg-polish-beta":
+    case "ce-polish-beta":
+    case "polish-beta":
       return "rg-polish"
     case "rg-dogfood-beta":
+    case "ce-dogfood-beta":
+    case "dogfood-beta":
       return "rg-dogfood"
     default:
-      return legacyName.startsWith("rg-") ? legacyName : `rg-${legacyName}`
+      return name.startsWith("rg-") ? name : `rg-${name}`
   }
 }
 
@@ -838,7 +867,7 @@ async function readTomlDescription(filePath: string): Promise<string | null> {
 }
 
 function normalizeLegacyWorkflowReferences(value: string): string {
-  return value.replace(/\bce:([a-z0-9-]+)\b/g, "rg-$1")
+  return value.replace(/\bce:([a-z0-9-]+)\b/g, "rg-$1").replace(/\brg:([a-z0-9-]+)\b/g, "rg-$1")
 }
 
 function normalizeDescriptionFingerprint(value: string): string {
@@ -894,6 +923,7 @@ async function loadLegacyFingerprints(): Promise<LegacyFingerprints> {
         // legacy-only artifact on upgrade.
         const legacyOnly = LEGACY_ONLY_SKILL_DESCRIPTIONS[legacyName]
           ?? LEGACY_ONLY_SKILL_DESCRIPTIONS[currentSkillNameForLegacy(legacyName)]
+          ?? LEGACY_ONLY_SKILL_DESCRIPTIONS[ceNameForLegacy(legacyName)]
         if (legacyOnly) skills.set(legacyName, legacyOnly)
       }
 
@@ -906,6 +936,7 @@ async function loadLegacyFingerprints(): Promise<LegacyFingerprints> {
         }
         const legacyOnly = LEGACY_ONLY_AGENT_DESCRIPTIONS[legacyName]
           ?? LEGACY_ONLY_AGENT_DESCRIPTIONS[currentAgentNameForLegacy(legacyName)]
+          ?? LEGACY_ONLY_AGENT_DESCRIPTIONS[ceNameForLegacy(legacyName)]
         if (legacyOnly) agents.set(legacyName, legacyOnly)
       }
 
@@ -938,12 +969,12 @@ async function loadLegacyFingerprints(): Promise<LegacyFingerprints> {
 
 function promptSkillNamesForLegacy(fileName: string): string[] {
   switch (fileName) {
-    case "rg-review.md":
-      return ["rg-review", "rg-code-review", "rg:review"]
+    case "ce-review.md":
+      return ["rg-review", "ce-code-review", "rg:review"]
     default: {
       const skillName = path.basename(fileName, ".md")
-      const legacyWorkflowName = skillName.startsWith("rg-")
-        ? skillName.replace(/^rg-/, "rg:")
+      const legacyWorkflowName = skillName.startsWith("ce-")
+        ? skillName.replace(/^ce-/, "ce:")
         : skillName
       return legacyWorkflowName === skillName
         ? [skillName]
@@ -1189,7 +1220,7 @@ export async function cleanupStalePrompts(promptsDir: string): Promise<number> {
  * renaming a file into `rg-engineering/legacy-backup/`.
  *
  * Verdicts:
- *   - `"rg-owned"`: body + frontmatter fingerprint match a known
+ *   - `"ce-owned"`: body + frontmatter fingerprint match a known
  *     rg-engineering prompt-wrapper shape. Safe to move.
  *   - `"foreign"`: we have a fingerprint on record for this filename and the
  *     file does NOT match it. A user or sibling plugin authored this file —
@@ -1210,7 +1241,7 @@ export async function cleanupStalePrompts(promptsDir: string): Promise<number> {
  * lets callers keep the historical allow-list behavior for those while still
  * gating the realistic collision vectors.
  */
-export type CodexPromptOwnership = "rg-owned" | "foreign" | "unknown"
+export type CodexPromptOwnership = "ce-owned" | "foreign" | "unknown"
 
 export async function classifyCodexLegacyPromptOwnership(
   promptPath: string,
@@ -1220,5 +1251,5 @@ export async function classifyCodexLegacyPromptOwnership(
   const hasFingerprint = prompts.has(fileName) || fileName in LEGACY_PROMPT_DESCRIPTION_ALIASES
   if (!hasFingerprint) return "unknown"
   const ceOwned = await isLegacyPromptWrapper(promptPath, prompts.get(fileName))
-  return ceOwned ? "rg-owned" : "foreign"
+  return ceOwned ? "ce-owned" : "foreign"
 }

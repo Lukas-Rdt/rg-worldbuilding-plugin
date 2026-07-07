@@ -43,7 +43,7 @@ Before going online, check if curated knowledge already exists in skills:
 
 ### Phase 1.5: MANDATORY Deprecation Check (for external APIs/services)
 
-**Before recommending any external API, OAuth flow, SDK, or third-party servirg:**
+**Before recommending any external API, OAuth flow, SDK, or third-party service:**
 
 1. Search for deprecation: `"[API name] deprecated [current year] sunset shutdown"`
 2. Search for breaking changes: `"[API name] breaking changes migration"`

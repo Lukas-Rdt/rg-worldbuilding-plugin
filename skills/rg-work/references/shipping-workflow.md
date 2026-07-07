@@ -80,7 +80,7 @@ This file contains the shipping workflow (Phase 3-4). It is loaded when all Phas
 
 1. **Prepare Validation Context**
 
-   Do not try to launch a dedicated CE evidenrg-capture workflow. Modern harnesses provide their own browser, screenshot, terminal recording, and artifact capture tools; use those directly only when the user asks or when the artifact already exists.
+   Do not try to launch a dedicated CE evidence-capture workflow. Modern harnesses provide their own browser, screenshot, terminal recording, and artifact capture tools; use those directly only when the user asks or when the artifact already exists.
 
    Note whether the completed work has observable behavior (UI rendering, CLI output, API/library behavior with a runnable example, generated artifacts, or workflow output), and summarize any manual validation performed. If the user supplied evidence (URL, markdown embed, local artifact path), pass it to `rg-commit-push-pr` as PR-description context.
 

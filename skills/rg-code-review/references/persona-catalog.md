@@ -29,7 +29,7 @@ Spawned when the orchestrator identifies relevant patterns in the diff. The orch
 | Persona | Agent | Select when diff touches... |
 |---------|-------|---------------------------|
 | `security` | `security-reviewer` | Auth middleware, public endpoints, user input handling, permission checks, secrets management |
-| `performance` | `performanrg-reviewer` | Database queries, ORM calls, loop-heavy data transforms, caching layers, async/concurrent code |
+| `performance` | `performance-reviewer` | Database queries, ORM calls, loop-heavy data transforms, caching layers, async/concurrent code |
 | `api-contract` | `api-contract-reviewer` | Route definitions, serializer/interface changes, event schemas, exported type signatures, API versioning |
 | `data-migration` | `data-migration-reviewer` | Migration files, schema dumps (`db/schema.rb`, `structure.sql`), backfill scripts, data transformations — **not** model/query-only changes without migration artifacts |
 | `reliability` | `reliability-reviewer` | Error handling, retry logic, circuit breakers, timeouts, background jobs, async handlers, health checks |

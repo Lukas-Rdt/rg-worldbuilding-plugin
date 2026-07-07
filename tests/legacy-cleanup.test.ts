@@ -47,7 +47,7 @@ const HISTORICAL_AGENT_DESCRIPTIONS: Record<string, string> = {
   "rg-security-sentinel":
     "Performs security audits for vulnerabilities, input validation, auth/authz, hardcoded secrets, and OWASP compliance. Use when reviewing code for security issues or before deployment.",
   "rg-session-historian":
-    "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `rg-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/rg-sessions` (or another caller that runs the full discovery + extract pipeline first).",
+    "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `ce-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/ce-sessions` (or another caller that runs the full discovery + extract pipeline first).",
   "rg-slack-researcher":
     "Searches Slack for organizational context -- decisions, constraints, and discussions that may not be documented elsewhere. Use when the user explicitly asks to search Slack for context during ideation, planning, or brainstorming.",
 }
@@ -124,14 +124,14 @@ describe("cleanupStaleSkillDirs", () => {
 
   test("preserves non-stale directories", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-preserve-"))
-    await createDir(path.join(root, "rg-plan"))
+    await createDir(path.join(root, "ce-plan"))
     await createDir(path.join(root, "rg-commit"))
     await createDir(path.join(root, "custom-user-skill"))
 
     const removed = await cleanupStaleSkillDirs(root)
 
     expect(removed).toBe(0)
-    expect(await exists(path.join(root, "rg-plan"))).toBe(true)
+    expect(await exists(path.join(root, "ce-plan"))).toBe(true)
     expect(await exists(path.join(root, "rg-commit"))).toBe(true)
     expect(await exists(path.join(root, "custom-user-skill"))).toBe(true)
   })
@@ -187,9 +187,9 @@ describe("cleanupStaleSkillDirs", () => {
     expect(removed).toBe(2)
     expect(await exists(path.join(root, "rg-dogfood-beta"))).toBe(false)
     expect(await exists(path.join(root, "rg-polish-beta"))).toBe(false)
-  })
+  });
 
-  test("removes raw colon workflow skill directories", async () => {
+  (process.platform === "win32" ? test.skip : test)("removes raw colon workflow skill directories", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-colon-workflows-"))
     await createDir(
       path.join(root, "rg:plan"),
@@ -219,9 +219,9 @@ describe("cleanupStaleSkillDirs", () => {
     expect(await exists(path.join(root, "rg:plan"))).toBe(false)
     expect(await exists(path.join(root, "workflows:review"))).toBe(false)
     expect(await exists(path.join(root, "rg:plan-beta"))).toBe(false)
-  })
+  });
 
-  test("removes workflow skill dirs whose shipped descriptions drifted", async () => {
+  (process.platform === "win32" ? test.skip : test)("removes workflow skill dirs whose shipped descriptions drifted", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-workflow-drifted-desc-"))
     const oldBrainstormDescription =
       "Explore requirements and approaches through collaborative dialogue, then write a right-sized requirements document. Use when the user says \"let's brainstorm\", \"what should we build\", or \"help me think through X\", presents a vague or ambitious feature request, or seems unsure about scope or direction -- even without explicitly asking to brainstorm."
@@ -254,22 +254,22 @@ describe("cleanupStaleSkillDirs", () => {
     expect(await exists(path.join(root, "workflows:plan"))).toBe(false)
   })
 
-  test("removes a retired rg-work-beta skill dir via its last-shipped description", async () => {
-    // Regression: once rg-work-beta is removed from the plugin, loadLegacyFingerprints
+  test("removes a retired ce-work-beta skill dir via its last-shipped description", async () => {
+    // Regression: once ce-work-beta is removed from the plugin, loadLegacyFingerprints
     // can no longer read its (deleted) SKILL.md, so the fingerprint comes from
-    // LEGACY_ONLY_SKILL_DESCRIPTIONS. Without that entry, skills.get("rg-work-beta")
+    // LEGACY_ONLY_SKILL_DESCRIPTIONS. Without that entry, skills.get("ce-work-beta")
     // stays undefined and isLegacyPluginOwned returns false before deleting, leaving
     // the stale install dir behind on upgrade.
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-retired-skill-"))
     await createDir(
-      path.join(root, "rg-work-beta"),
-      skillContent("rg-work-beta", "[BETA] Execute rg-work with external delegate support."),
+      path.join(root, "ce-work-beta"),
+      skillContent("ce-work-beta", "[BETA] Execute ce-work with external delegate support."),
     )
 
     const removed = await cleanupStaleSkillDirs(root)
 
     expect(removed).toBe(1)
-    expect(await exists(path.join(root, "rg-work-beta"))).toBe(false)
+    expect(await exists(path.join(root, "ce-work-beta"))).toBe(false)
   })
 
   test("returns 0 when directory does not exist", async () => {
@@ -333,45 +333,45 @@ describe("cleanupStaleSkillDirs", () => {
       ),
     )
     await createDir(
-      path.join(root, "rg-onboarding"),
+      path.join(root, "ce-onboarding"),
       skillContent(
-        "rg-onboarding",
+        "ce-onboarding",
         "Generate or regenerate ONBOARDING.md to help new contributors understand a codebase. Use when the user asks to 'create onboarding docs', 'generate ONBOARDING.md', 'document this project for new developers', 'write onboarding documentation', 'vonboard', 'vonboarding', 'prepare this repo for a new contributor', 'refresh the onboarding doc', or 'update ONBOARDING.md'. Also use when someone needs to onboard a new team member and wants a written artifact, or when a codebase lacks onboarding documentation and the user wants to generate one.",
       ),
     )
     await createDir(
-      path.join(root, "rg-andrew-kane-gem-writer"),
+      path.join(root, "ce-andrew-kane-gem-writer"),
       skillContent(
-        "rg-andrew-kane-gem-writer",
+        "ce-andrew-kane-gem-writer",
         "This skill should be used when writing Ruby gems following Andrew Kane's proven patterns and philosophy. It applies when creating new Ruby gems, refactoring existing gems, designing gem APIs, or when clean, minimal, production-ready Ruby library code is needed. Triggers on requests like \"create a gem\", \"write a Ruby library\", \"design a gem API\", or mentions of Andrew Kane's style.",
       ),
     )
     await createDir(
-      path.join(root, "rg-changelog"),
-      skillContent("rg-changelog", "Create engaging changelogs for recent merges to main branch"),
+      path.join(root, "ce-changelog"),
+      skillContent("ce-changelog", "Create engaging changelogs for recent merges to main branch"),
     )
     await createDir(
-      path.join(root, "rg-deploy-docs"),
-      skillContent("rg-deploy-docs", "Validate and prepare documentation for GitHub Pages deployment"),
+      path.join(root, "ce-deploy-docs"),
+      skillContent("ce-deploy-docs", "Validate and prepare documentation for GitHub Pages deployment"),
     )
     await createDir(
-      path.join(root, "rg-dspy-ruby"),
+      path.join(root, "ce-dspy-ruby"),
       skillContent(
-        "rg-dspy-ruby",
+        "ce-dspy-ruby",
         "Build type-safe LLM applications with DSPy.rb — Ruby's programmatic prompt framework with signatures, modules, agents, and optimization. Use when implementing predictable AI features, creating LLM signatures and modules, configuring language model providers, building agent systems with tools, optimizing prompts, or testing LLM-powered functionality in Ruby applications.",
       ),
     )
     await createDir(
-      path.join(root, "rg-every-style-editor"),
+      path.join(root, "ce-every-style-editor"),
       skillContent(
-        "rg-every-style-editor",
+        "ce-every-style-editor",
         "This skill should be used when reviewing or editing copy to ensure adherence to Every's style guide. It provides a systematic line-by-line review process for grammar, punctuation, mechanics, and style guide compliance.",
       ),
     )
     await createDir(
-      path.join(root, "rg-update"),
+      path.join(root, "ce-update"),
       `---
-name: rg-update
+name: ce-update
 description: |
   Check if the rg-engineering plugin is up to date and recommend the
   update command if not. Use when the user says "update compound engineering",
@@ -381,7 +381,7 @@ description: |
   Code — it relies on the plugin harness cache layout.
 ---
 
-# rg-update
+# ce-update
 `,
     )
     await createDir(
@@ -398,13 +398,13 @@ description: |
     expect(await exists(path.join(root, "feature-video"))).toBe(false)
     expect(await exists(path.join(root, "reproduce-bug"))).toBe(false)
     expect(await exists(path.join(root, "claude-permissions-optimizer"))).toBe(false)
-    expect(await exists(path.join(root, "rg-onboarding"))).toBe(false)
-    expect(await exists(path.join(root, "rg-andrew-kane-gem-writer"))).toBe(false)
-    expect(await exists(path.join(root, "rg-changelog"))).toBe(false)
-    expect(await exists(path.join(root, "rg-deploy-docs"))).toBe(false)
-    expect(await exists(path.join(root, "rg-dspy-ruby"))).toBe(false)
-    expect(await exists(path.join(root, "rg-every-style-editor"))).toBe(false)
-    expect(await exists(path.join(root, "rg-update"))).toBe(false)
+    expect(await exists(path.join(root, "ce-onboarding"))).toBe(false)
+    expect(await exists(path.join(root, "ce-andrew-kane-gem-writer"))).toBe(false)
+    expect(await exists(path.join(root, "ce-changelog"))).toBe(false)
+    expect(await exists(path.join(root, "ce-deploy-docs"))).toBe(false)
+    expect(await exists(path.join(root, "ce-dspy-ruby"))).toBe(false)
+    expect(await exists(path.join(root, "ce-every-style-editor"))).toBe(false)
+    expect(await exists(path.join(root, "ce-update"))).toBe(false)
     expect(await exists(path.join(root, "git-clean-gone-branches"))).toBe(false)
   })
 
@@ -605,23 +605,23 @@ describe("cleanupStalePrompts", () => {
   test("removes old workflow prompt wrappers", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-prompts-"))
     await createFile(
-      path.join(root, "rg-plan.md"),
+      path.join(root, "ce-plan.md"),
       promptWrapperContent(
-        "rg-plan",
+        "ce-plan",
         await pluginDescription("skills/rg-plan/SKILL.md"),
       ),
     )
     await createFile(
-      path.join(root, "rg-review.md"),
+      path.join(root, "ce-review.md"),
       promptWrapperContent(
-        "rg-review",
+        "ce-code-review",
         await pluginDescription("skills/rg-code-review/SKILL.md"),
       ),
     )
     await createFile(
-      path.join(root, "rg-brainstorm.md"),
+      path.join(root, "ce-brainstorm.md"),
       promptWrapperContent(
-        "rg-brainstorm",
+        "ce-brainstorm",
         await pluginDescription("skills/rg-brainstorm/SKILL.md"),
       ),
     )
@@ -629,8 +629,8 @@ describe("cleanupStalePrompts", () => {
     const removed = await cleanupStalePrompts(root)
 
     expect(removed).toBe(3)
-    expect(await exists(path.join(root, "rg-plan.md"))).toBe(false)
-    expect(await exists(path.join(root, "rg-review.md"))).toBe(false)
+    expect(await exists(path.join(root, "ce-plan.md"))).toBe(false)
+    expect(await exists(path.join(root, "ce-review.md"))).toBe(false)
   })
 
   test("preserves non-stale prompt files", async () => {
@@ -647,40 +647,40 @@ describe("cleanupStalePrompts", () => {
   test("preserves same-named user prompt files when content does not match plugin fingerprints", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-prompts-user-"))
     await createFile(
-      path.join(root, "rg-plan.md"),
+      path.join(root, "ce-plan.md"),
       "---\ndescription: \"A project-local rg-plan helper\"\n---\n\nCustom prompt body\n",
     )
 
     const removed = await cleanupStalePrompts(root)
 
     expect(removed).toBe(0)
-    expect(await exists(path.join(root, "rg-plan.md"))).toBe(true)
+    expect(await exists(path.join(root, "ce-plan.md"))).toBe(true)
   })
 
-  test("removes pre-rename workflow prompt wrappers with rg:* references", async () => {
+  test("removes pre-rename workflow prompt wrappers with ce:* references", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-prompts-legacy-workflow-"))
     await createFile(
-      path.join(root, "rg-plan.md"),
+      path.join(root, "ce-plan.md"),
       legacyWorkflowPromptContent(
-        "rg:plan",
+        "ce:plan",
         (await pluginDescription("skills/rg-plan/SKILL.md"))
-          .replaceAll("rg-", "rg:"),
+          .replaceAll("rg-", "ce:"),
       ),
     )
     await createFile(
-      path.join(root, "rg-work.md"),
+      path.join(root, "ce-work.md"),
       legacyWorkflowPromptContent(
-        "rg:work",
+        "ce:work",
         (await pluginDescription("skills/rg-work/SKILL.md"))
-          .replaceAll("rg-", "rg:"),
+          .replaceAll("rg-", "ce:"),
       ),
     )
 
     const removed = await cleanupStalePrompts(root)
 
     expect(removed).toBe(2)
-    expect(await exists(path.join(root, "rg-plan.md"))).toBe(false)
-    expect(await exists(path.join(root, "rg-work.md"))).toBe(false)
+    expect(await exists(path.join(root, "ce-plan.md"))).toBe(false)
+    expect(await exists(path.join(root, "ce-work.md"))).toBe(false)
   })
 
   test("removes wrappers whose description has drifted (matches a known historical alias)", async () => {
@@ -699,17 +699,17 @@ describe("cleanupStalePrompts", () => {
 
     // v2.66.1-style rg-plan description (no trailing rg-brainstorm guidance).
     await createFile(
-      path.join(root, "rg-plan.md"),
+      path.join(root, "ce-plan.md"),
       promptWrapperContent(
-        "rg-plan",
+        "ce-plan",
         "Create structured plans for any multi-step task -- software features, research workflows, events, study plans, or any goal that benefits from structured breakdown. Also deepen existing plans with interactive review of sub-agent findings.",
       ),
     )
     // v2.55-era rg-work description with a completely different opening.
     await createFile(
-      path.join(root, "rg-work.md"),
+      path.join(root, "ce-work.md"),
       promptWrapperContent(
-        "rg-work",
+        "ce-work",
         "Transform feature descriptions or requirements into implementation plans grounded in repo patterns and research.",
       ),
     )
@@ -726,9 +726,9 @@ describe("cleanupStalePrompts", () => {
     // source used a single-quoted YAML scalar, but parseFrontmatter returns the
     // apostrophe as `let's`; cleanup fingerprints must match the parsed value.
     await createFile(
-      path.join(root, "rg-brainstorm.md"),
+      path.join(root, "ce-brainstorm.md"),
       promptWrapperContent(
-        "rg-brainstorm",
+        "ce-brainstorm",
         "Explore requirements and approaches through collaborative dialogue, then write a right-sized requirements document. Use when the user says \"let's brainstorm\", \"what should we build\", or \"help me think through X\", presents a vague or ambitious feature request, or seems unsure about scope or direction -- even without explicitly asking to brainstorm.",
       ),
     )
@@ -736,10 +736,10 @@ describe("cleanupStalePrompts", () => {
     const removed = await cleanupStalePrompts(root)
 
     expect(removed).toBe(4)
-    expect(await exists(path.join(root, "rg-plan.md"))).toBe(false)
-    expect(await exists(path.join(root, "rg-work.md"))).toBe(false)
+    expect(await exists(path.join(root, "ce-plan.md"))).toBe(false)
+    expect(await exists(path.join(root, "ce-work.md"))).toBe(false)
     expect(await exists(path.join(root, "rg-work-beta.md"))).toBe(false)
-    expect(await exists(path.join(root, "rg-brainstorm.md"))).toBe(false)
+    expect(await exists(path.join(root, "ce-brainstorm.md"))).toBe(false)
   })
 
   test("removes a retired rg-work-beta prompt wrapper built from the last shipped skill", async () => {
@@ -779,23 +779,23 @@ describe("cleanupStalePrompts", () => {
     // else and we refuse to delete it.
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-prompts-foreign-desc-"))
     await createFile(
-      path.join(root, "rg-plan.md"),
+      path.join(root, "ce-plan.md"),
       promptWrapperContent(
-        "rg-plan",
+        "ce-plan",
         "A sibling plugin's rg-plan wrapper. This description has never been shipped by rg-engineering, so cleanup must preserve the file.",
       ),
     )
     await createFile(
-      path.join(root, "rg-brainstorm.md"),
+      path.join(root, "ce-brainstorm.md"),
       promptWrapperContent(
-        "rg-brainstorm",
+        "ce-brainstorm",
         "Fork-specific brainstorm wrapper with a description rg-engineering has never shipped.",
       ),
     )
     await createFile(
-      path.join(root, "rg-work.md"),
+      path.join(root, "ce-work.md"),
       promptWrapperContent(
-        "rg-work",
+        "ce-work",
         "Another plugin's rg-work prompt wrapper; keeps the rg-* namespace but has its own wording.",
       ),
     )
@@ -803,9 +803,9 @@ describe("cleanupStalePrompts", () => {
     const removed = await cleanupStalePrompts(root)
 
     expect(removed).toBe(0)
-    expect(await exists(path.join(root, "rg-plan.md"))).toBe(true)
-    expect(await exists(path.join(root, "rg-brainstorm.md"))).toBe(true)
-    expect(await exists(path.join(root, "rg-work.md"))).toBe(true)
+    expect(await exists(path.join(root, "ce-plan.md"))).toBe(true)
+    expect(await exists(path.join(root, "ce-brainstorm.md"))).toBe(true)
+    expect(await exists(path.join(root, "ce-work.md"))).toBe(true)
   })
 
   test("preserves user files whose body is not the plugin-generated boilerplate", async () => {
@@ -814,19 +814,19 @@ describe("cleanupStalePrompts", () => {
     // not carry the plugin-generated instruction sentence in their body.
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-prompts-user-body-"))
     await createFile(
-      path.join(root, "rg-plan.md"),
+      path.join(root, "ce-plan.md"),
       `---\ndescription: "User-authored rg-plan helper"\n---\n\nThis prompt does not invoke the rg-plan skill — it is a private workflow.\n`,
     )
     await createFile(
-      path.join(root, "rg-work.md"),
+      path.join(root, "ce-work.md"),
       `---\ndescription: "Execute work efficiently while maintaining quality and finishing features"\n---\n\nCustom body that mentions the rg-work skill but not via the plugin's instruction boilerplate.\n`,
     )
 
     const removed = await cleanupStalePrompts(root)
 
     expect(removed).toBe(0)
-    expect(await exists(path.join(root, "rg-plan.md"))).toBe(true)
-    expect(await exists(path.join(root, "rg-work.md"))).toBe(true)
+    expect(await exists(path.join(root, "ce-plan.md"))).toBe(true)
+    expect(await exists(path.join(root, "ce-work.md"))).toBe(true)
   })
 })
 

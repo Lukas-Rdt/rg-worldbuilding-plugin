@@ -10,8 +10,8 @@ Use this shape when converting Riffrec evidence into a durable brainstorm or pla
 - **Severity:** P0/P1/P2/P3
 - **Observed:** <What happened, grounded in transcript/events/screenshots>
 - **Expected:** <What the user appeared to expect or what the product should do>
-- **Evidenrg:** <Moment IDs and screenshot links>
-- **Confidenrg:** High/Medium/Low, with reason
+- **Evidence:** <Moment IDs and screenshot links>
+- **Confidence:** High/Medium/Low, with reason
 - **Requirement candidates:** R1, R2
 ```
 

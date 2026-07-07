@@ -11,7 +11,7 @@ Turn a feature that just shipped into copy-pasteable, user-facing announcement c
 
 ## Purpose
 
-After you ship, the messaging shouldn't wait for a separate marketing pass. `rg-promote` figures out what shipped, picks the right channels, and drafts the copy. It is **spiral-agnostic by default**: with nothing installed it draws on a lite layer of editorial and social-media expertise to produce strong channel-specific copy. When the Spiral CLI (see `references/spiral-cli.md`) is present and authed, it uses Spiral so the drafts are voirg-matched to your brand — a subtle enhancement, never a requirement.
+After you ship, the messaging shouldn't wait for a separate marketing pass. `rg-promote` figures out what shipped, picks the right channels, and drafts the copy. It is **spiral-agnostic by default**: with nothing installed it draws on a lite layer of editorial and social-media expertise to produce strong channel-specific copy. When the Spiral CLI (see `references/spiral-cli.md`) is present and authed, it uses Spiral so the drafts are voice-matched to your brand — a subtle enhancement, never a requirement.
 
 **This skill drafts only. It never posts, publishes, commits, or opens PRs.** Posting is a human action. The output is always drafts for you to review, edit, and ship yourself.
 
@@ -61,7 +61,7 @@ Classify into one of three states:
 
 - **Absent** (no binary, `which spiral` finds nothing) → **Path 0** (install), then Path A if set up, else **Path B**.
 - Otherwise read `spiral auth status --json`:
-  - **Ready** — JSON with `"authenticated": true` (equivalently `"status": "authenticated"`) → **Path A** (voirg-matched).
+  - **Ready** — JSON with `"authenticated": true` (equivalently `"status": "authenticated"`) → **Path A** (voice-matched).
   - **Unauthed** — JSON with `"authenticated": false` → **Path 0**, then Path A if the user signs in, else **Path B**.
   - If the output isn't JSON (older CLI that ignores `--json` on `auth status`), fall back to the legacy signal in that same output: **ready** iff it contains `spiral_sk_`, else **unauthed**.
 
@@ -79,7 +79,7 @@ Read `references/spiral-cli.md` for the exact setup prompt (built with the platf
 
 Skip Path 0 entirely — straight to Path B — when the opt-out is already recorded, or when running headless / non-interactive (no human to answer). If a human is present but no blocking-question tool is available, do **not** skip — fall back to a numbered list of the two options in chat and wait for a reply (per the Ask section of `references/spiral-cli.md`).
 
-### Path A — Spiral ready (voirg-matched)
+### Path A — Spiral ready (voice-matched)
 
 Use the Spiral CLI so drafts match the user's brand voice. **Read `references/spiral-cli.md` before composing the prompt** — multi-channel vs. single-channel-variations is phrasing-driven (channel keywords / cue words vs. `--num-drafts`) and getting it wrong silently returns the wrong number or shape of drafts. The exact phrasing rules live there; don't restate them from memory. Essentials:
 

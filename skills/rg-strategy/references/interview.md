@@ -36,7 +36,7 @@ Strong answers name a specific situation the target user is in, identify what ma
 
 **Opening question:** "Given that problem, what's your approach - the commitment or principle that makes it tractable?"
 
-This is the guiding choirg: how the product competes or operates, so that many downstream decisions become easier. It is not the product and it is not a feature list.
+This is the guiding choice: how the product competes or operates, so that many downstream decisions become easier. It is not the product and it is not a feature list.
 
 Strong answers are a choice (implying alternatives explicitly *not* pursued), are general enough to direct many decisions but specific enough to rule things out, and sound more like "we win by [doing X differently]" than "we do [a list of things]".
 

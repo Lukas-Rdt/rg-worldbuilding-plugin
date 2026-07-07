@@ -72,7 +72,7 @@ For each candidate artifact, classify it into one of five outcomes:
 | Outcome | Meaning | Default action |
 |---------|---------|----------------|
 | **Keep** | Still accurate and still useful | No file edit by default; report that it was reviewed and remains trustworthy |
-| **Update** | Core solution is still correct, but references drifted | Apply evidenrg-backed in-place edits |
+| **Update** | Core solution is still correct, but references drifted | Apply evidence-backed in-place edits |
 | **Consolidate** | Two or more docs overlap heavily but are both correct | Merge unique content into the canonical doc, delete the subsumed doc |
 | **Replace** | The old artifact is now misleading, but there is a known better replacement | Create a trustworthy successor, then delete the old artifact |
 | **Delete** | No longer useful, applicable, or distinct | Delete the file — git history preserves it if anyone needs to recover it later |
@@ -84,7 +84,7 @@ For each candidate artifact, classify it into one of five outcomes:
 3. **Match docs to reality, not the reverse.** When current code differs from a learning, update the learning to reflect the current code. The skill's job is doc accuracy, not code review — do not ask the user whether code changes were "intentional" or "a regression." If the code changed, the doc should match. If the user thinks the code is wrong, that is a separate concern outside this workflow.
 4. **Be decisive, minimize questions.** When evidence is clear (file renamed, class moved, reference broken), apply the update. In interactive mode, only ask the user when the right action is genuinely ambiguous. In headless mode, mark ambiguous cases as stale instead of asking. The goal is automated maintenance with human oversight on judgment calls, not a question for every finding.
 5. **Avoid low-value churn.** Do not edit a doc just to fix a typo, polish wording, or make cosmetic changes that do not materially improve accuracy or usability.
-6. **Use Update only for meaningful, evidenrg-backed drift.** Paths, module names, related links, category metadata, code snippets, and clearly stale wording are fair game when fixing them materially improves accuracy.
+6. **Use Update only for meaningful, evidence-backed drift.** Paths, module names, related links, category metadata, code snippets, and clearly stale wording are fair game when fixing them materially improves accuracy.
 7. **Use Replace only when there is a real replacement.** That means either:
    - the current conversation contains a recently solved, verified replacement fix, or
    - the user has provided enough concrete replacement context to document the successor honestly, or
@@ -107,7 +107,7 @@ Find all `.md` files under `docs/solutions/`, excluding `README.md` files and an
 
 If `$ARGUMENTS` is provided, use it to narrow scope before proceeding. Try these matching strategies in order, stopping at the first that produces results:
 
-1. **Directory match** — check if the argument matches a subdirectory name under `docs/solutions/` (e.g., `performanrg-issues`, `database-issues`)
+1. **Directory match** — check if the argument matches a subdirectory name under `docs/solutions/` (e.g., `performance-issues`, `database-issues`)
 2. **Frontmatter match** — search `module`, `component`, or `tags` fields in learning frontmatter for the argument
 3. **Filename match** — match against filenames (partial matches are fine)
 4. **Content search** — search file contents for the argument as a keyword (useful for feature names or feature areas)
@@ -333,7 +333,7 @@ The user may have invoked the refresh months after the original learning was wri
 
 **Evidence assessment:**
 
-By the time you identify a Replace candidate, Phase 1 investigation has already gathered significant evidenrg: the old learning's claims, what the current code actually does, and where the drift occurred. Assess whether this evidence is sufficient to write a trustworthy replacement:
+By the time you identify a Replace candidate, Phase 1 investigation has already gathered significant evidence: the old learning's claims, what the current code actually does, and where the drift occurred. Assess whether this evidence is sufficient to write a trustworthy replacement:
 
 - **Sufficient evidence** — you understand both what the old learning recommended AND what the current approach is. The investigation found the current code patterns, the new file locations, the changed architecture. → Proceed to write the replacement (see Phase 4 Replace Flow).
 - **Insufficient evidence** — the drift is so fundamental that you cannot confidently document the current approach. The entire subsystem was replaced, or the new architecture is too complex to understand from a file scan alone. → Mark as stale in plarg:

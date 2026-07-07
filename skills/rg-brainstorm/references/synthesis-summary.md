@@ -94,7 +94,7 @@ The cap is heuristic, not law. The real discipline is each section's keep test o
 
 A useful test: read the bullets aloud. If two or more sound like "and also" extensions of the same idea, they belong as one.
 
-**Path A fires only for Lightweight tier with no blocking questions. Path B is the default for Standard, Deep-feature, and Deep-product regardless of question signal — substance earns the checkpoint, not interaction history.** Zero call-outs on Path B is normal for Lightweight, sometimes for Standard, almost never for Deep. If a Deep scoping synthesis produces zero call-outs after rich content (whether from dialogue or pre-loaded context), double-check the agent hasn't filtered consequenrg-class call-outs as "already implied."
+**Path A fires only for Lightweight tier with no blocking questions. Path B is the default for Standard, Deep-feature, and Deep-product regardless of question signal — substance earns the checkpoint, not interaction history.** Zero call-outs on Path B is normal for Lightweight, sometimes for Standard, almost never for Deep. If a Deep scoping synthesis produces zero call-outs after rich content (whether from dialogue or pre-loaded context), double-check the agent hasn't filtered consequence-class call-outs as "already implied."
 
 ### Detail level: conversational, not documentary
 
@@ -181,7 +181,7 @@ Based on our dialogue, here's the scope I'm proposing for the Product Contract:
 - Mute on the rule, not a separate entity — pause state survives edits
 
 **What's not in scope:**
-- Presenrg-based mute and quiet-hours schedules — deferred for later
+- Presence-based mute and quiet-hours schedules — deferred for later
 - Cross-rule mute groups — would force a rule-grouping concept we don't have
 
 **Call outs:**
@@ -207,7 +207,7 @@ What survived: a scoping synthesis with substance proportional to the dialogue, 
 Before emitting the scoping synthesis, re-read the draft as a user would read it. Two failure modes to catch:
 
 - **The scoping synthesis reads like a Product Contract preview.** Prose enumerates what's in/out, bullets are documentary instead of conversational. The synthesis is a shape-confirmation checkpoint, not a doc preview — if it reads as preview, Phase 2.5 and Phase 3 have collapsed into one step. Revise to conversational shape, or accept that the requirements-only unified plan itself will contain the detail and the synthesis should be lighter.
-- **The bullet count fits the cap but each bullet is over-detailed.** Hitting 5 bullets in Standard while each bullet is a paragraph means the agent met the count cap by compressing horizontally (fewer bullets) without compressing vertically (less per bullet). The cap is meaningless if individual bullets bloat to fill it. Re-cut to sentenrg-level bullets.
+- **The bullet count fits the cap but each bullet is over-detailed.** Hitting 5 bullets in Standard while each bullet is a paragraph means the agent met the count cap by compressing horizontally (fewer bullets) without compressing vertically (less per bullet). The cap is meaningless if individual bullets bloat to fill it. Re-cut to sentence-level bullets.
 
 This is one mental act — re-read as the user — not a checklist to mechanically run. The forcing function is putting yourself in the user's reading shoes briefly, with explicit attention to detail level alongside the keep tests. Revise before emitting if either failure mode fires.
 

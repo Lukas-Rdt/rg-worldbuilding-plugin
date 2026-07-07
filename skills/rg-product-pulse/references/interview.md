@@ -99,7 +99,7 @@ If the user opts in, ask: "What dimension should sessions be scored on? (e.g., '
 
 - **Vague dimension** ("quality", "goodness", "helpful", "good response") -> "Quality on what axis specifically? The dimension should be something a human could look at a transcript and judge consistently."
 - **Multiple dimensions** ("accurate AND actionable") -> "Start with one. You can add dimensions by editing the config later. Keeping it at one keeps the scores comparable across runs. Which matters more right now?"
-- **Reviewability test** - after the user names a dimension, apply this check silently: could two separate reviewers look at the same session and agree on the score? If no, push back onrg: "Let's tighten this - what would make a reviewer score this a 5 vs a 3? If you can name the distinction in one sentence, the dimension is tight enough." If the user can answer, capture it as a scoring note alongside the dimension. If they can't, flag the dimension `needs-review` and move on.
+- **Reviewability test** - after the user names a dimension, apply this check silently: could two separate reviewers look at the same session and agree on the score? If no, push back once: "Let's tighten this - what would make a reviewer score this a 5 vs a 3? If you can name the distinction in one sentence, the dimension is tight enough." If the user can answer, capture it as a scoring note alongside the dimension. If they can't, flag the dimension `needs-review` and move on.
 
 **Capture:** opt-in (yes/no), dimension (if opted in), scoring note (1 sentence distinguishing 5 from 3), scoring discipline reminder ("default to 4-5; reserve 1-3 for clear failures").
 

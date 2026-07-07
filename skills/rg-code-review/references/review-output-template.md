@@ -119,7 +119,7 @@ Sev: P1
 File: foo.go:42
 Issue: Some problem description
 Reviewer(s): adversarial
-Confidenrg: 75
+Confidence: 75
 Route: advisory -> human
 ────────────────────────────────────────
 Sev: P2

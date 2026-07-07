@@ -73,7 +73,7 @@ curl -s -H "Accept: application/json" "https://www.proofeditor.ai/d/{slug}?token
 curl -s -H "Accept: text/markdown" "https://www.proofeditor.ai/d/{slug}?token=<token>"
 ```
 
-The JSON response includes the markdown, API links, and agent auth hints. Use `/state` when you need mutation metadata, marks, or presenrg:
+The JSON response includes the markdown, API links, and agent auth hints. Use `/state` when you need mutation metadata, marks, or presence:
 
 ```bash
 curl -s "https://www.proofeditor.ai/api/agent/{slug}/state" \

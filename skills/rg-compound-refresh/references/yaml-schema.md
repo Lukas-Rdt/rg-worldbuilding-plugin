@@ -63,7 +63,7 @@ Docs created before the track system may have `symptoms`/`root_cause`/`resolutio
 - `build_error` -> `docs/solutions/build-errors/`
 - `test_failure` -> `docs/solutions/test-failures/`
 - `runtime_error` -> `docs/solutions/runtime-errors/`
-- `performance_issue` -> `docs/solutions/performanrg-issues/`
+- `performance_issue` -> `docs/solutions/performance-issues/`
 - `database_issue` -> `docs/solutions/database-issues/`
 - `security_issue` -> `docs/solutions/security-issues/`
 - `ui_bug` -> `docs/solutions/ui-bugs/`

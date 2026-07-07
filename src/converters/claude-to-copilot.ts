@@ -125,7 +125,7 @@ export function transformContentForCopilot(body: string): string {
   // 3. Replace plugin colon-namespaced command references (e.g. rg:plan → rg-plan, rg:* → rg-*)
   // Scoped to `rg:` prefix which is the rg-engineering plugin namespace.
   // The lookbehind ensures we only match at word boundaries or after common delimiters,
-  // avoiding corruption of URLs, code identifiers, or unrelated namesparg:value patterns.
+  // avoiding corruption of URLs, code identifiers, or unrelated namespace:value patterns.
   // Note: / is intentionally excluded — slash commands are already handled in step 2.
   // Captures colons in the name segment so multi-colon refs like rg:foo:bar → rg-foo-bar.
   result = result.replace(/(?<=^|[\s,.()`'"])rg:([a-z*][a-z0-9_*:-]*)/gim, (_, name: string) => `rg-${name.replace(/:/g, "-")}`)

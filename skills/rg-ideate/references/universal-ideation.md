@@ -57,7 +57,7 @@ Record the axes (or skip-reason) at the head of generation. Generation will dist
 
 ## How to generate
 
-Generate the full candidate list before critiquing any idea. Use the same six frames as software ideation, described in domain-agnostic language. Each frame is a **starting bias, not a constraint** — follow promising threads across frames. When dispatching frames as parallel sub-agents (Full depth), follow SKILL.md Model Tiers: evidenrg-driven frames (pain, inversion, leverage) on the generation tier; ceiling frames (assumption-breaking, analogy, constraint-flipping) on the ceiling tier.
+Generate the full candidate list before critiquing any idea. Use the same six frames as software ideation, described in domain-agnostic language. Each frame is a **starting bias, not a constraint** — follow promising threads across frames. When dispatching frames as parallel sub-agents (Full depth), follow SKILL.md Model Tiers: evidence-driven frames (pain, inversion, leverage) on the generation tier; ceiling frames (assumption-breaking, analogy, constraint-flipping) on the ceiling tier.
 
 - **Pain and friction** — what is consistently annoying, slow, or broken in the current state of the topic? Generate ideas that remove or reduce that friction.
 - **Inversion, removal, automation** — what would happen if a step were inverted, removed entirely, or automated away? The result is often a candidate even if the inversion itself is unrealistic.

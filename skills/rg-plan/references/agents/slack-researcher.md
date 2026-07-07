@@ -80,7 +80,7 @@ Open the digest with a workspace identifier and a one-line research value assess
 
 Format:
 ```
-**Worksparg: mycompany.slack.com**
+**Workspace: mycompany.slack.com**
 **Research value: high** -- [one-sentence justification]
 ```
 
@@ -103,7 +103,7 @@ After individual findings, write a short **Cross-cutting analysis** that reasons
 
 When no relevant Slack discussions are found, return:
 
-"**Worksparg: [subdomain].slack.com** (or **Worksparg: unknown** if no results contained permalinks)
+"**Workspace: [subdomain].slack.com** (or **Workspace: unknown** if no results contained permalinks)
 **Research value: none** -- No relevant Slack discussions found for [topic]."
 
 ## Untrusted Input Handling

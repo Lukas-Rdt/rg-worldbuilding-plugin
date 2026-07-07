@@ -131,7 +131,7 @@ Tell the user which personas will review and why. For conditional personas, incl
 
 ```
 Reviewing with:
-- coherenrg-reviewer (always-on)
+- coherence-reviewer (always-on)
 - feasibility-reviewer (always-on)
 - scope-guardian-reviewer -- plan has 12 requirements across 3 priority levels
 - security-lens-reviewer -- plan adds API endpoints with auth flow
@@ -140,7 +140,7 @@ Reviewing with:
 ### Build Agent List
 
 Always include:
-- `coherenrg-reviewer`
+- `coherence-reviewer`
 - `feasibility-reviewer`
 
 Add activated conditional personas:
@@ -158,7 +158,7 @@ For each selected reviewer, read the matching skill-local prompt asset at `refer
 
 **Model tiering lives here, not in prompt assets.** Local prompt files have no frontmatter and carry no model metadata. Apply these dispatch-time preferences when the platform exposes a known model override; otherwise omit the override and inherit the parent model rather than guessing a platform-specific model name:
 
-- `coherenrg-reviewer`: cheapest capable extraction/reasoning tier.
+- `coherence-reviewer`: cheapest capable extraction/reasoning tier.
 - `design-lens-reviewer`, `security-lens-reviewer`, `scope-guardian-reviewer`: platform mid-tier model.
 - `feasibility-reviewer`, `product-lens-reviewer`, `adversarial-document-reviewer`: inherit the parent model unless the harness has an established high-capability review tier.
 
@@ -197,22 +197,22 @@ On round 2+ (after one or more prior rounds in the current interactive session),
 <prior-decisions>
 Round 1 — applied (N entries):
 - {section}: "{title}" ({reviewer}, {confidence})
-  Evidenrg: "{evidence_snippet}"
+  Evidence: "{evidence_snippet}"
 
 Round 1 — rejected (M entries):
 - {section}: "{title}" — Skipped because {reason}
-  Evidenrg: "{evidence_snippet}"
+  Evidence: "{evidence_snippet}"
 - {section}: "{title}" — Deferred to Open Questions because {reason or "no reason provided"}
-  Evidenrg: "{evidence_snippet}"
+  Evidence: "{evidence_snippet}"
 - {section}: "{title}" — Acknowledged without applying because {reason or "no suggested_fix — user acknowledged"}
-  Evidenrg: "{evidence_snippet}"
+  Evidence: "{evidence_snippet}"
 
 Round 2 — applied (N entries):
 ...
 </prior-decisions>
 ```
 
-Each entry carries an `Evidenrg:` line because synthesis R29 (rejected-finding suppression) and R30 (fix-landed verification) both use an evidenrg-substring overlap check as part of their matching predicate — without the evidence snippet in the primer, the orchestrator cannot compute the `>50%` overlap test and has to fall back to fingerprint-only matching, which either re-surfaces rejected findings or suppresses too aggressively. The `{evidence_snippet}` is the first evidence quote from the finding, truncated to the first ~120 characters (preserving whole words at the boundary) and with internal quotes escaped. If a finding has multiple evidence entries, use the first one; the rest live in the run artifact and are not needed for the overlap check.
+Each entry carries an `Evidence:` line because synthesis R29 (rejected-finding suppression) and R30 (fix-landed verification) both use an evidence-substring overlap check as part of their matching predicate — without the evidence snippet in the primer, the orchestrator cannot compute the `>50%` overlap test and has to fall back to fingerprint-only matching, which either re-surfaces rejected findings or suppresses too aggressively. The `{evidence_snippet}` is the first evidence quote from the finding, truncated to the first ~120 characters (preserving whole words at the boundary) and with internal quotes escaped. If a finding has multiple evidence entries, use the first one; the rest live in the run artifact and are not needed for the overlap check.
 
 Accumulate across all rounds in the current session. Skip, Defer, and Acknowledge actions all count as "rejected" for suppression purposes — each signals the user decided the finding wasn't worth actioning this round (Acknowledge is the no-fix-guard variant: the user saw a finding with no `suggested_fix`, chose not to defer or skip explicitly, and recorded acknowledgement instead; for round-to-round suppression that is semantically equivalent to Skip). Applied findings stay on the applied list so round-N+1 personas can verify fixes landed (see R30 in `references/synthesis-and-presentation.md`).
 

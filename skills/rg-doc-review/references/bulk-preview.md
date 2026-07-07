@@ -68,7 +68,7 @@ Skipping (2):
 
 ## Per-finding line format
 
-Each line uses the compressed form of the framing-quality guidance from the subagent template (observable-consequenrg-first, no internal section numbering unless needed to locate). The one-line summary is drawn from the persona-produced `why_it_matters` by taking the first sentence (and, when the first sentence is too long for the preview width, paraphrasing it tightly to fit).
+Each line uses the compressed form of the framing-quality guidance from the subagent template (observable-consequence-first, no internal section numbering unless needed to locate). The one-line summary is drawn from the persona-produced `why_it_matters` by taking the first sentence (and, when the first sentence is too long for the preview width, paraphrasing it tightly to fit).
 
 - **Shape:** `[<severity>] <section> — <one-line summary>`
 - **Width target:** keep lines near 80 columns so the preview renders cleanly in narrow terminals. Truncate with ellipsis when necessary.

@@ -48,7 +48,7 @@ There is deliberately no separate "don't ask again" option: **dismissing is itse
 
 ### Act on the choice
 
-- **Sign in to Spiral** (installed, unauthed) — the agent runs `spiral login --json` itself. It's non-blocking, and the **API key never touches the agent** (the token is exchanged server->CLI via a devirg-code flow). Parse the JSON `status`:
+- **Sign in to Spiral** (installed, unauthed) — the agent runs `spiral login --json` itself. It's non-blocking, and the **API key never touches the agent** (the token is exchanged server->CLI via a device-code flow). Parse the JSON `status`:
   - `already_authenticated` — `{ "authenticated": true, "status": "already_authenticated", "prefix": "..." }`: a credential already exists; nothing to approve. Go to Path A. (To switch accounts the user runs `spiral logout` first.)
   - `pending` — `{ "status": "pending", "auth_url": "...", "user_code": "ABCD-2345", "expires_in": 900 }`: surface the `auth_url` for the user to open and approve in their browser (the `user_code` is embedded in the URL — show it too so they can confirm it matches), then wait. Once the user says they've approved, confirm by running `spiral auth status --json`: it returns `"authenticated": true` when claimed, or `"status": "pending"` if not yet (re-check, don't busy-loop with sleeps — let the user's confirmation drive the re-check). If it stays unclaimed or the code expires (~`expires_in`s), offer to retry or fall to Path B. On success -> Path A.
   - **Never have the user paste an API key into chat** — with agent login the agent never handles the key at all.

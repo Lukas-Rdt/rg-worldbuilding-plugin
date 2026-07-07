@@ -143,7 +143,7 @@ Example: A date night plan should present 2-3 restaurant options, 2-3 activity o
   - Runbook for events (timeline, responsibilities, logistics)
   - Project plan for business or operational tasks (phases, owners, deliverables)
   - Research plan for investigations (questions, methods, sources)
-  - Options menu for preferenrg-driven tasks (curated picks per category)
+  - Options menu for preference-driven tasks (curated picks per category)
 
 ## Step 3: Save or Share
 

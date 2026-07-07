@@ -19,30 +19,30 @@ describe("plugin legacy artifacts", () => {
 
     // Historical CE skills (renamed/removed since) are detected. These are
     // explicitly enumerated in EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN.
-    expect(artifacts.skills).toContain("rg-plan")
-    expect(artifacts.skills).toContain("rg:plan")
-    expect(artifacts.skills).toContain("rg:plan-beta")
-    expect(artifacts.skills).toContain("rg-review")
-    expect(artifacts.skills).toContain("rg:review-beta")
-    expect(artifacts.skills).toContain("rg-document-review")
+    expect(artifacts.skills).toContain("ce-plan")
+    expect(artifacts.skills).toContain("ce:plan")
+    expect(artifacts.skills).toContain("ce:plan-beta")
+    expect(artifacts.skills).toContain("ce-review")
+    expect(artifacts.skills).toContain("ce:review-beta")
+    expect(artifacts.skills).toContain("ce-document-review")
     expect(artifacts.skills).toContain("demo-reel")
-    expect(artifacts.skills).toContain("rg:polish-beta")
-    expect(artifacts.skills).toContain("rg:release-notes")
-    expect(artifacts.skills).toContain("rg-update")
+    expect(artifacts.skills).toContain("ce:polish-beta")
+    expect(artifacts.skills).toContain("ce:release-notes")
+    expect(artifacts.skills).toContain("ce-update")
     expect(artifacts.skills).toContain("creating-agent-skills")
     expect(artifacts.skills).toContain("repo-research-analyst")
     expect(artifacts.skills).toContain("bug-reproduction-validator")
     expect(artifacts.skills).toContain("report-bug")
     expect(artifacts.skills).toContain("reproduce-bug")
     expect(artifacts.skills).toContain("resolve_pr_parallel")
-    expect(artifacts.skills).toContain("rg-demo-reel")
-    expect(artifacts.skills).toContain("rg-agent-native-architecture")
+    expect(artifacts.skills).toContain("ce-demo-reel")
+    expect(artifacts.skills).toContain("ce-agent-native-architecture")
     // Removed standalone CE agent names are intentionally swept now that the
     // plugin ships those behaviors as skill-local prompt assets.
-    expect(artifacts.skills).toContain("rg-repo-research-analyst")
-    expect(artifacts.skills).toContain("rg-learnings-researcher")
-    expect(artifacts.agents).toContain("rg-repo-research-analyst.toml")
-    expect(artifacts.agents).toContain("rg-learnings-researcher.toml")
+    expect(artifacts.skills).toContain("ce-repo-research-analyst")
+    expect(artifacts.skills).toContain("ce-learnings-researcher")
+    expect(artifacts.agents).toContain("ce-repo-research-analyst.toml")
+    expect(artifacts.agents).toContain("ce-learnings-researcher.toml")
 
     expect(artifacts.prompts).toContain("codify.md")
     expect(artifacts.prompts).toContain("compound-plan.md")
@@ -54,8 +54,8 @@ describe("plugin legacy artifacts", () => {
     // rg-work-beta is fully retired: both its skill dir and its Codex
     // slash-prompt wrapper (~/.codex/prompts/rg-work-beta.md) must be
     // enumerated so flat installs without a manifest still sweep them.
-    expect(artifacts.skills).toContain("rg-work-beta")
-    expect(artifacts.prompts).toContain("rg-work-beta.md")
+    expect(artifacts.skills).toContain("ce-work-beta")
+    expect(artifacts.prompts).toContain("ce-work-beta.md")
   })
 
   test("Codex legacy detection ignores current bundle skills/agents not in the historical allow-list", () => {
@@ -115,7 +115,7 @@ describe("plugin legacy artifacts", () => {
     expect(artifacts.skills).not.toContain("rg:plan")
     expect(artifacts.skills).not.toContain("rg-plan")
     expect(artifacts.agents).toContain("repo-research-analyst.md")
-    expect(artifacts.agents).toContain("rg-repo-research-analyst.md")
+    expect(artifacts.agents).toContain("ce-repo-research-analyst.md")
 
     expect(artifacts.prompts).toContain("codify.md")
     expect(artifacts.prompts).toContain("compound-plan.md")
@@ -144,7 +144,7 @@ describe("plugin legacy artifacts", () => {
     expect(artifacts.skills).not.toContain("rg-plan")
 
     expect(artifacts.agents).toContain("repo-research-analyst")
-    expect(artifacts.agents).toContain("rg-repo-research-analyst")
+    expect(artifacts.agents).toContain("ce-repo-research-analyst")
   })
 
   test("includes only historical CE artifacts for deprecated Windsurf cleanup", async () => {
@@ -152,7 +152,7 @@ describe("plugin legacy artifacts", () => {
 
     const artifacts = getLegacyWindsurfArtifacts(plugin)
 
-    expect(artifacts.skills).toContain("rg-review")
+    expect(artifacts.skills).toContain("ce-review")
     expect(artifacts.skills).toContain("creating-agent-skills")
     expect(artifacts.skills).toContain("reproduce-bug")
     expect(artifacts.skills).toContain("resolve_pr_parallel")
@@ -162,7 +162,7 @@ describe("plugin legacy artifacts", () => {
     expect(artifacts.workflows).toContain("compound-plan.md")
     expect(artifacts.workflows).toContain("plan.md")
     expect(artifacts.workflows).toContain("workflows-plan.md")
-    expect(artifacts.workflows).toContain("rg-plan.md")
+    expect(artifacts.workflows).toContain("ce-plan.md")
     expect(artifacts.workflows).toContain("technical_review.md")
 
     // Names present in the current CE bundle but NOT on the historical

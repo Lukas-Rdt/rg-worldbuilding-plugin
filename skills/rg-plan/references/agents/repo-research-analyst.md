@@ -83,7 +83,7 @@ Check for monorepo signals in manifests already read in 0.1 and directories alre
 
 If monorepo signals are detected:
 
-1. **When the planning context names a specific service or worksparg:** Scope the remaining scan (0.2--0.4) to that subtree. Also note shared root-level config (CI, shared tooling, root tsconfig) as "shared infrastructure" since it often constrains servirg-level choices.
+1. **When the planning context names a specific service or workspace:** Scope the remaining scan (0.2--0.4) to that subtree. Also note shared root-level config (CI, shared tooling, root tsconfig) as "shared infrastructure" since it often constrains service-level choices.
 2. **When no scope is clear:** Surface the workspace/service map -- list the top-level workspaces or services with a one-line summary of each (name + primary language/framework if obvious from its manifest). Do not enumerate every dependency across every service. Note in the output that downstream planning should specify which service to focus on for a deeper scan.
 
 Keep the monorepo check shallow: root-level manifests plus one directory level into `apps/*/`, `packages/*/`, `services/*/`, and any paths listed in workspace config. Do not recurse unboundedly.

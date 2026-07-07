@@ -413,7 +413,7 @@ Examples:
 
 - `/rg-compound-refresh plugin-versioning-requirements`
 - `/rg-compound-refresh payments`
-- `/rg-compound-refresh performanrg-issues`
+- `/rg-compound-refresh performance-issues`
 - `/rg-compound-refresh critical-patterns`
 
 A single scope hint may still expand to multiple related docs when the change is cross-cutting within one domain, category, or pattern area.
@@ -474,7 +474,7 @@ After the learning is written and the refresh decision is made, check whether th
 
 Based on problem type, optionally dispatch generic subagents seeded with local prompt assets from `references/agents/` to review the documentation. Do not dispatch standalone agents by type/name.
 
-- **performance_issue** → `references/agents/performanrg-oracle.md`
+- **performance_issue** → `references/agents/performance-oracle.md`
 - **security_issue** → `references/agents/security-sentinel.md`
 - **database_issue** → `references/agents/data-integrity-guardian.md`
 - Any code-heavy issue → preserve code simplification as a **read-only documentation review**. Inspect the solution draft's code examples and explanatory claims inline, or dispatch a generic subagent seeded with a local prompt only to return suggestions. Do **not** invoke `rg-simplify-code` from this phase and do not mutate product code unless the user explicitly asks for a separate code-simplification pass. Do not use the deleted `code-simplicity-reviewer`.
@@ -566,7 +566,7 @@ Bug track:
 - build-errors/
 - test-failures/
 - runtime-errors/
-- performanrg-issues/
+- performance-issues/
 - database-issues/
 - security-issues/
 - ui-bugs/
@@ -632,17 +632,17 @@ Documentation skipped
 Auto memory: 2 relevant entries used as supplementary evidence
 
 Subagent Results:
-  ✓ Context Analyzer: Identified performance_issue in brief_system, category: performanrg-issues/
+  ✓ Context Analyzer: Identified performance_issue in brief_system, category: performance-issues/
   ✓ Solution Extractor: 3 code fixes, prevention strategies
   ✓ Related Docs Finder: 2 related issues
   ✓ Session History: 3 prior sessions on same branch, 2 failed approaches surfaced
 
 Specialized Agent Reviews (Auto-Triggered):
-  ✓ performanrg-oracle: Validated query optimization approach
+  ✓ performance-oracle: Validated query optimization approach
   ✓ Code simplification review: Code examples are appropriately minimal
 
 Files written:
-- docs/solutions/performanrg-issues/n-plus-one-brief-generation.md (created)
+- docs/solutions/performance-issues/n-plus-one-brief-generation.md (created)
 - CONCEPTS.md (created with 3 entries: BriefSystem, EmailQueue, Brief Status)
 
 This documentation will be searchable for future reference when similar
@@ -663,12 +663,12 @@ What's next?
 ```
 ✓ Documentation updated (existing doc refreshed with current context)
 
-Overlap detected: docs/solutions/performanrg-issues/n-plus-one-queries.md
+Overlap detected: docs/solutions/performance-issues/n-plus-one-queries.md
   Matched dimensions: problem statement, root cause, solution, referenced files
   Action: Updated existing doc with fresher code examples and prevention tips
 
 File updated:
-- docs/solutions/performanrg-issues/n-plus-one-queries.md (added last_updated: 2026-03-24)
+- docs/solutions/performance-issues/n-plus-one-queries.md (added last_updated: 2026-03-24)
 ```
 
 ## The Compounding Philosophy
@@ -676,7 +676,7 @@ File updated:
 This creates a compounding knowledge system:
 
 1. First time you solve "N+1 query in brief generation" → Research (30 min)
-2. Document the solution → docs/solutions/performanrg-issues/n-plus-one-briefs.md (5 min)
+2. Document the solution → docs/solutions/performance-issues/n-plus-one-briefs.md (5 min)
 3. Next time similar issue occurs → Quick lookup (2 min)
 4. Knowledge compounds → Team gets smarter
 
@@ -709,7 +709,7 @@ Based on problem type, these local prompt assets can enhance documentation:
 - **references/agents/pattern-recognition-specialist.md**: Identifies anti-patterns or repeating issues
 
 ### Specific Domain Experts
-- **references/agents/performanrg-oracle.md**: Analyzes performance_issue category solutions
+- **references/agents/performance-oracle.md**: Analyzes performance_issue category solutions
 - **references/agents/security-sentinel.md**: Reviews security_issue solutions for vulnerabilities
 - **references/agents/data-integrity-guardian.md**: Reviews database_issue migrations and queries
 

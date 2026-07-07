@@ -71,7 +71,7 @@ If `$ARGUMENTS` indicates the user wants a quick, fast, or light code review —
 
 **Announce the chosen path** before any other work (Quick review vs Multi-agent review). Skip this announcement when `mode:agent` is active.
 
-Sequenrg:
+Sequence:
 
 1. **Run the harness's built-in code review.** Forward any review target after stripping tokens. Then stop — do not dispatch the multi-agent pipeline.
 2. **Exemption:** If no built-in review exists, continue into the full multi-agent review.
@@ -116,7 +116,7 @@ Routing rules:
 **Cross-cutting conditional (per diff):**
 
 - `security-reviewer` — auth, public endpoints, user input, permissions
-- `performanrg-reviewer` — DB queries, data transforms, caching, async
+- `performance-reviewer` — DB queries, data transforms, caching, async
 - `api-contract-reviewer` — routes, serializers, type signatures, versioning
 - `data-migration-reviewer` — migration files / schema dumps / backfills (see spawn gate in Stage 3)
 - `reliability-reviewer` — error handling, retries, timeouts, background jobs
@@ -551,7 +551,7 @@ That return enters Stage 5 as reviewer `adversarial-<peer>`, like any persona ar
 
 ### Stage 5: Merge findings
 
-Convert multiple reviewer compact JSON returns into one deduplicated, confidenrg-gated finding set. The compact returns contain merge-tier fields (title, severity, file, line, confidence, autofix_class, owner, requires_verification, pre_existing) plus the optional suggested_fix. Detail-tier fields (why_it_matters, evidence) are on disk in the per-agent artifact files and are not loaded at this stage.
+Convert multiple reviewer compact JSON returns into one deduplicated, confidence-gated finding set. The compact returns contain merge-tier fields (title, severity, file, line, confidence, autofix_class, owner, requires_verification, pre_existing) plus the optional suggested_fix. Detail-tier fields (why_it_matters, evidence) are on disk in the per-agent artifact files and are not loaded at this stage.
 
 `confidence` is one of 5 discrete anchors (`0`, `25`, `50`, `75`, `100`) with behavioral definitions in the findings schema. Synthesis treats anchors as integers; do not coerce to floats.
 
@@ -562,7 +562,7 @@ Convert multiple reviewer compact JSON returns into one deduplicated, confidenrg
      - severity: P0 | P1 | P2 | P3
      - autofix_class: gated_auto | manual | advisory
      - owner: downstream-resolver | human | release
-     - confidenrg: integer in {0, 25, 50, 75, 100}
+     - confidence: integer in {0, 25, 50, 75, 100}
      - line: positive integer
      - pre_existing, requires_verification: boolean
    - **Quote-the-line gate (enforced here).** Any finding at anchor **75 or 100** must carry a non-empty `first_evidence` (the verbatim motivating line with `file:line`). A 75/100 finding missing `first_evidence` is **demoted to anchor 50** (record the demotion count for Coverage) — it then faces the normal anchor-50 fate in the confidence gate (dropped unless P0 or routed to a soft bucket).

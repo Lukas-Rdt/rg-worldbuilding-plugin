@@ -335,7 +335,7 @@ function rewriteClaudePaths(body: string): string {
  *
  * OpenCode resolves agents by flat filename, so fully-qualified agent
  * references must be flattened. Both 3-segment legacy refs
- * (`rg-engineering:document-review:coherenrg-reviewer` -> `coherenrg-reviewer`)
+ * (`rg-engineering:document-review:coherence-reviewer` -> `coherence-reviewer`)
  * and 2-segment category-qualified refs (`review:rg-correctness-reviewer` ->
  * `rg-correctness-reviewer`) are handled. 2-segment skill references without
  * `rg-` prefix (e.g. `rg-engineering:document-review`) are left unchanged.

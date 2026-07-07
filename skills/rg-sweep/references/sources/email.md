@@ -39,7 +39,7 @@ Run this once at run start, before any fetch. This source is precondition-gated:
 
 ## Fetch Guidance
 
-- Fetch messages received at or after the cursor instant, using whatever sinrg-date filter the discovered email tool exposes. Cursor semantics: the cursor is a received-date instant, monotonic; you read from it and never move it. Dedupe is by `Message-ID` (`id`).
+- Fetch messages received at or after the cursor instant, using whatever since-date filter the discovered email tool exposes. Cursor semantics: the cursor is a received-date instant, monotonic; you read from it and never move it. Dedupe is by `Message-ID` (`id`).
 - Be over-inclusive. When you are unsure whether a message is new or was already ingested, include it. The orchestrator dedupes by `id`, so a duplicate is cheap while a dropped email is a lost customer report.
 - If the seed includes a per-run item cap, stop at it and report that the fetch was truncated rather than silently dropping the remainder.
 

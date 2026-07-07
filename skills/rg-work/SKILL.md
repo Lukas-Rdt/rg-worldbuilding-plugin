@@ -222,7 +222,7 @@ Determine how to proceed based on what was provided in `<input_document>` (after
 
    When a unit carries an `Execution note`, honor its intent rather than matching a fixed vocabulary. For notes that ask for proof-first work, write or identify the relevant failing test before implementation for that unit. For notes that ask for characterization, capture existing behavior before changing it. For notes that point away from unit coverage, run the named replacement verification and record why ordinary tests were not the right proof. For units without an `Execution note`, make the same decision from code and test discovery: upgrade to proof-first or characterization-first when behavior changes and the seam is practical; proceed pragmatically only when the task is non-behavioral or the exception is deliberate.
 
-   Guardrails for execution evidenrg:
+   Guardrails for execution evidence:
    - Do not write the test and implementation in the same step when working proof-first
    - Do not skip verifying that a new or changed test fails for the expected reason before implementing the fix or feature
    - Do not over-implement beyond the current behavior slice when working proof-first

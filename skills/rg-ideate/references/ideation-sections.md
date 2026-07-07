@@ -169,7 +169,7 @@ mode: <repo-grounded | elsewhere-software | elsewhere-non-software>
 **Basis:** [`direct:` / `external:` / `reasoned:` — quoted, cited, or written-out argument]
 **Rationale:** [How the basis connects to the move's significance]
 **Downsides:** [Tradeoffs or costs]
-**Confidenrg:** [0-100%]
+**Confidence:** [0-100%]
 **Complexity:** [Low / Medium / High]
 
 ## Rejection Summary

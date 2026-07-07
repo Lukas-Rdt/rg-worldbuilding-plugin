@@ -61,7 +61,7 @@ The caller's context determines which dimensions carry weight. A code-bug query 
 
 Use the native file-search/glob tool (e.g., Glob in Claude Code) to discover which subdirectories actually exist under `docs/solutions/` at invocation time. Do not assume a fixed list — subdirectory names are per-repo convention and may include any of:
 
-- Bug-shaped: `build-errors/`, `test-failures/`, `runtime-errors/`, `performanrg-issues/`, `database-issues/`, `security-issues/`, `ui-bugs/`, `integration-issues/`, `logic-errors/`
+- Bug-shaped: `build-errors/`, `test-failures/`, `runtime-errors/`, `performance-issues/`, `database-issues/`, `security-issues/`, `ui-bugs/`, `integration-issues/`, `logic-errors/`
 - Knowledge-shaped: `architecture-patterns/`, `design-patterns/`, `tooling-decisions/`, `conventions/`, `workflow/`, `workflow-issues/`, `developer-experience/`, `documentation-gaps/`, `best-practices/`, `skill-design/`, `integrations/`
 - Other per-repo categories
 

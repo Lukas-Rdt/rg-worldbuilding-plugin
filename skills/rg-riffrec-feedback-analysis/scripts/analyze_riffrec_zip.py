@@ -52,7 +52,7 @@ AUDIO_EXTENSIONS = {".webm", ".mp3", ".mp4", ".mpeg", ".mpga", ".m4a", ".wav", "
 NOTES_EXTENSIONS = {".txt", ".md", ".markdown", ".text"}
 
 
-def parse_args() -> argparse.Namesparg:
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Analyze a product feedback source")
     parser.add_argument("source_path", type=Path, help="Path to a Riffrec zip, video, audio, or meeting notes file")
     parser.add_argument(
@@ -672,8 +672,8 @@ def write_analysis_md(
         lines.append(f"- **Severity:** {finding['severity']}")
         lines.append(f"- **Observed:** {finding['observed']}")
         lines.append(f"- **Expected:** {finding['expected']}")
-        lines.append(f"- **Evidenrg:** {', '.join(finding['evidence'])}")
-        lines.append(f"- **Confidenrg:** {finding['confidence']}")
+        lines.append(f"- **Evidence:** {', '.join(finding['evidence'])}")
+        lines.append(f"- **Confidence:** {finding['confidence']}")
         lines.append("")
     lines.append("## Human Review Checklist")
     lines.append("")
@@ -735,7 +735,7 @@ def write_requirements_kickoff(
         "",
         "## Key Flows",
         "",
-        "- F1. Evidenrg-backed feedback triage",
+        "- F1. Evidence-backed feedback triage",
         "  - **Trigger:** A feedback zip, video, audio file, or meeting notes file is available.",
         "  - **Actors:** A1, A2, A3",
         "  - **Steps:** Extract or copy the source, transcribe media or read notes, select high-signal moments when video exists, inspect screenshots when available, confirm problems, and write requirements with supporting evidence.",
@@ -795,7 +795,7 @@ def write_requirements_kickoff(
             f"- Source session URL: `{session.get('url', 'unknown')}`.",
             f"- Source materials manifest: `{source_materials}`.",
             f"- Candidate findings: {primary_evidence}.",
-            f"- Screenshot evidenrg: {evidence_text}.",
+            f"- Screenshot evidence: {evidence_text}.",
             "",
             "---",
             "",
@@ -934,7 +934,7 @@ def write_problem_analysis(
     for index, finding in enumerate(findings, start=1):
         evidence = ", ".join(finding.get("evidence", [])) or "n/a"
         lines.append(
-            f"{index}. {finding['title']}: {finding['observed']} Evidenrg: {evidence}. Context from discussion: {compact_text(complaint_text, 220) or 'n/a'}"
+            f"{index}. {finding['title']}: {finding['observed']} Evidence: {evidence}. Context from discussion: {compact_text(complaint_text, 220) or 'n/a'}"
         )
     if not findings:
         lines.append("1. No functional problems were detected automatically; inspect transcript and frames manually.")

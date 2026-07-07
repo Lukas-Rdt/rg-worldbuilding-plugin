@@ -38,4 +38,4 @@ Use the shared anchored rubric (see `subagent-template.md` — Confidence rubric
 - Code quality, non-security architecture, business logic
 - Performance (unless it creates a DoS vector)
 - Style/formatting, scope (product-lens), design (design-lens)
-- Internal consistency (coherenrg-reviewer)
+- Internal consistency (coherence-reviewer)

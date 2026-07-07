@@ -68,7 +68,7 @@ cd "$(git rev-parse --show-toplevel)"      # return to the current checkout root
 
 ## When to create a worktree
 
-Create one (Step 1/2) only when you are **not** already isolated and you need a separate worksparg:
+Create one (Step 1/2) only when you are **not** already isolated and you need a separate workspace:
 
 - Reviewing a PR while keeping the current checkout free for other work
 - Running multiple features in parallel without branch-switching overhead

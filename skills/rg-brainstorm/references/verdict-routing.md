@@ -12,7 +12,7 @@ Open-ended design or scoping where *you'd* have to invent the options ("how shou
 
 ## Offer — do not silently switch
 
-It is one simple choirg: do they want a `/rg-pov` verdict, or not? Make it an *interactive* offer via the platform's blocking question tool, and map the content onto its fields:
+It is one simple choice: do they want a `/rg-pov` verdict, or not? Make it an *interactive* offer via the platform's blocking question tool, and map the content onto its fields:
 
 - The **question prompt** carries the justification, so the user chooses on the merits, not on trust: name the candidate(s); say in one line *why* this is a decision rather than a scoping exercise (you'd be committing to a specific outside thing, not shaping something you've already chosen to build); and state what `/rg-pov` gives them — a decisive, project-grounded verdict on the candidate, weighing fit, migration cost, and whether it's worth it here.
 - The **options are asymmetric, not two co-equal pitches**: **yes** → hand off to `/rg-pov` for that verdict; **no** → stay here and the normal brainstorm simply continues. The decline needs no selling of its own — it is the default path resuming, so keep it a plain "no, keep brainstorming."

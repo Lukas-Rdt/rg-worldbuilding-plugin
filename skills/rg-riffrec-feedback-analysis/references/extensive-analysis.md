@@ -85,7 +85,7 @@ Every source mapping should include:
 - Requirement/example ids, such as `R14`, `AE4`, or `EX17`.
 - File paths with line numbers when practical.
 - A short evidence note from code, not just a file guess.
-- Confidenrg: `High`, `Medium`, `Low`, or `Unknown`.
+- Confidence: `High`, `Medium`, `Low`, or `Unknown`.
 
 Prefer saying "I did not find a current inbox implementation for this surface" over forcing a speculative mapping. Missing surfaces are useful product findings and should stay in the brainstorm.
 
