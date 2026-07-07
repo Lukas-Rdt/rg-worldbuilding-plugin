@@ -1,6 +1,6 @@
-# Compound Engineering
+# RG Engineering
 
-This Gemini extension provides the Compound Engineering skill set for planning,
+This Gemini extension provides the RG Engineering skill set for planning,
 review, implementation, debugging, and release workflows.
 
 Use the installed skills when they match the user's request. Treat this file as

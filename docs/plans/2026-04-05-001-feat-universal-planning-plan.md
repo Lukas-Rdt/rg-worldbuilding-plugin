@@ -10,18 +10,18 @@ origin: docs/brainstorms/2026-04-05-universal-planning-requirements.md
 
 ## Overview
 
-ce:plan currently self-gates on non-software tasks because its description, trigger phrases, and workflow phases are all software-specific. This plan adds a detection stub to Phase 0 that identifies non-software tasks early and routes them to a dedicated reference file (`references/universal-planning.md`) containing a domain-agnostic planning workflow. The software path is completely unchanged.
+rg:plan currently self-gates on non-software tasks because its description, trigger phrases, and workflow phases are all software-specific. This plan adds a detection stub to Phase 0 that identifies non-software tasks early and routes them to a dedicated reference file (`references/universal-planning.md`) containing a domain-agnostic planning workflow. The software path is completely unchanged.
 
 ## Problem Frame
 
-Users reach for `/ce:plan` for any multi-step planning — trip itineraries, study plans, team offsites. The model refuses because ce:plan's language signals software-only use. The structured thinking (ambiguity assessment, research, sequencing, dependencies) is domain-agnostic; only the current implementation is software-specific. (see origin: `docs/brainstorms/2026-04-05-universal-planning-requirements.md`)
+Users reach for `/rg:plan` for any multi-step planning — trip itineraries, study plans, team offsites. The model refuses because rg:plan's language signals software-only use. The structured thinking (ambiguity assessment, research, sequencing, dependencies) is domain-agnostic; only the current implementation is software-specific. (see origin: `docs/brainstorms/2026-04-05-universal-planning-requirements.md`)
 
 ## Requirements Trace
 
-- R1. Update ce:plan YAML description and trigger phrases for non-software planning
+- R1. Update rg:plan YAML description and trigger phrases for non-software planning
 - R2. Detect non-software tasks early in Phase 0
 - R3. Error policy: default to software when uncertain, ask when ambiguous
-- R4. Verify ce:brainstorm doesn't self-gate (confirmed: it doesn't — no changes needed)
+- R4. Verify rg:brainstorm doesn't self-gate (confirmed: it doesn't — no changes needed)
 - R5. Non-software path loads `references/universal-planning.md`, skips Phases 0.2 through 5.1 (all software-specific phases)
 - R6. Ambiguity assessment before planning
 - R7. Focused inline Q&A (~3 questions guideline)
@@ -34,8 +34,8 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 ## Scope Boundaries
 
 - Software planning path is NOT modified — zero changes to Phases 0.2-5.4
-- ce:brainstorm NOT modified — verified domain-agnostic, no self-gating
-- ce:work NOT modified — remains software-only
+- rg:brainstorm NOT modified — verified domain-agnostic, no self-gating
+- rg:work NOT modified — remains software-only
 - R9 (web research) and R10 (local files) deferred to Phase 2 extension
 - No domain-specific templates — quality principles only
 - Pipeline mode (LFG/SLFG): non-software tasks produce a stop message, not a plan
@@ -44,11 +44,11 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 
 ### Relevant Code and Patterns
 
-- `plugins/compound-engineering/skills/ce-plan/SKILL.md` — 688-line skill with phased workflow (0.1-5.4). Detection inserts at Phase 0.1b (after resume, before requirements doc search).
-- `plugins/compound-engineering/skills/ce-plan/references/` — existing reference files loaded via backtick paths: `deepening-workflow.md` (Phase 5.3), `plan-handoff.md` (Phase 5.4), `visual-communication.md` (Phase 4.4). Pattern: "read `references/<file>.md` for [what it contains]"
-- `plugins/compound-engineering/skills/ce-brainstorm/SKILL.md` — description is domain-agnostic ("Explore requirements and approaches through collaborative dialogue"). Does not self-gate.
-- `plugins/compound-engineering/skills/lfg/SKILL.md` — pipeline gate at step 2: "Verify that the ce:plan workflow produced a plan file in `docs/plans/`. If no plan file was created, run `/ce:plan $ARGUMENTS` again." Must handle non-software gracefully.
-- `plugins/compound-engineering/skills/slfg/SKILL.md` — similar pipeline, step 2 records plan path from `docs/plans/`.
+- `plugins/rg-engineering/skills/rg-plan/SKILL.md` — 688-line skill with phased workflow (0.1-5.4). Detection inserts at Phase 0.1b (after resume, before requirements doc search).
+- `plugins/rg-engineering/skills/rg-plan/references/` — existing reference files loaded via backtick paths: `deepening-workflow.md` (Phase 5.3), `plan-handoff.md` (Phase 5.4), `visual-communication.md` (Phase 4.4). Pattern: "read `references/<file>.md` for [what it contains]"
+- `plugins/rg-engineering/skills/rg-brainstorm/SKILL.md` — description is domain-agnostic ("Explore requirements and approaches through collaborative dialogue"). Does not self-gate.
+- `plugins/rg-engineering/skills/lfg/SKILL.md` — pipeline gate at step 2: "Verify that the rg:plan workflow produced a plan file in `docs/plans/`. If no plan file was created, run `/rg:plan $ARGUMENTS` again." Must handle non-software gracefully.
+- `plugins/rg-engineering/skills/slfg/SKILL.md` — similar pipeline, step 2 records plan path from `docs/plans/`.
 
 ### Institutional Learnings
 
@@ -61,9 +61,9 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 
 - **Detection as explicit state checks, not prose**: Detection uses enumerated software signals (code references, programming languages, APIs, etc.) and classifies based on presence/absence, not vague heuristic matching. This follows the state-machine learning.
 - **Reference file extraction justified**: The non-software workflow is ~80-100 lines of entirely different phase instructions. This exceeds the "~20% of skill content, conditional" threshold for extraction per the Plugin AGENTS.md compliance checklist.
-- **Self-contained reference file**: `references/universal-planning.md` handles its own write and handoff rather than reusing Phase 5.2 and plan-handoff.md, because the handoff options differ substantially (no ce:work, no issue creation, user-chosen file location). This duplicates ~8 lines of Proof upload logic and the file-write step. Accepted tradeoff: self-containment is simpler to maintain than conditional notes threaded through the software phases.
+- **Self-contained reference file**: `references/universal-planning.md` handles its own write and handoff rather than reusing Phase 5.2 and plan-handoff.md, because the handoff options differ substantially (no rg:work, no issue creation, user-chosen file location). This duplicates ~8 lines of Proof upload logic and the file-write step. Accepted tradeoff: self-containment is simpler to maintain than conditional notes threaded through the software phases.
 - **Pipeline mode stop signal**: In pipeline mode, detection outputs a clear message and stops. LFG/SLFG get a one-line addition to handle this gracefully rather than retrying.
-- **No ce:brainstorm changes**: Verified domain-agnostic. Repo scan waste on non-software tasks is acceptable — optimizing it is a separate concern.
+- **No rg:brainstorm changes**: Verified domain-agnostic. Repo scan waste on non-software tasks is acceptable — optimizing it is a separate concern.
 
 ## Open Questions
 
@@ -71,8 +71,8 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 
 - **Detection heuristics**: Use explicit signal lists (software: code/repo/language/API/database/test references; non-software: clearly non-software domain + no software signals). Default to software when uncertain.
 - **Quality principles**: Actionable steps, dependency-sequenced, time-aware, resource-identified, contingency-aware, appropriately detailed, domain-appropriate format.
-- **ce:brainstorm self-gating**: Confirmed domain-agnostic. No changes needed.
-- **LFG/SLFG contract**: ce:plan outputs a stop message; LFG/SLFG get a note to handle non-software gracefully.
+- **rg:brainstorm self-gating**: Confirmed domain-agnostic. No changes needed.
+- **LFG/SLFG contract**: rg:plan outputs a stop message; LFG/SLFG get a note to handle non-software gracefully.
 - **Plan file location**: User-chosen via prompt (docs/plans/ if exists, CWD, /tmp, or custom).
 
 ### Deferred to Implementation
@@ -85,30 +85,30 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 
 ## Implementation Units
 
-- [ ] **Unit 1: Update ce:plan YAML frontmatter**
+- [ ] **Unit 1: Update rg:plan YAML frontmatter**
 
-**Goal:** Update the skill description and argument-hint to include non-software planning triggers so the model routes non-software requests to ce:plan.
+**Goal:** Update the skill description and argument-hint to include non-software planning triggers so the model routes non-software requests to rg:plan.
 
 **Requirements:** R1
 
 **Dependencies:** None
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-plan/SKILL.md` (lines 1-4, YAML frontmatter)
+- Modify: `plugins/rg-engineering/skills/rg-plan/SKILL.md` (lines 1-4, YAML frontmatter)
 
 **Approach:**
 - Update `description` to include non-software planning triggers. Keep software triggers intact; add non-software ones alongside.
-- **Routing boundary with ce:brainstorm**: ce:plan is for structuring an already-decided task into an actionable plan; ce:brainstorm is for exploring what to do when uncertain. Include this distinction in trigger phrasing — e.g., ce:plan triggers on "plan this", "break this down", "create a plan for [specific goal]"; ce:brainstorm triggers on "help me think through", "what should we build", "I'm not sure about scope."
+- **Routing boundary with rg:brainstorm**: rg:plan is for structuring an already-decided task into an actionable plan; rg:brainstorm is for exploring what to do when uncertain. Include this distinction in trigger phrasing — e.g., rg:plan triggers on "plan this", "break this down", "create a plan for [specific goal]"; rg:brainstorm triggers on "help me think through", "what should we build", "I'm not sure about scope."
 - Update `argument-hint` to include non-software examples.
-- Keep the description concise — avoid making it so broad that the model over-routes to ce:plan. Include a negative signal where natural (e.g., "for exploratory or ambiguous requests, prefer ce:brainstorm first" — already present, keep it).
+- Keep the description concise — avoid making it so broad that the model over-routes to rg:plan. Include a negative signal where natural (e.g., "for exploratory or ambiguous requests, prefer rg:brainstorm first" — already present, keep it).
 
 **Patterns to follow:**
-- ce:brainstorm's description style: domain-agnostic framing with specific trigger phrases
+- rg:brainstorm's description style: domain-agnostic framing with specific trigger phrases
 
 **Test scenarios:**
-- Happy path: `/ce:plan a 3 day trip to Disney World` triggers ce:plan (previously would not)
-- Happy path: `/ce:plan plan the auth refactor` still triggers ce:plan (no regression)
-- Edge case: Conversational "help me plan my team offsite" — model should consider ce:plan as a candidate (not just ce:brainstorm)
+- Happy path: `/rg:plan a 3 day trip to Disney World` triggers rg:plan (previously would not)
+- Happy path: `/rg:plan plan the auth refactor` still triggers rg:plan (no regression)
+- Edge case: Conversational "help me plan my team offsite" — model should consider rg:plan as a candidate (not just rg:brainstorm)
 
 **Verification:**
 - Description includes both software and non-software trigger phrases
@@ -116,7 +116,7 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 
 ---
 
-- [ ] **Unit 2: Add detection stub to ce:plan SKILL.md**
+- [ ] **Unit 2: Add detection stub to rg:plan SKILL.md**
 
 **Goal:** Insert a non-software detection phase (0.1b) after the resume check (0.1) and before requirements doc search (0.2) that classifies the task and branches to the non-software path when appropriate.
 
@@ -125,7 +125,7 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 **Dependencies:** Unit 3 (the reference file must exist for the detection stub to function in testing, though the SKILL.md edit can be written first)
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-plan/SKILL.md` (insert new section after Phase 0.1, ~line 75)
+- Modify: `plugins/rg-engineering/skills/rg-plan/SKILL.md` (insert new section after Phase 0.1, ~line 75)
 
 **Approach:**
 - New section `#### 0.1b Detect Non-Software Task` placed between Phase 0.1 (resume) and Phase 0.2 (find upstream requirements doc)
@@ -137,7 +137,7 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 - Target: ~20-25 lines of SKILL.md content (slightly larger due to resume handling and task-vs-topic distinction)
 
 **Patterns to follow:**
-- Existing reference file loading pattern: "read `references/deepening-workflow.md` for..." (ce:plan SKILL.md line 681)
+- Existing reference file loading pattern: "read `references/deepening-workflow.md` for..." (rg:plan SKILL.md line 681)
 - State-machine detection pattern from `docs/solutions/skill-design/git-workflow-skills-need-explicit-state-machines.md`
 
 **Test scenarios:**
@@ -166,20 +166,20 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 **Dependencies:** Unit 2 (detection stub references this file)
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-plan/references/universal-planning.md`
+- Create: `plugins/rg-engineering/skills/rg-plan/references/universal-planning.md`
 
 **Approach:**
 - Self-contained workflow with 5 steps: (1) assess ambiguity, (2) focused Q&A if needed, (3) structure the plan using quality principles, (4) prompt for file location, (5) write file and present handoff options. Research capability (R9) is added in Phase 2 when implemented — no placeholder step in v1.
 - Quality principles defined inline: actionable steps, dependency-sequenced, time-aware, resource-identified, contingency-aware, appropriately detailed, domain-appropriate format, research-aware (when the model lacks domain knowledge, offer to research before planning — prompt user first, don't auto-research)
 - File location prompt: docs/plans/ (if exists), CWD, /tmp, or custom path. Use platform's question tool.
-- Handoff options: open in editor, share to Proof, done. NO ce:work (software-only) or issue creation.
-- Frontmatter for non-software plans: `title`, `status`, `date`, and `domain: non-software`. Omit `type`, `origin`, `deepened`. The `domain` field serves as a marker for resume/deepen flows and downstream consumers (LFG gate, ce:work) to recognize non-software plans.
+- Handoff options: open in editor, share to Proof, done. NO rg:work (software-only) or issue creation.
+- Frontmatter for non-software plans: `title`, `status`, `date`, and `domain: non-software`. Omit `type`, `origin`, `deepened`. The `domain` field serves as a marker for resume/deepen flows and downstream consumers (LFG gate, rg:work) to recognize non-software plans.
 - Filename convention: `YYYY-MM-DD-<descriptive-name>-plan.md` (no sequence number or type prefix)
 - Target: ~80-100 lines
 - Follow cross-platform interaction rules: use "the platform's question tool" with named examples
 
 **Patterns to follow:**
-- Existing reference files in ce:plan (`deepening-workflow.md`, `plan-handoff.md`) — header comment explaining when/why the file is loaded
+- Existing reference files in rg:plan (`deepening-workflow.md`, `plan-handoff.md`) — header comment explaining when/why the file is loaded
 - Cross-platform question tool references from Plugin AGENTS.md compliance checklist
 - Backtick-path references for any future sub-references
 
@@ -189,7 +189,7 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 - Happy path: File location prompt shows docs/plans/ only when directory exists; falls back to CWD/tmp/custom when it doesn't
 - Edge case: Very simple request ("plan dinner tonight") → minimal plan, appropriately brief
 - Edge case: Complex request ("plan a 3-month study curriculum for the GRE") → detailed plan with phases, resources, milestones
-- Integration: Handoff options do NOT include ce:work or issue creation
+- Integration: Handoff options do NOT include rg:work or issue creation
 
 **Verification:**
 - Non-software tasks produce domain-appropriate structured plans (not software plan template)
@@ -208,11 +208,11 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 **Dependencies:** Unit 2 (detection stub produces the stop message)
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/lfg/SKILL.md` (after line 14, the ce:plan gate)
-- Modify: `plugins/compound-engineering/skills/slfg/SKILL.md` (after line 13, the ce:plan step)
+- Modify: `plugins/rg-engineering/skills/lfg/SKILL.md` (after line 14, the rg:plan gate)
+- Modify: `plugins/rg-engineering/skills/slfg/SKILL.md` (after line 13, the rg:plan step)
 
 **Approach:**
-- Rewrite the LFG gate as an explicit 3-branch state check (not an advisory note appended to the existing gate): "If ce:plan produced a plan file in `docs/plans/`, proceed. If ce:plan reported the task is non-software and stopped, stop the pipeline and inform the user that LFG requires software tasks. Otherwise, run `/ce:plan $ARGUMENTS` again."
+- Rewrite the LFG gate as an explicit 3-branch state check (not an advisory note appended to the existing gate): "If rg:plan produced a plan file in `docs/plans/`, proceed. If rg:plan reported the task is non-software and stopped, stop the pipeline and inform the user that LFG requires software tasks. Otherwise, run `/rg:plan $ARGUMENTS` again."
 - The non-software branch must appear before the retry branch so it takes precedence.
 - Similar rewrite for SLFG step 2.
 - Keep changes to 2-3 sentences each.
@@ -222,48 +222,48 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 
 **Test scenarios:**
 - Happy path: Software task → LFG proceeds normally (no regression)
-- Error path: Non-software task in LFG → ce:plan outputs stop message → LFG stops gracefully instead of retrying
+- Error path: Non-software task in LFG → rg:plan outputs stop message → LFG stops gracefully instead of retrying
 
 **Test expectation: none** — LFG/SLFG are orchestration skills tested by manual invocation, not automated tests.
 
 **Verification:**
-- LFG does not retry when ce:plan reports non-software
-- SLFG does not retry when ce:plan reports non-software
+- LFG does not retry when rg:plan reports non-software
+- SLFG does not retry when rg:plan reports non-software
 
 ---
 
 - [ ] **Unit 5: Validate and update documentation**
 
-**Goal:** Verify ce:brainstorm doesn't need changes (R4), update README component descriptions if needed, run release validation.
+**Goal:** Verify rg:brainstorm doesn't need changes (R4), update README component descriptions if needed, run release validation.
 
 **Requirements:** R4
 
 **Dependencies:** Units 1-4
 
 **Files:**
-- Read (verify): `plugins/compound-engineering/skills/ce-brainstorm/SKILL.md`
-- Possibly modify: `plugins/compound-engineering/README.md` (if skill descriptions need updating)
+- Read (verify): `plugins/rg-engineering/skills/rg-brainstorm/SKILL.md`
+- Possibly modify: `plugins/rg-engineering/README.md` (if skill descriptions need updating)
 
 **Approach:**
-- Manually test ce:brainstorm with a non-software prompt to verify it doesn't refuse
-- Check if README component tables need description updates for ce:plan
+- Manually test rg:brainstorm with a non-software prompt to verify it doesn't refuse
+- Check if README component tables need description updates for rg:plan
 - Run `bun run release:validate` to ensure plugin consistency
 
 **Test scenarios:**
-- Happy path: ce:brainstorm accepts "plan my team offsite" without refusing
+- Happy path: rg:brainstorm accepts "plan my team offsite" without refusing
 - Integration: `bun run release:validate` passes
 
 **Verification:**
-- ce:brainstorm confirmed domain-agnostic (no changes needed)
+- rg:brainstorm confirmed domain-agnostic (no changes needed)
 - release:validate passes
-- README accurately reflects ce:plan's expanded capability
+- README accurately reflects rg:plan's expanded capability
 
 ## System-Wide Impact
 
-- **Interaction graph:** ce:plan detection stub fires on every invocation. Non-software detection routes to `references/universal-planning.md`. LFG/SLFG get a graceful stop for non-software. ce:brainstorm unchanged.
+- **Interaction graph:** rg:plan detection stub fires on every invocation. Non-software detection routes to `references/universal-planning.md`. LFG/SLFG get a graceful stop for non-software. rg:brainstorm unchanged.
 - **Error propagation:** Detection uncertainty → ask user → user answers → correct path. Detection false negative (non-software → software path) → existing refusal behavior (status quo, not worse). Detection false positive (software → non-software path) → disconnected plan (mitigated by defaulting to software).
 - **State lifecycle risks:** None. Detection is stateless; it runs once at the start of each invocation.
-- **API surface parity:** ce:plan's description change affects how all platforms (Claude Code, Codex, Gemini) route to the skill. The converter copies SKILL.md as-is for skills, so no converter changes needed.
+- **API surface parity:** rg:plan's description change affects how all platforms (Claude Code, Codex, Gemini) route to the skill. The converter copies SKILL.md as-is for skills, so no converter changes needed.
 - **Integration coverage:** Manual testing required — no automated skill behavioral tests in this repo.
 - **Unchanged invariants:** The entire software planning workflow (Phases 0.2-5.4) is not touched. All existing plans, deepening flows, and pipeline behaviors for software tasks are unchanged.
 
@@ -272,19 +272,19 @@ Users reach for `/ce:plan` for any multi-step planning — trip itineraries, stu
 | Risk | Mitigation |
 |------|------------|
 | Detection auto-classification is unreliable (per learnings) | R3 error policy: default to software, ask when uncertain. Monitor false positive rate after release. |
-| Description broadening causes over-routing to ce:plan | Keep non-software triggers specific ("events, study plans") not generic ("any task"). Include negative signal ("for simple questions, ask directly"). |
+| Description broadening causes over-routing to rg:plan | Keep non-software triggers specific ("events, study plans") not generic ("any task"). Include negative signal ("for simple questions, ask directly"). |
 | Non-software plan quality varies without a template | Quality principles provide guardrails. Manual testing with diverse prompts before release. Iterate on principles based on output quality. |
 | LFG retry loop if stop message not handled | Unit 4 adds explicit handling. Test the pipeline path. |
 
 ## Documentation / Operational Notes
 
-- Update `plugins/compound-engineering/README.md` skill description for ce:plan if the table entry mentions software-only planning
+- Update `plugins/rg-engineering/README.md` skill description for rg:plan if the table entry mentions software-only planning
 - No changelog entry needed (handled by release automation)
 - No version bump (per Plugin AGENTS.md contributor rules)
 
 ## Sources & References
 
 - **Origin document:** `docs/brainstorms/2026-04-05-universal-planning-requirements.md`
-- Related code: `plugins/compound-engineering/skills/ce-plan/SKILL.md`, `plugins/compound-engineering/skills/ce-brainstorm/SKILL.md`, `plugins/compound-engineering/skills/lfg/SKILL.md`, `plugins/compound-engineering/skills/slfg/SKILL.md`
-- Related issue: [#517](https://github.com/EveryInc/compound-engineering-plugin/issues/517)
+- Related code: `plugins/rg-engineering/skills/rg-plan/SKILL.md`, `plugins/rg-engineering/skills/rg-brainstorm/SKILL.md`, `plugins/rg-engineering/skills/lfg/SKILL.md`, `plugins/rg-engineering/skills/slfg/SKILL.md`
+- Related issue: [#517](https://github.com/Lukas-Rdt/rg-engineering-plugin/issues/517)
 - Related learnings: `docs/solutions/skill-design/beta-skills-framework.md`, `docs/solutions/skill-design/compound-refresh-skill-improvements.md`, `docs/solutions/skill-design/git-workflow-skills-need-explicit-state-machines.md`

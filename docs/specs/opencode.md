@@ -89,4 +89,4 @@ https://opencode.ai/config.json
   - `~/.config/opencode/skills/*/SKILL.md`
 - OpenCode's plugin system is useful for JS/TS hooks and custom tools, but current docs do not describe a native marketplace command that consumes CE's `.claude-plugin/marketplace.json` and installs the full skills/agents/commands payload.
 - Keep the custom Bun writer until OpenCode documents a native distribution path for packaged skills and agents.
-- The `compound-engineering` plugin currently emits skills and subagent Markdown files for OpenCode. It should not emit deprecated `tools` config; permission config is enough for non-default permission modes.
+- The `rg-engineering` plugin currently emits skills and subagent Markdown files for OpenCode. It should not emit deprecated `tools` config; permission config is enough for non-default permission modes.

@@ -12,12 +12,12 @@ https://docs.cursor.com/customize/model-context-protocol
 
 ## Plugin Marketplace
 
-Compound Engineering is published through the Cursor Plugin Marketplace.
+RG Engineering is published through the Cursor Plugin Marketplace.
 
 In Cursor Agent chat, install with:
 
 ```text
-/add-plugin compound-engineering
+/add-plugin rg-engineering
 ```
 
 Users can also search for "compound engineering" in the plugin marketplace.

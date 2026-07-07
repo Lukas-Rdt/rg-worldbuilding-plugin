@@ -4,7 +4,7 @@ category: workflow
 date: 2026-04-27
 created: 2026-04-27
 severity: medium
-component: ce-commit-push-pr
+component: rg-commit-push-pr
 problem_type: workflow_issue
 tags:
   - branching
@@ -26,7 +26,7 @@ When multiple agent sessions (Claude Code, Cursor, Codex, plus any humans) share
 
 When a session creates a feature branch from local `main` while drift type 2 holds, the new branch silently inherits the unpushed work. The eventual PR opens looking clean to the originating session but appears contaminated on GitHub. Resolving it requires force-push surgery during PR review.
 
-This came in as [issue #707](https://github.com/EveryInc/compound-engineering-plugin/issues/707).
+This came in as [issue #707](https://github.com/Lukas-Rdt/rg-engineering-plugin/issues/707).
 
 ## Why post-facto detection is the wrong tool
 
@@ -50,7 +50,7 @@ You can patch around it (parse stack metadata from PR base refs) but the patches
 
 Prevent at branch creation rather than detect at push or PR time.
 
-`ce-commit-push-pr` Step 4 — the branch-creation path used when the user invokes the skill while on the default branch with working-tree changes — was changed from:
+`rg-commit-push-pr` Step 4 — the branch-creation path used when the user invokes the skill while on the default branch with working-tree changes — was changed from:
 
 ```bash
 git checkout -b <branch-name>

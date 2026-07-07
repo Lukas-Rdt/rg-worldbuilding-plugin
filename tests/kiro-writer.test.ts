@@ -15,7 +15,7 @@ async function exists(filePath: string): Promise<boolean> {
 }
 
 const SESSION_HISTORIAN_DESCRIPTION =
-  "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `ce-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/ce-sessions` (or another caller that runs the full discovery + extract pipeline first)."
+  "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `rg-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/rg-sessions` (or another caller that runs the full discovery + extract pipeline first)."
 const REPO_RESEARCH_ANALYST_DESCRIPTION =
   "Conducts thorough research on repository structure, documentation, conventions, and implementation patterns. Use when onboarding to a new codebase or understanding project conventions."
 
@@ -86,7 +86,7 @@ describe("writeKiroBundle", () => {
     await fs.mkdir(sourceSkillDir, { recursive: true })
     await fs.writeFile(
       path.join(sourceSkillDir, "SKILL.md"),
-      "---\nname: ce-plan\ndescription: Plan\n---\n\nPlan.",
+      "---\nname: rg-plan\ndescription: Plan\n---\n\nPlan.",
     )
     await fs.mkdir(path.join(kiroRoot, "skills", "reproduce-bug"), { recursive: true })
     await fs.writeFile(path.join(kiroRoot, "skills", "reproduce-bug", "SKILL.md"), skillContent("reproduce-bug", REPRODUCE_BUG_DESCRIPTION))
@@ -97,31 +97,31 @@ describe("writeKiroBundle", () => {
     await writeKiroBundle(kiroRoot, {
       ...emptyBundle,
       pluginName: "rg-engineering",
-      skillDirs: [{ name: "ce-plan", sourceDir: sourceSkillDir }],
+      skillDirs: [{ name: "rg-plan", sourceDir: sourceSkillDir }],
     })
 
     expect(await exists(path.join(kiroRoot, "skills", "reproduce-bug"))).toBe(false)
     expect(await exists(path.join(kiroRoot, "agents", "repo-research-analyst.json"))).toBe(false)
     expect(await exists(path.join(kiroRoot, "agents", "prompts", "repo-research-analyst.md"))).toBe(false)
-    expect(await exists(path.join(kiroRoot, "skills", "ce-plan", "SKILL.md"))).toBe(true)
+    expect(await exists(path.join(kiroRoot, "skills", "rg-plan", "SKILL.md"))).toBe(true)
   })
 
   test("preserves user-authored legacy-name Kiro agents during install cleanup", async () => {
     const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "kiro-legacy-agent-preserve-"))
     const kiroRoot = path.join(tempRoot, ".kiro")
     await fs.mkdir(path.join(kiroRoot, "agents", "prompts"), { recursive: true })
-    const userConfig = kiroAgentConfig("ce-repo-research-analyst", "Personal Kiro research helper.")
-    await fs.writeFile(path.join(kiroRoot, "agents", "ce-repo-research-analyst.json"), userConfig)
-    await fs.writeFile(path.join(kiroRoot, "agents", "prompts", "ce-repo-research-analyst.md"), "user prompt")
+    const userConfig = kiroAgentConfig("rg-repo-research-analyst", "Personal Kiro research helper.")
+    await fs.writeFile(path.join(kiroRoot, "agents", "rg-repo-research-analyst.json"), userConfig)
+    await fs.writeFile(path.join(kiroRoot, "agents", "prompts", "rg-repo-research-analyst.md"), "user prompt")
 
     await writeKiroBundle(kiroRoot, {
       ...emptyBundle,
       pluginName: "rg-engineering",
     })
 
-    expect(await exists(path.join(kiroRoot, "agents", "ce-repo-research-analyst.json"))).toBe(true)
-    expect(await fs.readFile(path.join(kiroRoot, "agents", "ce-repo-research-analyst.json"), "utf8")).toBe(userConfig)
-    expect(await exists(path.join(kiroRoot, "agents", "prompts", "ce-repo-research-analyst.md"))).toBe(true)
+    expect(await exists(path.join(kiroRoot, "agents", "rg-repo-research-analyst.json"))).toBe(true)
+    expect(await fs.readFile(path.join(kiroRoot, "agents", "rg-repo-research-analyst.json"), "utf8")).toBe(userConfig)
+    expect(await exists(path.join(kiroRoot, "agents", "prompts", "rg-repo-research-analyst.md"))).toBe(true)
   })
 
   test("writes agents, skills, steering, and mcp.json", async () => {
@@ -207,7 +207,7 @@ describe("writeKiroBundle", () => {
     await fs.writeFile(
       path.join(sourceSkillDir, "SKILL.md"),
       `---
-name: ce-plan
+name: rg-plan
 description: Planning workflow
 ---
 
@@ -221,13 +221,13 @@ Run these research agents:
 
     const bundle: KiroBundle = {
       ...emptyBundle,
-      skillDirs: [{ name: "ce-plan", sourceDir: sourceSkillDir }],
+      skillDirs: [{ name: "rg-plan", sourceDir: sourceSkillDir }],
     }
 
     await writeKiroBundle(tempRoot, bundle)
 
     const installedSkill = await fs.readFile(
-      path.join(tempRoot, ".kiro", "skills", "ce-plan", "SKILL.md"),
+      path.join(tempRoot, ".kiro", "skills", "rg-plan", "SKILL.md"),
       "utf8",
     )
 

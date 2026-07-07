@@ -7,7 +7,7 @@ topic: vscode-copilot-agent-tool-access
 
 ## Problem Frame
 
-When the Compound Engineering plugin is installed in VS Code via "Chat: Install Plugin from Source", CE subagents (reviewers, researchers, etc.) cannot read workspace files. Invoking `ce-correctness-reviewer` produces:
+When the RG Engineering plugin is installed in VS Code via "Chat: Install Plugin from Source", CE subagents (reviewers, researchers, etc.) cannot read workspace files. Invoking `rg-correctness-reviewer` produces:
 
 ```
 ACCESS_FAILED No filesystem read tool is available in this session to read README.md
@@ -39,8 +39,8 @@ This renders all CE subagents inert under Copilot — they can reason but cannot
   - **Trigger:** User invokes a CE skill that dispatches a reviewer/researcher subagent.
   - **Actors:** A1, A3
   - **Steps:**
-    1. User invokes `/compound-engineering:ce-code-review`
-    2. Skill dispatches `ce-correctness-reviewer` as subagent
+    1. User invokes `/rg-engineering:rg-code-review`
+    2. Skill dispatches `rg-correctness-reviewer` as subagent
     3. VS Code Copilot loads the agent definition, finds no `tools` field
     4. Subagent receives no filesystem tools
     5. Subagent fails to read any files
@@ -107,14 +107,14 @@ This renders all CE subagents inert under Copilot — they can reason but cannot
 
 - AE3. **Covers R3.** Given a CE agent with `tools: Read, Grep, Glob, Bash, WebFetch, WebSearch, mcp__context7__*`, when converted, the output is `tools: [read, search, execute, web]` (MCP reference omitted, web deduplicated).
 
-- AE4. **Covers R1, R3, R7.** Given the `ce-correctness-reviewer` agent is installed in VS Code Copilot, when it is dispatched as a subagent, it can successfully read `README.md` from the workspace.
+- AE4. **Covers R1, R3, R7.** Given the `rg-correctness-reviewer` agent is installed in VS Code Copilot, when it is dispatched as a subagent, it can successfully read `README.md` from the workspace.
 
 ---
 
 ## Success Criteria
 
 - CE reviewer and researcher subagents can read, search, and execute in the workspace when invoked through VS Code Copilot.
-- The smoke test (invoke `ce-correctness-reviewer`, ask it to read `README.md`) returns file content instead of `ACCESS_FAILED`.
+- The smoke test (invoke `rg-correctness-reviewer`, ask it to read `README.md`) returns file content instead of `ACCESS_FAILED`.
 - No regression: agents without declared tools continue to work as before (tools field omitted).
 - Existing non-Copilot targets (OpenCode, Codex, Pi, Gemini, Kiro) are unaffected.
 
@@ -123,8 +123,8 @@ This renders all CE subagents inert under Copilot — they can reason but cannot
 ## Scope Boundaries
 
 - **Not in scope: Changing VS Code Copilot host behavior.** We work within the host's documented tool-declaration mechanism.
-- **Not in scope: Changing `/compound-engineering:ce-*` namespacing.** This is VS Code Copilot host behavior for installed plugins. Document it but do not attempt to override.
-- **Not in scope: `.compound-engineering/config.local.yaml` as a tool-access fix.** That config controls CE preferences (Codex delegation, etc.), not Copilot tool grants.
+- **Not in scope: Changing `/rg-engineering:rg-*` namespacing.** This is VS Code Copilot host behavior for installed plugins. Document it but do not attempt to override.
+- **Not in scope: `.rg-engineering/config.local.yaml` as a tool-access fix.** That config controls CE preferences (Codex delegation, etc.), not Copilot tool grants.
 - **Not in scope: Adding a full `copilot` install target to `src/targets/index.ts`.** The immediate fix is making the converter emit tools. A dedicated install target may be added later.
 - **Not in scope: Changing how the plugin is distributed/installed.** The fix must work with the existing "Install Plugin from Source" workflow.
 - **Deferred: Copilot skill `tools` field.** Skills (SKILL.md) may also benefit from tool declarations, but the immediate failure is in subagents. Skill tool access can be addressed separately if needed.
@@ -174,7 +174,7 @@ From the [Custom Agents docs](https://code.visualstudio.com/docs/copilot/customi
 However, the same docs state:
 > "Agent files in the `.claude/agents` folder use **plain `.md` files**"
 
-The CE plugin agents use `.agent.md` extension (`ce-correctness-reviewer.agent.md`), NOT plain `.md`. VS Code's Claude format detection for agent files appears to depend on the file extension:
+The CE plugin agents use `.agent.md` extension (`rg-correctness-reviewer.agent.md`), NOT plain `.md`. VS Code's Claude format detection for agent files appears to depend on the file extension:
 - `.md` in `.claude/agents/` → Claude format (comma-separated tools string, auto-mapped)
 - `.agent.md` → Copilot format (YAML array of VS Code tool names)
 
@@ -249,9 +249,9 @@ After implementation, verify the fix end-to-end:
 
 1. **Build/convert the plugin** (if a build step is required).
 2. **Install in VS Code** via "Chat: Install Plugin from Source" pointing at the fork repo.
-3. **Confirm plugin loaded:** Check VS Code's extension/plugin list shows compound-engineering from the fork.
+3. **Confirm plugin loaded:** Check VS Code's extension/plugin list shows rg-engineering from the fork.
 4. **Smoke test — subagent file read:**
-   - Invoke `/compound-engineering:ce-correctness-reviewer` (or dispatch it from a skill)
+   - Invoke `/rg-engineering:rg-correctness-reviewer` (or dispatch it from a skill)
    - Ask it to read `README.md` and report the first heading
    - Expected: returns content (e.g., `# fantastic-chainsaw` or whatever the repo's H1 is)
    - Failure: `ACCESS_FAILED No filesystem read tool`
@@ -259,7 +259,7 @@ After implementation, verify the fix end-to-end:
    - Invoke built-in `Explore` with the same request
    - Expected: succeeds (baseline proof the host provides tools)
 6. **Full flow test — code review:**
-   - Invoke `/compound-engineering:ce-code-review` on a small diff
+   - Invoke `/rg-engineering:rg-code-review` on a small diff
    - Verify reviewer subagents produce findings referencing actual file content
 7. **Regression — no-tools agent:**
    - If any CE agent legitimately has no `tools` field, verify it still loads without error
@@ -270,8 +270,8 @@ After implementation, verify the fix end-to-end:
 
 Two quick empirical tests will determine the fix strategy:
 
-1. **Test A (file extension):** Rename one CE agent to `.md` (e.g., `ce-correctness-reviewer.md`), keep Claude-style `tools: Read, Grep, Glob, Bash`. Install plugin, invoke as subagent. If it works → fix is renaming all agent files.
+1. **Test A (file extension):** Rename one CE agent to `.md` (e.g., `rg-correctness-reviewer.md`), keep Claude-style `tools: Read, Grep, Glob, Bash`. Install plugin, invoke as subagent. If it works → fix is renaming all agent files.
 
 2. **Test B (tool format):** Keep `.agent.md` extension, change `tools` to `tools: [read, search, execute, edit]` (Copilot-native YAML array). Install plugin, invoke as subagent. If it works → fix is converting tool declarations to Copilot format.
 
-After one test succeeds → `/ce-plan` for full implementation across all 49 agent files, converter updates, and test changes.
+After one test succeeds → `/rg-plan` for full implementation across all 49 agent files, converter updates, and test changes.

@@ -24,9 +24,9 @@ tags:
 
 ## Context
 
-> **Note:** This is a retrospective. The experimental delegation skill it studied (`ce-work-beta`) has since been removed from the plugin. The findings below are preserved as general guidance for designing external-model delegation in any orchestrator skill, not as documentation for a live feature.
+> **Note:** This is a retrospective. The experimental delegation skill it studied (`rg-work-beta`) has since been removed from the plugin. The findings below are preserved as general guidance for designing external-model delegation in any orchestrator skill, not as documentation for a live feature.
 
-Over six iterations of evaluation building Codex delegation into an experimental `ce-work` delegation mode, we collected quantitative data on the token economics of orchestrating work between Claude Code (the orchestrator) and Codex (the delegated executor). The core question: when does delegating plan units to Codex actually save Claude tokens, and what architectural patterns control the cost?
+Over six iterations of evaluation building Codex delegation into an experimental `rg-work` delegation mode, we collected quantitative data on the token economics of orchestrating work between Claude Code (the orchestrator) and Codex (the delegated executor). The core question: when does delegating plan units to Codex actually save Claude tokens, and what architectural patterns control the cost?
 
 The delegation model: the delegating skill receives a plan with N implementation units, then decides whether to execute them directly (standard mode) or delegate them to Codex via `codex exec`. Delegation has a fixed orchestration overhead per batch (prompt file write, codex exec invocation, result classification, commit) of approximately 4-5k Claude tokens. Each unit of code Claude does not write saves roughly 3-5k tokens. The crossover depends on how many units are batched per delegation call.
 
@@ -121,9 +121,9 @@ Every delegation decision — whether to delegate, how to batch, what to include
 | Triviality signals (Goal, Approach) | Whether delegation is considered at all ("config change" vs "recursive validation engine") |
 | Dependencies between units | Batch boundary decisions for plans >5 units |
 
-A well-structured ce-plan output provides all of these. A hand-written requirements doc or TODO list may provide few or none — the delegation logic still works (the skill handles non-standard plans), but the decisions are less informed. For example, without explicit file lists, the batching rule cannot check for shared files; without test scenarios, the Codex prompt's `<testing>` section has nothing to supplement.
+A well-structured rg-plan output provides all of these. A hand-written requirements doc or TODO list may provide few or none — the delegation logic still works (the skill handles non-standard plans), but the decisions are less informed. For example, without explicit file lists, the batching rule cannot check for shared files; without test scenarios, the Codex prompt's `<testing>` section has nothing to supplement.
 
-This does not mean delegation requires ce-plan output. It means the quality of delegation improves proportionally with the structure of the plan. Users who invest in structured plans get smarter delegation decisions. Users with lightweight plans get delegation that works but makes conservative choices (e.g., single-batch everything, generic test guidance).
+This does not mean delegation requires rg-plan output. It means the quality of delegation improves proportionally with the structure of the plan. Users who invest in structured plans get smarter delegation decisions. Users with lightweight plans get delegation that works but makes conservative choices (e.g., single-batch everything, generic test guidance).
 
 ### Prompt Engineering for Delegation Quality
 

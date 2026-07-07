@@ -15,7 +15,7 @@ Replace the single-voice `document-review` skill with a multi-persona review pip
 
 ## Problem Frame
 
-The current `document-review` applies five generic criteria (Clarity, Completeness, Specificity, Appropriate Level, YAGNI) through a single evaluator voice. This misses role-specific concerns: a security engineer, product leader, and design reviewer each see different problems in the same plan. The `ce:review` skill already demonstrates that multi-persona review produces richer, more actionable feedback for code. The same architecture applies to plan/requirements review. (see origin: docs/brainstorms/2026-03-23-plan-review-personas-requirements.md)
+The current `document-review` applies five generic criteria (Clarity, Completeness, Specificity, Appropriate Level, YAGNI) through a single evaluator voice. This misses role-specific concerns: a security engineer, product leader, and design reviewer each see different problems in the same plan. The `rg:review` skill already demonstrates that multi-persona review produces richer, more actionable feedback for code. The same architecture applies to plan/requirements review. (see origin: docs/brainstorms/2026-03-23-plan-review-personas-requirements.md)
 
 ## Requirements Trace
 
@@ -40,17 +40,17 @@ The current `document-review` applies five generic criteria (Clarity, Completene
 
 ### Relevant Code and Patterns
 
-- `plugins/compound-engineering/skills/ce-review/SKILL.md` -- Multi-agent orchestration reference: parallel dispatch via Task tool, always-on + conditional agents, P1/P2/P3 severity, finding synthesis with dedup
-- `plugins/compound-engineering/skills/document-review/SKILL.md` -- Current single-voice skill to replace. Key contract: "Review complete" terminal signal
-- `plugins/compound-engineering/agents/review/ce-*.agent.md` -- 15 existing review agents. Frontmatter schema: `name`, `description`, `model: inherit`. Body: examples block, role definition, analysis protocol, output format
-- `plugins/compound-engineering/AGENTS.md` -- Agent naming: fully-qualified `compound-engineering:<category>:<agent-name>`. Agent placement: `agents/<category>/<name>.md`
+- `plugins/rg-engineering/skills/rg-review/SKILL.md` -- Multi-agent orchestration reference: parallel dispatch via Task tool, always-on + conditional agents, P1/P2/P3 severity, finding synthesis with dedup
+- `plugins/rg-engineering/skills/document-review/SKILL.md` -- Current single-voice skill to replace. Key contract: "Review complete" terminal signal
+- `plugins/rg-engineering/agents/review/rg-*.agent.md` -- 15 existing review agents. Frontmatter schema: `name`, `description`, `model: inherit`. Body: examples block, role definition, analysis protocol, output format
+- `plugins/rg-engineering/AGENTS.md` -- Agent naming: fully-qualified `rg-engineering:<category>:<agent-name>`. Agent placement: `agents/<category>/<name>.md`
 
 ### Caller Integration Points
 
 All 4 callers use the same contract:
-- `ce-brainstorm/SKILL.md` line 301: "Load the `document-review` skill and apply it to the requirements document"
-- `ce-plan/SKILL.md` line 592: "Load `document-review` skill"
-- `ce-plan-beta/SKILL.md` line 611: "Load the `document-review` skill with the plan path"
+- `rg-brainstorm/SKILL.md` line 301: "Load the `document-review` skill and apply it to the requirements document"
+- `rg-plan/SKILL.md` line 592: "Load `document-review` skill"
+- `rg-plan-beta/SKILL.md` line 611: "Load the `document-review` skill with the plan path"
 - `deepen-plan-beta/SKILL.md` line 402: "Load the `document-review` skill with the plan path"
 
 All expect "Review complete" as the terminal signal. No callers check for specific output format. No caller changes needed.
@@ -102,7 +102,7 @@ Three proven review approaches provide the behavioral foundation for specific pe
 
 - **Agents, not inline prompts**: Persona reviewers are implemented as agent files under `agents/review/`. This enables parallel dispatch via Task tool, follows established patterns, and keeps the SKILL.md focused on orchestration. (Resolves deferred question from origin)
 
-- **Structured output contract aligned with ce:review-beta (PR #348)**: Same normalization mechanism -- findings-schema.json, subagent-template.md, review-output-template.md as reference files. Same field names and enums where applicable (severity P0-P3, autofix_class, owner, confidence, evidence). Document-specific adaptations: `section` replaces `file`+`line`, `deferred_questions` replaces `testing_gaps`, drop `pre_existing`. Each persona defines its own confidence calibration and suppress conditions. (Resolves deferred question from origin -- output format)
+- **Structured output contract aligned with rg:review-beta (PR #348)**: Same normalization mechanism -- findings-schema.json, subagent-template.md, review-output-template.md as reference files. Same field names and enums where applicable (severity P0-P3, autofix_class, owner, confidence, evidence). Document-specific adaptations: `section` replaces `file`+`line`, `deferred_questions` replaces `testing_gaps`, drop `pre_existing`. Each persona defines its own confidence calibration and suppress conditions. (Resolves deferred question from origin -- output format)
 
 - **Content-based activation heuristics**: The orchestrator skill checks the document for keyword and structural patterns to select conditional personas. Heuristics are defined in the skill, not in the agents -- this keeps selection logic centralized and agents focused on review. (Resolves deferred question from origin)
 
@@ -118,10 +118,10 @@ Three proven review approaches provide the behavioral foundation for specific pe
 
 ### Resolved During Planning
 
-- **Agent category**: Place under `agents/review/` alongside existing code review agents. Names are distinct (coherence-reviewer, feasibility-reviewer, etc.) and don't conflict with existing agents. Fully-qualified: `compound-engineering:review:<name>`.
-- **Parallel vs serial dispatch**: Always parallel. We have 2-6 agents per run (under the auto-serial threshold of 5 from ce:review's pattern). Even at max (6), these are document reviewers with bounded scope.
+- **Agent category**: Place under `agents/review/` alongside existing code review agents. Names are distinct (coherence-reviewer, feasibility-reviewer, etc.) and don't conflict with existing agents. Fully-qualified: `rg-engineering:review:<name>`.
+- **Parallel vs serial dispatch**: Always parallel. We have 2-6 agents per run (under the auto-serial threshold of 5 from rg:review's pattern). Even at max (6), these are document reviewers with bounded scope.
 - **Review pattern integration**: Premise challenge -> product-lens opener. Dimensional rating -> design-lens evaluation method. Existing-code audit -> scope-guardian opener. These are incorporated as agent behavior, not separate orchestration mechanisms.
-- **Output format**: Align with ce:review-beta (PR #348) normalization pattern. Same mechanism: JSON schema reference file, shared subagent template, output template. Same enums (P0-P3 severity, autofix_class, owner). Document-specific field swaps: `section` replaces `file`+`line`, `deferred_questions` replaces `testing_gaps`, drop `pre_existing`.
+- **Output format**: Align with rg:review-beta (PR #348) normalization pattern. Same mechanism: JSON schema reference file, shared subagent template, output template. Same enums (P0-P3 severity, autofix_class, owner). Document-specific field swaps: `section` replaces `file`+`line`, `deferred_questions` replaces `testing_gaps`, drop `pre_existing`.
 
 ### Deferred to Implementation
 
@@ -161,7 +161,7 @@ Document Review Pipeline Flow:
 11. OFFER next action: "Refine again" or "Review complete"
 ```
 
-**Finding structure (aligned with ce:review-beta PR #348):**
+**Finding structure (aligned with rg:review-beta PR #348):**
 
 ```
 Envelope (per persona):
@@ -172,7 +172,7 @@ Envelope (per persona):
 
 Finding object:
   title:               Short issue title (<=10 words)
-  severity:            P0 / P1 / P2 / P3  (same scale as ce:review-beta)
+  severity:            P0 / P1 / P2 / P3  (same scale as rg:review-beta)
   section:             Document section where issue appears (replaces file+line)
   why_it_matters:      Impact statement (what goes wrong if not addressed)
   autofix_class:       safe_auto / gated_auto / manual / advisory
@@ -182,20 +182,20 @@ Finding object:
   confidence:          0.0-1.0 (calibrated per persona)
   evidence:            Quoted text from document (minimum 1)
 
-Severity definitions (same as ce:review-beta):
+Severity definitions (same as rg:review-beta):
   P0: Contradictions or gaps that would cause building the wrong thing. Must fix.
   P1: Significant gap likely hit during planning/implementation. Should fix.
   P2: Moderate issue with meaningful downside. Fix if straightforward.
   P3: Minor improvement. User's discretion.
 
-Autofix classes (same enum as ce:review-beta for schema compatibility):
+Autofix classes (same enum as rg:review-beta for schema compatibility):
   safe_auto:  Terminology fix, formatting, cross-reference -- local and deterministic
   gated_auto: Restructure or edit that changes document meaning -- needs approval
   manual:     Strategic question requiring user judgment -- becomes residual work
   advisory:   Informational finding -- surface in report only
 
 Orchestrator routing (document review simplification):
-  The 4-class enum is preserved for schema compatibility with ce:review-beta,
+  The 4-class enum is preserved for schema compatibility with rg:review-beta,
   but the orchestrator routes as 2 buckets:
     safe_auto           -> apply automatically
     gated_auto + manual + advisory -> present to user
@@ -214,13 +214,13 @@ Orchestrator routing (document review simplification):
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/agents/document-review/ce-coherence-reviewer.agent.md`
-- Create: `plugins/compound-engineering/agents/document-review/ce-feasibility-reviewer.agent.md`
+- Create: `plugins/rg-engineering/agents/document-review/rg-coherence-reviewer.agent.md`
+- Create: `plugins/rg-engineering/agents/document-review/rg-feasibility-reviewer.agent.md`
 
 **Approach:**
 - Follow existing agent structure: frontmatter (name, description, model: inherit), examples block, role definition, analysis protocol
 - Each agent defines: role identity, analysis protocol, confidence calibration, and suppress conditions
-- Agents do NOT define their own output format -- the shared `references/findings-schema.json` and `references/subagent-template.md` handle output normalization (same pattern as ce:review-beta PR #348)
+- Agents do NOT define their own output format -- the shared `references/findings-schema.json` and `references/subagent-template.md` handle output normalization (same pattern as rg:review-beta PR #348)
 
 **coherence-reviewer:**
 - Role: Technical editor who reads for internal consistency
@@ -237,8 +237,8 @@ Orchestrator routing (document review simplification):
 - Suppress: implementation style choices, testing strategy details, code organization preferences, theoretical scalability concerns
 
 **Patterns to follow:**
-- `plugins/compound-engineering/agents/review/ce-code-simplicity-reviewer.agent.md` for agent structure and output format conventions
-- `plugins/compound-engineering/agents/review/ce-architecture-strategist.agent.md` for systematic analysis protocol style
+- `plugins/rg-engineering/agents/review/rg-code-simplicity-reviewer.agent.md` for agent structure and output format conventions
+- `plugins/rg-engineering/agents/review/rg-architecture-strategist.agent.md` for systematic analysis protocol style
 - iterative-engineering agents for confidence calibration and suppress conditions pattern
 
 **Test scenarios:**
@@ -267,10 +267,10 @@ Orchestrator routing (document review simplification):
 **Dependencies:** Unit 1 (for consistent agent structure)
 
 **Files:**
-- Create: `plugins/compound-engineering/agents/document-review/ce-product-lens-reviewer.agent.md`
-- Create: `plugins/compound-engineering/agents/document-review/ce-design-lens-reviewer.agent.md`
-- Create: `plugins/compound-engineering/agents/document-review/ce-security-lens-reviewer.agent.md`
-- Create: `plugins/compound-engineering/agents/document-review/ce-scope-guardian-reviewer.agent.md`
+- Create: `plugins/rg-engineering/agents/document-review/rg-product-lens-reviewer.agent.md`
+- Create: `plugins/rg-engineering/agents/document-review/rg-design-lens-reviewer.agent.md`
+- Create: `plugins/rg-engineering/agents/document-review/rg-security-lens-reviewer.agent.md`
+- Create: `plugins/rg-engineering/agents/document-review/rg-scope-guardian-reviewer.agent.md`
 
 **Approach:**
 All four use the same structure established in Unit 1 (frontmatter, examples, role, protocol, confidence calibration, suppress conditions). Output normalization handled by shared reference files.
@@ -311,7 +311,7 @@ All four use the same structure established in Unit 1 (frontmatter, examples, ro
 
 **Patterns to follow:**
 - Unit 1 agents for consistent structure
-- `plugins/compound-engineering/agents/review/ce-security-sentinel.agent.md` for security analysis style (plan-level adaptation)
+- `plugins/rg-engineering/agents/review/rg-security-sentinel.agent.md` for security analysis style (plan-level adaptation)
 
 **Test scenarios:**
 - product-lens-reviewer challenges a plan that builds a complex admin dashboard when the stated goal is "improve user onboarding"
@@ -343,17 +343,17 @@ All four use the same structure established in Unit 1 (frontmatter, examples, ro
 **Dependencies:** Unit 1, Unit 2
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/document-review/SKILL.md`
-- Create: `plugins/compound-engineering/skills/document-review/references/findings-schema.json`
-- Create: `plugins/compound-engineering/skills/document-review/references/subagent-template.md`
-- Create: `plugins/compound-engineering/skills/document-review/references/review-output-template.md`
+- Modify: `plugins/rg-engineering/skills/document-review/SKILL.md`
+- Create: `plugins/rg-engineering/skills/document-review/references/findings-schema.json`
+- Create: `plugins/rg-engineering/skills/document-review/references/subagent-template.md`
+- Create: `plugins/rg-engineering/skills/document-review/references/review-output-template.md`
 
 **Approach:**
 
-**Reference files (aligned with ce:review-beta PR #348 mechanism):**
-- `findings-schema.json`: JSON schema that all persona agents must conform to. Same structure as ce:review-beta with document-specific swaps: `section` replaces `file`+`line`, `deferred_questions` replaces `testing_gaps`, drop `pre_existing`. Same enums for severity, autofix_class, owner.
-- `subagent-template.md`: Shared prompt template with variable slots ({persona_file}, {schema}, {document_content}, {document_path}, {document_type}). Rules: "Return ONLY valid JSON matching the schema", suppress below confidence floor, every finding needs evidence. Adapted from ce:review-beta's template for document context instead of diff context.
-- `review-output-template.md`: Markdown template for synthesized output. Findings grouped by severity (P0-P3), pipe-delimited tables with section, issue, reviewer, confidence, and route (autofix_class -> owner). Adapted from ce:review-beta's template for sections instead of file:line.
+**Reference files (aligned with rg:review-beta PR #348 mechanism):**
+- `findings-schema.json`: JSON schema that all persona agents must conform to. Same structure as rg:review-beta with document-specific swaps: `section` replaces `file`+`line`, `deferred_questions` replaces `testing_gaps`, drop `pre_existing`. Same enums for severity, autofix_class, owner.
+- `subagent-template.md`: Shared prompt template with variable slots ({persona_file}, {schema}, {document_content}, {document_path}, {document_type}). Rules: "Return ONLY valid JSON matching the schema", suppress below confidence floor, every finding needs evidence. Adapted from rg:review-beta's template for document context instead of diff context.
+- `review-output-template.md`: Markdown template for synthesized output. Findings grouped by severity (P0-P3), pipe-delimited tables with section, issue, reviewer, confidence, and route (autofix_class -> owner). Adapted from rg:review-beta's template for sections instead of file:line.
 
 The rewritten skill has these phases:
 
@@ -370,7 +370,7 @@ The rewritten skill has these phases:
 **Phase 2 -- Announce and Dispatch Personas:**
 - Announce the review team with per-conditional justifications (e.g., "scope-guardian-reviewer -- plan has 12 requirements across 3 priority levels")
 - Build the agent list: always coherence-reviewer + feasibility-reviewer, plus activated conditional agents
-- Dispatch all agents in parallel via Task tool using fully-qualified names (`compound-engineering:review:<name>`)
+- Dispatch all agents in parallel via Task tool using fully-qualified names (`rg-engineering:review:<name>`)
 - Pass each agent: document content, document path, document type (requirements vs plan), and the structured output schema
 - Each agent receives the full document -- do not split into sections
 
@@ -399,7 +399,7 @@ Synthesis pipeline (order matters):
 
 **Pipeline mode:** When called from automated workflows, auto-fixes run silently. Strategic questions are still surfaced (the calling skill decides whether to present them or convert to assumptions).
 
-**Protected artifacts:** Carry over from ce:review -- never flag `docs/brainstorms/`, `docs/plans/`, or `docs/solutions/` files for deletion. Discard any such findings during synthesis.
+**Protected artifacts:** Carry over from rg:review -- never flag `docs/brainstorms/`, `docs/plans/`, or `docs/solutions/` files for deletion. Discard any such findings during synthesis.
 
 **What NOT to do section:** Carry over current guardrails:
 - Don't rewrite the entire document
@@ -415,7 +415,7 @@ Synthesis pipeline (order matters):
 - When a residual concern from one persona matches a finding from another -> promote the concern, note corroboration
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-review/SKILL.md` for agent dispatch and synthesis patterns
+- `plugins/rg-engineering/skills/rg-review/SKILL.md` for agent dispatch and synthesis patterns
 - Current `document-review/SKILL.md` for the entry point, iteration guidance, and "What NOT to Do" guardrails
 - iterative-engineering `plan-review/SKILL.md` for synthesis pipeline ordering and fingerprint dedup
 
@@ -435,7 +435,7 @@ Synthesis pipeline (order matters):
 
 **Verification:**
 - Skill has valid frontmatter (name: document-review, description updated to reflect persona pipeline)
-- All agent references use fully-qualified namespace (`compound-engineering:review:<name>`)
+- All agent references use fully-qualified namespace (`rg-engineering:review:<name>`)
 - Entry point matches current skill (path or auto-find)
 - Terminal signal "Review complete" preserved
 - Conditional persona selection logic is centralized in the skill
@@ -455,7 +455,7 @@ Synthesis pipeline (order matters):
 **Dependencies:** Unit 1, Unit 2, Unit 3
 
 **Files:**
-- Modify: `plugins/compound-engineering/README.md`
+- Modify: `plugins/rg-engineering/README.md`
 
 **Approach:**
 - Add 6 new agents to the Review table in README.md (coherence-reviewer, design-lens-reviewer, feasibility-reviewer, product-lens-reviewer, scope-guardian-reviewer, security-lens-reviewer)
@@ -479,7 +479,7 @@ Synthesis pipeline (order matters):
 
 ## System-Wide Impact
 
-- **Interaction graph:** document-review is called from 4 skills (ce-brainstorm, ce-plan, ce-plan-beta, deepen-plan-beta). The "Review complete" contract is preserved, so no caller changes needed.
+- **Interaction graph:** document-review is called from 4 skills (rg-brainstorm, rg-plan, rg-plan-beta, deepen-plan-beta). The "Review complete" contract is preserved, so no caller changes needed.
 - **Error propagation:** If a persona agent fails or times out during parallel dispatch, the orchestrator should proceed with findings from the agents that completed. Do not block the entire review on a single agent failure. Note the failed agent in the coverage section.
 - **State lifecycle risks:** None -- personas are read-only. Only the orchestrator modifies the document, in a single auto-fix pass.
 - **API surface parity:** The skill name (`document-review`) and terminal signal ("Review complete") remain unchanged. No breaking changes to callers.
@@ -488,17 +488,17 @@ Synthesis pipeline (order matters):
 
 ## Risks & Dependencies
 
-- **Agent dispatch limit:** ce:review auto-switches to serial mode at >5 agents. Maximum dispatch here is 6 (2 always-on + 4 conditional). If all 6 activate, the orchestrator should still use parallel dispatch since these are lightweight document reviewers reading a single document, not code analyzers scanning a codebase. Document this decision in the skill.
+- **Agent dispatch limit:** rg:review auto-switches to serial mode at >5 agents. Maximum dispatch here is 6 (2 always-on + 4 conditional). If all 6 activate, the orchestrator should still use parallel dispatch since these are lightweight document reviewers reading a single document, not code analyzers scanning a codebase. Document this decision in the skill.
 - **Contradictory findings:** The synthesis phase must handle conflicting persona findings explicitly. The initial implementation should lean toward presenting contradictions (both perspectives as a combined finding) rather than auto-resolving them. This preserves value even if it's slightly noisier.
 - **Finding volume at full activation:** When all 6 personas activate on a large document, the total pre-dedup finding count could exceed 20-30. The synthesis pipeline (confidence gate + dedup + suppress conditions) should reduce this to a manageable set. If it doesn't, the first lever to pull is tightening per-persona suppress conditions.
-- **Persona prompt quality:** The agents are only as good as their prompts. The established review patterns and iterative-engineering references provide battle-tested material, but the compound-engineering versions will be new and may need iteration. Plan for 1-2 rounds of prompt refinement after initial implementation.
+- **Persona prompt quality:** The agents are only as good as their prompts. The established review patterns and iterative-engineering references provide battle-tested material, but the rg-engineering versions will be new and may need iteration. Plan for 1-2 rounds of prompt refinement after initial implementation.
 
 ## Sources & References
 
 - **Origin document:** [docs/brainstorms/2026-03-23-plan-review-personas-requirements.md](docs/brainstorms/2026-03-23-plan-review-personas-requirements.md)
-- Related code: `plugins/compound-engineering/skills/ce-review/SKILL.md` (multi-agent orchestration pattern)
-- Related code: `plugins/compound-engineering/skills/document-review/SKILL.md` (current implementation to replace)
-- Related code: `plugins/compound-engineering/agents/review/` (agent structure reference)
+- Related code: `plugins/rg-engineering/skills/rg-review/SKILL.md` (multi-agent orchestration pattern)
+- Related code: `plugins/rg-engineering/skills/document-review/SKILL.md` (current implementation to replace)
+- Related code: `plugins/rg-engineering/agents/review/` (agent structure reference)
 - Related pattern: iterative-engineering `skills/plan-review/SKILL.md` (synthesis pipeline, findings schema, subagent template)
 - Related pattern: iterative-engineering `agents/coherence-reviewer.md`, `feasibility-reviewer.md`, `scope-guardian-reviewer.md`, `prd-reviewer.md`, `tech-plan-reviewer.md`, `skeptic-reviewer.md` (persona prompt design, confidence calibration, suppress conditions)
 - Related learning: `docs/solutions/skill-design/compound-refresh-skill-improvements.md` (subagent design patterns)

@@ -8,13 +8,13 @@ date: 2026-02-08
 
 ## Overview
 
-Replace the 486-line `/compound-engineering-setup` wizard and JSON config with the `.local.md` plugin-settings pattern. Make agent configuration dead simple: a YAML frontmatter file users edit directly, with a lightweight setup command that generates the template.
+Replace the 486-line `/rg-engineering-setup` wizard and JSON config with the `.local.md` plugin-settings pattern. Make agent configuration dead simple: a YAML frontmatter file users edit directly, with a lightweight setup command that generates the template.
 
 ## Problem Statement
 
-The current branch (`feat/compound-engineering-setup`) has:
+The current branch (`feat/rg-engineering-setup`) has:
 - A 486-line setup command with Quick/Advanced/Minimal modes, add/remove loops, custom agent discovery
-- JSON config file (`.claude/compound-engineering.json`) — not the plugin-settings convention
+- JSON config file (`.claude/rg-engineering.json`) — not the plugin-settings convention
 - Config-loading boilerplate that would be duplicated across 4 workflow commands
 - Over-engineered for "which agents should review my code?"
 
@@ -22,7 +22,7 @@ Meanwhile, the workflow commands on main have hardcoded agent lists that can't b
 
 ## Proposed Solution
 
-Use `.claude/compound-engineering.local.md` with YAML frontmatter. Three simple changes:
+Use `.claude/rg-engineering.local.md` with YAML frontmatter. Three simple changes:
 
 1. **Rewrite `setup.md`** (486 → ~60 lines) — detect project type, create template file
 2. **Add config reading to workflow commands** (~5 lines each) — read file, fall back to defaults
@@ -49,15 +49,15 @@ That's it. No `conditionalAgents`, no `options`, no `customAgents` mapping. Cond
 
 ### Phase 1: Rewrite setup.md
 
-**File:** `plugins/compound-engineering/commands/setup.md`
+**File:** `plugins/rg-engineering/commands/setup.md`
 **From:** 486 lines → **To:** ~60 lines
 
 The setup command should:
 
 - [x] Detect project type (Gemfile+Rails, tsconfig, pyproject.toml, etc.)
-- [x] Check if `.claude/compound-engineering.local.md` already exists
+- [x] Check if `.claude/rg-engineering.local.md` already exists
 - [x] If exists: show current config, ask if user wants to regenerate
-- [x] If not: create `.claude/compound-engineering.local.md` with smart defaults for detected type
+- [x] If not: create `.claude/rg-engineering.local.md` with smart defaults for detected type
 - [x] Display the file path and tell user they can edit it directly
 - [x] No wizard, no multi-step AskUserQuestion flows, no modify loops
 
@@ -72,7 +72,7 @@ The setup command should:
 
 ### Phase 2: Update review.md
 
-**File:** `plugins/compound-engineering/commands/workflows/review.md`
+**File:** `plugins/rg-engineering/commands/workflows/review.md`
 **Change:** Replace hardcoded agent list (lines 64-81) with config-aware section
 
 Add before the parallel agents section (~5 lines):
@@ -80,7 +80,7 @@ Add before the parallel agents section (~5 lines):
 ```markdown
 #### Load Review Agents
 
-Read `.claude/compound-engineering.local.md` (project) or `~/.claude/compound-engineering.local.md` (global).
+Read `.claude/rg-engineering.local.md` (project) or `~/.claude/rg-engineering.local.md` (global).
 If found, use `review_agents` from YAML frontmatter. If not found, auto-detect project type and use defaults:
 - Rails: kieran-rails-reviewer, dhh-rails-reviewer, code-simplicity-reviewer, security-sentinel, performance-oracle
 - Python: kieran-python-reviewer, code-simplicity-reviewer, security-sentinel, performance-oracle
@@ -108,30 +108,30 @@ Run all review agents in parallel using Task tool.
 
 ### Phase 3: Update work.md
 
-**File:** `plugins/compound-engineering/commands/workflows/work.md`
+**File:** `plugins/rg-engineering/commands/workflows/work.md`
 **Change:** Replace hardcoded agent list in "Consider Reviewer Agents" section (lines 180-193)
 
 Replace with:
 
 ```markdown
-If review agents are needed, read from `.claude/compound-engineering.local.md` frontmatter (`review_agents`).
+If review agents are needed, read from `.claude/rg-engineering.local.md` frontmatter (`review_agents`).
 If no config, use project-appropriate defaults. Run in parallel with Task tool.
 ```
 
 ### Phase 4: Update compound.md
 
-**File:** `plugins/compound-engineering/commands/workflows/compound.md`
+**File:** `plugins/rg-engineering/commands/workflows/compound.md`
 **Change:** Update Phase 3 "Optional Enhancement" (lines 92-98) and "Applicable Specialized Agents" section (lines 214-234)
 
 The specialized agents in compound.md are problem-type-based (performance → performance-oracle, security → security-sentinel). These should stay hardcoded — they're not "review agents", they're domain experts triggered by problem category. No config needed.
 
-**Only change:** Add a note that users can customize review agents via `/compound-engineering-setup`, but don't add config-reading logic here.
+**Only change:** Add a note that users can customize review agents via `/rg-engineering-setup`, but don't add config-reading logic here.
 
 ## Acceptance Criteria
 
 - [ ] `setup.md` is under 80 lines
-- [ ] Running `/compound-engineering-setup` creates `.claude/compound-engineering.local.md` with correct defaults
-- [ ] Running `/compound-engineering-setup` when config exists shows current config and asks before overwriting
+- [ ] Running `/rg-engineering-setup` creates `.claude/rg-engineering.local.md` with correct defaults
+- [ ] Running `/rg-engineering-setup` when config exists shows current config and asks before overwriting
 - [ ] `/workflows:review` reads agents from `.local.md` when present
 - [ ] `/workflows:review` falls back to auto-detected defaults when no config
 - [ ] `/workflows:work` reads agents from `.local.md` when present
@@ -146,7 +146,7 @@ The specialized agents in compound.md are problem-type-based (performance → pe
 
 `commands/technical_review.md` is a one-line command (`Have @agent-dhh-rails-reviewer @agent-kieran-rails-reviewer @agent-code-simplicity-reviewer review...`) with `disable-model-invocation: true`. It duplicates the `/plan_review` skill. Delete it.
 
-- [x] Delete `plugins/compound-engineering/commands/technical_review.md`
+- [x] Delete `plugins/rg-engineering/commands/technical_review.md`
 
 **5b. Add `disable-model-invocation: true` to `setup.md`**
 
@@ -172,8 +172,8 @@ Wait — with setup.md added and technical_review.md deleted: 25 - 1 = 24. Same 
 
 - [ ] `setup.md` is under 80 lines
 - [ ] `setup.md` has `disable-model-invocation: true`
-- [ ] Running `/compound-engineering-setup` creates `.claude/compound-engineering.local.md` with correct defaults
-- [ ] Running `/compound-engineering-setup` when config exists shows current config and asks before overwriting
+- [ ] Running `/rg-engineering-setup` creates `.claude/rg-engineering.local.md` with correct defaults
+- [ ] Running `/rg-engineering-setup` when config exists shows current config and asks before overwriting
 - [ ] `/workflows:review` reads agents from `.local.md` when present
 - [ ] `/workflows:review` falls back to auto-detected defaults when no config
 - [ ] `/workflows:review` runs `schema-drift-detector` for PRs with migrations or schema.rb

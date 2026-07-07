@@ -2,7 +2,7 @@
 title: "Git workflow skills need explicit state machines for branch, push, and PR state"
 category: skill-design
 date: 2026-03-27
-module: skills/ce-commit and ce-commit-push-pr
+module: skills/rg-commit and rg-commit-push-pr
 problem_type: architecture_pattern
 component: tooling
 symptoms:
@@ -27,7 +27,7 @@ tags:
 
 ## Problem
 
-The `ce-commit` and `ce-commit-push-pr` skills had accumulated branch-state and PR-state bugs because they described Git flow in broad prose instead of modeling the workflow as a sequence of explicit state checks. Small wording changes kept introducing regressions around detached HEAD, untracked files, upstream detection, default-branch pushes, and PR lookup.
+The `rg-commit` and `rg-commit-push-pr` skills had accumulated branch-state and PR-state bugs because they described Git flow in broad prose instead of modeling the workflow as a sequence of explicit state checks. Small wording changes kept introducing regressions around detached HEAD, untracked files, upstream detection, default-branch pushes, and PR lookup.
 
 ## Symptoms
 
@@ -73,7 +73,7 @@ git checkout -b <branch-name>
 git branch --show-current
 ```
 
-In `ce-commit-push-pr`, create that branch automatically: the user invoked a commit/push/PR workflow, and later push/PR steps require a branch-backed ref. The second `git branch --show-current` is not redundant. It converts "the skill thinks it created branch X" into "Git says the current branch is X."
+In `rg-commit-push-pr`, create that branch automatically: the user invoked a commit/push/PR workflow, and later push/PR steps require a branch-backed ref. The second `git branch --show-current` is not redundant. It converts "the skill thinks it created branch X" into "Git says the current branch is X."
 
 Apply the same pattern before default-branch safety checks:
 
@@ -123,7 +123,7 @@ If the current branch is `main`, `master`, or the resolved default branch, and t
 
 - create a feature branch first and re-read the branch name
 - ask only when unpushed local commits create a real carry-forward decision, such as preserving them on the feature branch vs starting from the fresh remote base
-- if the safe branch transition cannot be completed in `ce-commit-push-pr`, stop rather than trying to open a PR from the default branch
+- if the safe branch transition cannot be completed in `rg-commit-push-pr`, stop rather than trying to open a PR from the default branch
 
 This prevents "push default branch, then attempt impossible PR flow" behavior.
 
@@ -143,7 +143,7 @@ This turns a brittle narrative into a deterministic control flow with a small nu
 
 ## Edge Cases We Hit While Fixing This
 
-These were not hypothetical concerns. Each one showed up while revising `ce-commit` and `ce-commit-push-pr`, and several "fixes" introduced a new bug one step later in the flow.
+These were not hypothetical concerns. Each one showed up while revising `rg-commit` and `rg-commit-push-pr`, and several "fixes" introduced a new bug one step later in the flow.
 
 ### 1. Detached HEAD can reappear as a later bug even after it seems "handled"
 
@@ -203,7 +203,7 @@ Learning: every path that can lead to push or PR creation must pass through a de
 
 One fix asked the user whether to create a feature branch first when clean-tree logic found unpushed default-branch commits. But if the user declined, the workflow still continued to push and then attempt PR creation. That leads to an impossible "open a PR from the default branch to itself" situation.
 
-Learning: in `ce-commit-push-pr`, declining feature-branch creation on the default branch is a stop condition, not a continue condition.
+Learning: in `rg-commit-push-pr`, declining feature-branch creation on the default branch is a stop condition, not a continue condition.
 
 ### 9. Clean-working-tree shortcuts interact with branch safety, PR state, and upstream state all at once
 

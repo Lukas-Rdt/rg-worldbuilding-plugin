@@ -22,15 +22,15 @@ All facts below were verified by building a fixture plugin and running `agy plug
 `agy` installs a plugin from a **local directory** or a **remote Git repository URL** when the source contains a root `plugin.json`:
 
 ```bash
-agy plugin install https://github.com/EveryInc/compound-engineering-plugin
+agy plugin install https://github.com/Lukas-Rdt/rg-engineering-plugin
 ```
 
 Local checkout (repository root or bundled `.agy/` entry point):
 
 ```bash
-git clone https://github.com/EveryInc/compound-engineering-plugin
-agy plugin install ./compound-engineering-plugin
-agy plugin install ./compound-engineering-plugin/.agy   # equivalent via symlinked manifest
+git clone https://github.com/Lukas-Rdt/rg-engineering-plugin
+agy plugin install ./rg-engineering-plugin
+agy plugin install ./rg-engineering-plugin/.agy   # equivalent via symlinked manifest
 ```
 
 - `agy plugin install <target>` requires `<target>` to be a directory containing a `plugin.json` at
@@ -39,11 +39,11 @@ agy plugin install ./compound-engineering-plugin/.agy   # equivalent via symlink
 - `agy plugin install <plugin>@<marketplace>` exists for marketplaces; Antigravity does not yet
   ship a curated marketplace catalog equivalent to Kimi's `.kimi-plugin/marketplace.json`.
 - `agy plugin import [gemini|claude]` imports an existing Gemini-CLI / Claude install; on this machine
-  `agy plugin list` showed `compound-engineering` already imported with `source: gemini-cli`.
+  `agy plugin list` showed `rg-engineering` already imported with `source: gemini-cli`.
 - Other subcommands: `list`, `uninstall <name>`, `enable <name>`, `disable <name>`, `validate [path]`,
   `link <mp> <target>`.
 
-Compound Engineering publishes root `plugin.json` plus `skills/` so remote Git install works without
+RG Engineering publishes root `plugin.json` plus `skills/` so remote Git install works without
 a clone step. The committed `.agy/` bundle holds a symlinked manifest (`plugin.json -> ../plugin.json`)
 and `skills -> ../skills` for explicit local `.agy` installs.
 
@@ -73,7 +73,7 @@ dirs/files are optional and discovered by convention.
 Minimal valid manifest (verified):
 
 ```json
-{ "name": "compound-engineering", "version": "0.0.0" }
+{ "name": "rg-engineering", "version": "0.0.0" }
 ```
 
 - `name` and `version` are sufficient to validate. `description` and other fields are optional and

@@ -11,10 +11,10 @@ import path from "node:path"
 
 // The cache helper is byte-duplicated per consuming skill (parity-guarded in
 // repo-profile-cache-parity.test.ts). Behavior is identical, so exercise the
-// canonical ce-pov copy here.
+// canonical rg-pov copy here.
 const SCRIPT = path.join(
   __dirname,
-  "../skills/ce-pov/scripts/repo-profile-cache.py",
+  "../skills/rg-pov/scripts/repo-profile-cache.py",
 )
 
 function git(cwd: string, ...args: string[]): string {

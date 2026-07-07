@@ -412,12 +412,12 @@ describe("writeOpenCodeBundle", () => {
     await writeOpenCodeBundle(outputRoot, {
       pluginName: "rg-engineering",
       config: { $schema: "https://opencode.ai/config.json" },
-      agents: [{ name: "ce-agent", content: "ce agent" }],
+      agents: [{ name: "rg-agent", content: "ce agent" }],
       plugins: [],
       commandFiles: [],
       skillDirs: [
         {
-          name: "ce-skill",
+          name: "rg-skill",
           sourceDir: path.join(import.meta.dir, "fixtures", "sample-plugin", "skills", "skill-one"),
         },
       ],
@@ -455,8 +455,8 @@ describe("writeOpenCodeBundle", () => {
       skillDirs: [],
     })
 
-    expect(await exists(path.join(outputRoot, "agents", "ce-agent.md"))).toBe(false)
-    expect(await exists(path.join(outputRoot, "skills", "ce-skill"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "agents", "rg-agent.md"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "skills", "rg-skill"))).toBe(false)
     expect(await exists(path.join(outputRoot, "agents", "tutor-agent.md"))).toBe(true)
     expect(await exists(path.join(outputRoot, "skills", "tutor-skill"))).toBe(true)
     expect(await exists(path.join(outputRoot, "coding-tutor", "install-manifest.json"))).toBe(true)
@@ -494,8 +494,8 @@ describe("writeOpenCodeBundle", () => {
     const outputRoot = path.join(tempRoot, ".opencode")
     const agentsRoot = path.join(outputRoot, "agents")
     await fs.mkdir(agentsRoot, { recursive: true })
-    const userAgent = agentContent("ce-repo-research-analyst", "Personal OpenCode research helper.")
-    await fs.writeFile(path.join(agentsRoot, "ce-repo-research-analyst.md"), userAgent)
+    const userAgent = agentContent("rg-repo-research-analyst", "Personal OpenCode research helper.")
+    await fs.writeFile(path.join(agentsRoot, "rg-repo-research-analyst.md"), userAgent)
 
     const plugin = await loadClaudePlugin(path.join(import.meta.dir, ".."))
     const bundle = convertClaudeToOpenCode(plugin, {
@@ -505,8 +505,8 @@ describe("writeOpenCodeBundle", () => {
     })
     await writeOpenCodeBundle(outputRoot, bundle)
 
-    expect(await exists(path.join(agentsRoot, "ce-repo-research-analyst.md"))).toBe(true)
-    expect(await fs.readFile(path.join(agentsRoot, "ce-repo-research-analyst.md"), "utf8")).toBe(userAgent)
+    expect(await exists(path.join(agentsRoot, "rg-repo-research-analyst.md"))).toBe(true)
+    expect(await fs.readFile(path.join(agentsRoot, "rg-repo-research-analyst.md"), "utf8")).toBe(userAgent)
   })
 
   test("upgrades from pre-namespacing legacy shared manifest for non-CE plugins", async () => {
@@ -523,9 +523,9 @@ describe("writeOpenCodeBundle", () => {
 
     // Seed the legacy shared manifest at the OLD path, recording artifacts
     // that the previous coding-tutor install placed in the root.
-    await fs.mkdir(path.join(outputRoot, "compound-engineering"), { recursive: true })
+    await fs.mkdir(path.join(outputRoot, "rg-engineering"), { recursive: true })
     await fs.writeFile(
-      path.join(outputRoot, "compound-engineering", "install-manifest.json"),
+      path.join(outputRoot, "rg-engineering", "install-manifest.json"),
       JSON.stringify({
         version: 1,
         pluginName: "coding-tutor",
@@ -576,7 +576,7 @@ describe("writeOpenCodeBundle", () => {
 
     // The legacy shared manifest must be archived so it doesn't keep
     // misleading a future install (and must no longer exist at the old path).
-    expect(await exists(path.join(outputRoot, "compound-engineering", "install-manifest.json"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "rg-engineering", "install-manifest.json"))).toBe(false)
     expect(await exists(path.join(outputRoot, "coding-tutor", "legacy-backup"))).toBe(true)
   })
 

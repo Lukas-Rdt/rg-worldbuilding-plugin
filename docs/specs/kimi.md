@@ -18,13 +18,13 @@ Kimi Code CLI plugins are directories or zip files with a manifest at one of:
 <plugin_root>/.kimi-plugin/plugin.json
 ```
 
-When both exist, `kimi.plugin.json` takes precedence. Compound Engineering uses `.kimi-plugin/plugin.json` to match the repo's other platform-specific manifest directories.
+When both exist, `kimi.plugin.json` takes precedence. RG Engineering uses `.kimi-plugin/plugin.json` to match the repo's other platform-specific manifest directories.
 
 Supported fields include:
 
 | Field | CE usage |
 | --- | --- |
-| `name` | Required plugin id, set to `compound-engineering` |
+| `name` | Required plugin id, set to `rg-engineering` |
 | `version` | Root plugin version, bumped by release-please |
 | `description`, `keywords`, `author`, `homepage`, `license` | Shared display metadata |
 | `interface.displayName` | Marketplace/plugin manager display name |
@@ -45,9 +45,9 @@ Kimi also supports a custom marketplace JSON source. The catalog schema uses:
   "version": "2",
   "plugins": [
     {
-      "id": "compound-engineering",
-      "displayName": "Compound Engineering",
-      "source": "https://github.com/EveryInc/compound-engineering-plugin"
+      "id": "rg-engineering",
+      "displayName": "RG Engineering",
+      "source": "https://github.com/Lukas-Rdt/rg-engineering-plugin"
     }
   ]
 }
@@ -60,13 +60,13 @@ The marketplace catalog has no release-owned `metadata.version` equivalent. Trea
 Direct install from GitHub:
 
 ```text
-/plugins install https://github.com/EveryInc/compound-engineering-plugin
+/plugins install https://github.com/Lukas-Rdt/rg-engineering-plugin
 ```
 
 Marketplace browsing:
 
 ```text
-/plugins marketplace https://raw.githubusercontent.com/EveryInc/compound-engineering-plugin/main/.kimi-plugin/marketplace.json
+/plugins marketplace https://raw.githubusercontent.com/Lukas-Rdt/rg-engineering-plugin/main/.kimi-plugin/marketplace.json
 ```
 
 After installing, enabling, disabling, or removing a plugin, Kimi requires `/reload` or a new session for changes to apply.

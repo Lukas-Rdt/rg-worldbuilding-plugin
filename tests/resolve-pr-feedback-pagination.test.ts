@@ -3,7 +3,7 @@ import path from "path"
 import { describe, expect, test } from "bun:test"
 
 /**
- * The two GraphQL fetch scripts in ce-resolve-pr-feedback must paginate.
+ * The two GraphQL fetch scripts in rg-resolve-pr-feedback must paginate.
  *
  * Issue #798: previous versions used fixed `first: N` page sizes with no
  * cursor loop, so PRs with more than one page of review threads / comments /
@@ -18,7 +18,7 @@ import { describe, expect, test } from "bun:test"
 
 const SCRIPTS_DIR = path.join(
   process.cwd(),
-  "skills/ce-resolve-pr-feedback/scripts",
+  "skills/rg-resolve-pr-feedback/scripts",
 )
 
 const PAGE_INFO_SELECTION = /pageInfo\s*\{\s*hasNextPage\s+endCursor\s*\}/
@@ -27,7 +27,7 @@ function read(name: string): string {
   return readFileSync(path.join(SCRIPTS_DIR, name), "utf8")
 }
 
-describe("ce-resolve-pr-feedback scripts paginate GraphQL connections (issue #798)", () => {
+describe("rg-resolve-pr-feedback scripts paginate GraphQL connections (issue #798)", () => {
   test("get-pr-comments uses --paginate for every top-level connection", () => {
     const body = read("get-pr-comments")
     const paginateCount = (body.match(/gh api graphql --paginate\b/g) ?? []).length

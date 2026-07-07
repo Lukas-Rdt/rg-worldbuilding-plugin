@@ -1,11 +1,11 @@
 # Review followup (LFG step 4–5)
 
-`ce-code-review` is review-only. LFG applies eligible fixes itself, then commits.
+`rg-code-review` is review-only. LFG applies eligible fixes itself, then commits.
 
 ## Step 4 — invoke review
 
 ```
-ce-code-review mode:agent plan:<plan-path-from-step-1>
+rg-code-review mode:agent plan:<plan-path-from-step-1>
 ```
 
 Read the **Actionable Findings** summary and artifact path. Do not pass `mode:autofix`.

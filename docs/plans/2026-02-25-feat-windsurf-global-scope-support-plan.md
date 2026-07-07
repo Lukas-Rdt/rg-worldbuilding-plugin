@@ -592,8 +592,8 @@ Test the shared `resolveTargetOutputRoot` function:
 
 ## Acceptance Criteria
 
-- [x] `install compound-engineering --to windsurf` writes to `~/.codeium/windsurf/` by default
-- [x] `install compound-engineering --to windsurf --scope workspace` writes to `cwd/.windsurf/`
+- [x] `install rg-engineering --to windsurf` writes to `~/.codeium/windsurf/` by default
+- [x] `install rg-engineering --to windsurf --scope workspace` writes to `cwd/.windsurf/`
 - [x] `--output /custom/path` overrides scope for both commands
 - [x] `--scope` on non-supporting target produces clear error
 - [x] `mcp_config.json` merges with existing file (backup created, user entries preserved)

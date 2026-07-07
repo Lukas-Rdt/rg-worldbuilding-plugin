@@ -5,16 +5,16 @@ import { load } from "js-yaml"
 
 const PLUGIN_ROOT = path.join(process.cwd(), "skills")
 
-/** Canonical copies live in ce-compound; mirrors must stay identical. */
+/** Canonical copies live in rg-compound; mirrors must stay identical. */
 const SHARED_SUPPORT_FILES = [
   "references/schema.yaml",
   "references/yaml-schema.md",
   "assets/resolution-template.md",
 ]
 
-const SKILLS_WITH_COPIES = ["ce-compound", "ce-compound-refresh"]
+const SKILLS_WITH_COPIES = ["rg-compound", "rg-compound-refresh"]
 
-describe("ce-compound support file drift", () => {
+describe("rg-compound support file drift", () => {
   for (const file of SHARED_SUPPORT_FILES) {
     test(`${file} is identical across ${SKILLS_WITH_COPIES.join(", ")}`, async () => {
       const contents = await Promise.all(
@@ -31,18 +31,18 @@ describe("ce-compound support file drift", () => {
 })
 
 // Format-rendering refs (markdown-rendering.md, html-rendering.md) are
-// byte-duplicated across ce-plan, ce-brainstorm, and ce-ideate. There is no
+// byte-duplicated across rg-plan, rg-brainstorm, and rg-ideate. There is no
 // cross-skill shared-file mechanism (see AGENTS.md
 // "Runtime vs Authoring Context"); all copies must stay identical so the
 // agent renders artifacts the same way regardless of which skill composed
 // them.
-const RENDERING_SKILLS = ["ce-plan", "ce-brainstorm", "ce-ideate"]
+const RENDERING_SKILLS = ["rg-plan", "rg-brainstorm", "rg-ideate"]
 const RENDERING_REFS = [
   "references/markdown-rendering.md",
   "references/html-rendering.md",
 ]
 
-describe("format-rendering ref drift across ce-plan and ce-brainstorm", () => {
+describe("format-rendering ref drift across rg-plan and rg-brainstorm", () => {
   for (const ref of RENDERING_REFS) {
     test(`${ref} is identical across ${RENDERING_SKILLS.join(", ")}`, async () => {
       const contents = await Promise.all(
@@ -66,7 +66,7 @@ describe("format-rendering ref drift across ce-plan and ce-brainstorm", () => {
  * wrapped in double quotes — otherwise strict YAML parsers reject the file.
  * See issue #606.
  */
-describe("ce-compound YAML safety rule presence", () => {
+describe("rg-compound YAML safety rule presence", () => {
   for (const skill of SKILLS_WITH_COPIES) {
     test(`${skill}/references/schema.yaml validation_rules includes YAML-safety entry`, async () => {
       const raw = await readFile(
@@ -102,9 +102,9 @@ describe("ce-compound YAML safety rule presence", () => {
     })
   }
 
-  test("ce-compound/SKILL.md points at YAML Safety Rules in both frontmatter-writing spots", async () => {
+  test("rg-compound/SKILL.md points at YAML Safety Rules in both frontmatter-writing spots", async () => {
     const raw = await readFile(
-      path.join(PLUGIN_ROOT, "ce-compound", "SKILL.md"),
+      path.join(PLUGIN_ROOT, "rg-compound", "SKILL.md"),
       "utf8",
     )
     // Match the distinctive write-path pointer phrase, not generic yaml-schema.md
@@ -124,11 +124,11 @@ describe("ce-compound YAML safety rule presence", () => {
     expect(frontmatterAdjacent.length).toBeGreaterThanOrEqual(2)
   })
 
-  test("ce-compound-refresh per-action-flows reference points at YAML-safety rules in the Replace flow", async () => {
+  test("rg-compound-refresh per-action-flows reference points at YAML-safety rules in the Replace flow", async () => {
     // The Replace Flow content lives in references/per-action-flows.md after the
     // Phase 4 extraction; SKILL.md keeps a stub that delegates to it.
     const raw = await readFile(
-      path.join(PLUGIN_ROOT, "ce-compound-refresh", "references", "per-action-flows.md"),
+      path.join(PLUGIN_ROOT, "rg-compound-refresh", "references", "per-action-flows.md"),
       "utf8",
     )
     // Anchor to the Replace Flow section so a drifted or deleted pointer is

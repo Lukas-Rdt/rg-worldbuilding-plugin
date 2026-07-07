@@ -9,7 +9,7 @@ status: complete
 
 ## Overview
 
-Add GitHub Copilot as a converter target following the established `TargetHandler` pattern. This converts the compound-engineering Claude Code plugin into Copilot's native format: custom agents (`.agent.md`), agent skills (`SKILL.md`), and MCP server configuration JSON.
+Add GitHub Copilot as a converter target following the established `TargetHandler` pattern. This converts the rg-engineering Claude Code plugin into Copilot's native format: custom agents (`.agent.md`), agent skills (`SKILL.md`), and MCP server configuration JSON.
 
 **Brainstorm:** `docs/brainstorms/2026-02-14-copilot-converter-target-brainstorm.md`
 
@@ -249,7 +249,7 @@ Follow `docs/specs/cursor.md` format:
 **File:** `README.md`
 
 - Add "copilot" to the list of supported targets
-- Add usage example: `compound convert --to copilot ./plugins/compound-engineering`
+- Add usage example: `compound convert --to copilot ./plugins/rg-engineering`
 - Add sync example: `compound sync copilot`
 
 ## Acceptance Criteria

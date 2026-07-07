@@ -22,14 +22,14 @@ Two related improvements to the converter CLI:
 Users currently must run 6 separate commands to install to all targets:
 
 ```bash
-bunx @every-env/compound-plugin install compound-engineering --to opencode
-bunx @every-env/compound-plugin install compound-engineering --to droid
-bunx @every-env/compound-plugin install compound-engineering --to cursor
-bunx @every-env/compound-plugin install compound-engineering --to pi
-bunx @every-env/compound-plugin install compound-engineering --to gemini
+bunx @every-env/compound-plugin install rg-engineering --to opencode
+bunx @every-env/compound-plugin install rg-engineering --to droid
+bunx @every-env/compound-plugin install rg-engineering --to cursor
+bunx @every-env/compound-plugin install rg-engineering --to pi
+bunx @every-env/compound-plugin install rg-engineering --to gemini
 ```
 
-Superseded note (2026-06-19): Compound Engineering's Codex path is now native plugin install through `codex plugin marketplace add` plus the `/plugins` TUI. The old converted Codex companion install is no longer part of the CE install flow.
+Superseded note (2026-06-19): RG Engineering's Codex path is now native plugin install through `codex plugin marketplace add` plus the `/plugins` TUI. The old converted Codex companion install is no longer part of the CE install flow.
 
 Similarly, sync requires separate commands per target. And Gemini sync doesn't exist yet.
 
@@ -299,7 +299,7 @@ Follow `tests/sync-cursor.test.ts` pattern:
 Add to install section:
 ```bash
 # auto-detect installed tools and install to all
-bunx @every-env/compound-plugin install compound-engineering --to all
+bunx @every-env/compound-plugin install rg-engineering --to all
 ```
 
 Add to sync section:

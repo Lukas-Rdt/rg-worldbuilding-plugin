@@ -470,21 +470,21 @@ Task best-practices-researcher(topic)`
     expect(result).not.toContain("@security-sentinel")
   })
 
-  test("replaces ce: namespace with ce- in body text", () => {
-    const input = "prefer ce:brainstorm first. Then run ce:plan and ce:review. Use ce:* skills."
+  test("replaces rg: namespace with rg- in body text", () => {
+    const input = "prefer rg:brainstorm first. Then run rg:plan and rg:review. Use rg:* skills."
     const result = transformContentForCopilot(input)
-    expect(result).toBe("prefer ce-brainstorm first. Then run ce-plan and ce-review. Use ce-* skills.")
-    expect(result).not.toContain("ce:")
+    expect(result).toBe("prefer rg-brainstorm first. Then run rg-plan and rg-review. Use rg-* skills.")
+    expect(result).not.toContain("rg:")
   })
 
-  test("replaces multi-colon ce: references fully", () => {
-    const input = "run ce:foo:bar and ce:baz:qux"
+  test("replaces multi-colon rg: references fully", () => {
+    const input = "run rg:foo:bar and rg:baz:qux"
     const result = transformContentForCopilot(input)
-    expect(result).toBe("run ce-foo-bar and ce-baz-qux")
+    expect(result).toBe("run rg-foo-bar and rg-baz-qux")
     expect(result).not.toContain(":")
   })
 
-  test("ce: replacement does not corrupt non-command patterns", () => {
+  test("rg: replacement does not corrupt non-command patterns", () => {
     const input = "Use source: explicit and Confidence: high. See https://example.com/ace:thing"
     const result = transformContentForCopilot(input)
     expect(result).toContain("source: explicit")
@@ -492,11 +492,11 @@ Task best-practices-researcher(topic)`
     expect(result).toContain("ace:thing")
   })
 
-  test("ce: replacement does not corrupt URLs", () => {
-    const input = "See https://example.com/ce:plan and http://docs.example.com/ce:review/overview"
+  test("rg: replacement does not corrupt URLs", () => {
+    const input = "See https://example.com/rg:plan and http://docs.example.com/rg:review/overview"
     const result = transformContentForCopilot(input)
-    expect(result).toContain("https://example.com/ce:plan")
-    expect(result).toContain("http://docs.example.com/ce:review/overview")
+    expect(result).toContain("https://example.com/rg:plan")
+    expect(result).toContain("http://docs.example.com/rg:review/overview")
   })
 
   test("generated skill deduplicates against sanitized pass-through skill names", () => {
@@ -505,20 +505,20 @@ Task best-practices-researcher(topic)`
       agents: [],
       commands: [
         {
-          name: "ce:plan",
+          name: "rg:plan",
           description: "Planning command",
           model: "inherit",
           allowedTools: [],
           body: "Plan the work.",
-          sourcePath: "/tmp/plugin/commands/ce-plan.md",
+          sourcePath: "/tmp/plugin/commands/rg-plan.md",
         },
       ],
       skills: [
         {
-          name: "ce:plan",
+          name: "rg:plan",
           description: "Planning skill",
-          sourceDir: "/tmp/plugin/skills/ce-plan",
-          skillPath: "/tmp/plugin/skills/ce-plan/SKILL.md",
+          sourceDir: "/tmp/plugin/skills/rg-plan",
+          skillPath: "/tmp/plugin/skills/rg-plan/SKILL.md",
         },
       ],
     }
@@ -526,7 +526,7 @@ Task best-practices-researcher(topic)`
     const bundle = convertClaudeToCopilot(plugin, defaultOptions)
 
     // The generated skill from the command should get a deduplicated name
-    // since "ce:plan" and "ce-plan" both map to "ce-plan" on disk
-    expect(bundle.generatedSkills[0].name).not.toBe("ce-plan")
+    // since "rg:plan" and "rg-plan" both map to "rg-plan" on disk
+    expect(bundle.generatedSkills[0].name).not.toBe("rg-plan")
   })
 })

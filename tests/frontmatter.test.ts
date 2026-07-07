@@ -111,7 +111,7 @@ describe("frontmatter YAML validity", () => {
 
         // Pi rejects skill names that don't match the parent directory or contain
         // characters outside [a-z0-9-]. Upgrading from a pre-v3 install with
-        // `name: ce:brainstorm` frontmatter in a renamed `ce-brainstorm` directory
+        // `name: rg:brainstorm` frontmatter in a renamed `rg-brainstorm` directory
         // triggered issue #449. Catch any reintroduction at the source.
         test(`${pluginRoot}/${rel} skill frontmatter name matches directory and uses valid characters`, () => {
           const parsed = load(yaml) as Record<string, unknown> | null
@@ -122,7 +122,7 @@ describe("frontmatter YAML validity", () => {
           expect(name, `frontmatter name "${name}" must be lowercase a-z, 0-9, and hyphens`).toMatch(/^[a-z0-9-]+$/)
         })
 
-        // All rg-engineering skills (and agents) must use the `ce-` prefix
+        // All rg-engineering skills (and agents) must use the `rg-` prefix
         // so they are unambiguously identifiable as rg-engineering
         // components. See AGENTS.md "Naming
         // Convention". A small allowlist preserves three pre-existing skills
@@ -133,12 +133,12 @@ describe("frontmatter YAML validity", () => {
             "file-todos",
             "lfg",
           ])
-          test(`${pluginRoot}/${rel} skill name uses ce- prefix`, () => {
+          test(`${pluginRoot}/${rel} skill name uses rg- prefix`, () => {
             const dirName = path.basename(path.dirname(rel))
             if (SKILL_PREFIX_ALLOWLIST.has(dirName)) return
             expect(
-              dirName.startsWith("ce-"),
-              `Skill "${dirName}" must use the ce- prefix. ` +
+              dirName.startsWith("rg-"),
+              `Skill "${dirName}" must use the rg- prefix. ` +
                 `If this is a legacy skill that predates the rule, add it to ` +
                 `SKILL_PREFIX_ALLOWLIST in tests/frontmatter.test.ts.`,
             ).toBe(true)
@@ -150,11 +150,11 @@ describe("frontmatter YAML validity", () => {
         pluginRoot === "." &&
         /^agents\/[^/]+\.md$/.test(rel)
       ) {
-        test(`${pluginRoot}/${rel} agent name uses ce- prefix`, () => {
+        test(`${pluginRoot}/${rel} agent name uses rg- prefix`, () => {
           const fileName = path.basename(rel, ".md")
           expect(
-            fileName.startsWith("ce-"),
-            `Agent "${fileName}" must use the ce- prefix.`,
+            fileName.startsWith("rg-"),
+            `Agent "${fileName}" must use the rg- prefix.`,
           ).toBe(true)
         })
 
@@ -165,7 +165,7 @@ describe("frontmatter YAML validity", () => {
         // indefinitely on platforms whose bash tool blocks on heredocs (see
         // issue #832 for the OpenCode coherence-reviewer stall).
         const NO_BASH_AGENTS = new Set([
-          "ce-coherence-reviewer",
+          "rg-coherence-reviewer",
         ])
         const agentName = path.basename(rel, ".md")
         if (NO_BASH_AGENTS.has(agentName)) {

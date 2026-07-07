@@ -17,7 +17,7 @@ tags: [cross-skill, cache, skill-design, duplication, parity-test, skill-creator
 
 ## Context
 
-Repo-grounding skills (`ce-pov`, `ce-plan`, `ce-optimize`, `ce-ideate`, `ce-brainstorm`, `ce-code-review`, `ce-compound`, `ce-debug`) each independently re-derived the same question-agnostic "project profile" (stack, deps, conventions, structure) on every run — an expensive grounding pass repeated per skill and per invocation. We wanted one shared, cached primitive. But the plugin's hard constraint (AGENTS.md "File References in Skills") forbids cross-skill imports: the converter copies each skill directory as an isolated unit, so a skill may only reference files inside its own tree. There is no shared-module mechanism.
+Repo-grounding skills (`rg-pov`, `rg-plan`, `rg-optimize`, `rg-ideate`, `rg-brainstorm`, `rg-code-review`, `rg-compound`, `rg-debug`) each independently re-derived the same question-agnostic "project profile" (stack, deps, conventions, structure) on every run — an expensive grounding pass repeated per skill and per invocation. We wanted one shared, cached primitive. But the plugin's hard constraint (AGENTS.md "File References in Skills") forbids cross-skill imports: the converter copies each skill directory as an isolated unit, so a skill may only reference files inside its own tree. There is no shared-module mechanism.
 
 ## Guidance
 
@@ -27,7 +27,7 @@ Build the "shared" primitive as **byte-duplicated assets plus a parity test**, n
 2. **Guard file drift with a `tests/` byte-identity test** — declare the asset filenames x the consumer-skill list and assert each copy equals the first (mirror `tests/compound-support-files.test.ts`). Adding a consumer = drop in the copies + add its name to the test's `CONSUMER_SKILLS`.
 3. **Invoke the bundled script via the `SKILL_DIR` anchor**, never `${CLAUDE_SKILL_DIR}` (see `docs/solutions/skill-design/bundled-script-path-resolution-across-harnesses.md`).
 4. **Put deterministic work in the script, judgment in the persona.** The Python helper does git keying + validity + atomic read/write (unit-testable); the LLM persona derives the profile only on a miss.
-5. **Share state through a single OS-temp location, keyed by content/identity**, so any skill reads what another wrote (`/tmp/compound-engineering/repo-profile/<root-sha>/<head-sha>.json`).
+5. **Share state through a single OS-temp location, keyed by content/identity**, so any skill reads what another wrote (`/tmp/rg-engineering/repo-profile/<root-sha>/<head-sha>.json`).
 
 ## Why This Matters
 

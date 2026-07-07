@@ -21,12 +21,12 @@ const PI_AGENTS_BLOCK_START = "<!-- BEGIN COMPOUND PI TOOL MAP -->"
 const PI_AGENTS_BLOCK_END = "<!-- END COMPOUND PI TOOL MAP -->"
 const PI_INSTALL_MANIFEST = "install-manifest.json"
 
-const PI_AGENTS_BLOCK_BODY = `## Compound Engineering (Pi compatibility)
+const PI_AGENTS_BLOCK_BODY = `## RG Engineering (Pi compatibility)
 
 This block is managed by compound-plugin.
 
 Required Pi companion for multi-agent CE workflows:
-- \`pi-subagents\` provides the subagent primitive used by ce-code-review, ce-doc-review, ce-plan, and ce-work
+- \`pi-subagents\` provides the subagent primitive used by rg-code-review, rg-doc-review, rg-plan, and rg-work
 
 Recommended Pi companion:
 - \`pi-ask-user\` (by edlsh) provides the \`ask_user\` tool; skills fall back to numbered options in chat when it is missing

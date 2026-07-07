@@ -1,6 +1,6 @@
 # Agent Instructions
 
-This repository is the root of the `compound-engineering` coding-agent plugin and the marketplace/catalog metadata used to distribute it.
+This repository is the root of the `rg-engineering` coding-agent plugin and the marketplace/catalog metadata used to distribute it.
 
 It also contains:
 - the Bun/TypeScript CLI that converts Claude Code plugins into other agent platform formats
@@ -22,17 +22,17 @@ bun run release:validate  # check plugin/marketplace consistency
 - **Merge policy:** All changes to `main` go through pull requests. Direct pushes and direct merges are not allowed; branch protection on `main` enforces this by requiring the `test` status check to pass. The direct path bypasses `release:validate`, the test suite, and PR title validation — past direct merges have caused version drift requiring multi-PR recovery (see `docs/solutions/workflow/release-please-version-drift-recovery.md`).
 - **Safety:** Do not delete or overwrite user data. Avoid destructive commands.
 - **Testing:** Run `bun test` after changes that affect parsing, conversion, or output.
-- **Release versioning:** Releases are prepared by release automation, not normal feature PRs. The repo has one root plugin/package release component (`compound-engineering`) plus marketplace components (`marketplace`, `cursor-marketplace`). GitHub release PRs and GitHub Releases are the canonical release-notes surface for new releases; root `CHANGELOG.md` is only a pointer to that history. Use conventional titles such as `feat:` and `fix:` so release automation can classify change intent, but do not hand-bump release-owned versions or hand-author release notes in routine PRs.
+- **Release versioning:** Releases are prepared by release automation, not normal feature PRs. The repo has one root plugin/package release component (`rg-engineering`) plus marketplace components (`marketplace`, `cursor-marketplace`). GitHub release PRs and GitHub Releases are the canonical release-notes surface for new releases; root `CHANGELOG.md` is only a pointer to that history. Use conventional titles such as `feat:` and `fix:` so release automation can classify change intent, but do not hand-bump release-owned versions or hand-author release notes in routine PRs.
 - **Output Paths:** Keep OpenCode output at `opencode.json` and `.opencode/{agents,skills,plugins}`. For OpenCode, commands go to `~/.config/opencode/commands/<name>.md`; `opencode.json` is deep-merged (never overwritten wholesale).
 - **Scratch Space:** Default to OS temp. Use `.context/` only when explicitly justified by the rules below.
   - **Default: OS temp** — covers most scratch, including per-run throwaway AND cross-invocation reusable, regardless of whether a repo is present or whether other skills may read the files. A stable OS-temp prefix handles cross-skill and cross-invocation coordination equally well as an in-repo path; repo-adjacency is rarely the relevant property.
     - **Per-run throwaway**: `mktemp -d -t <prefix>-XXXXXX` (OS handles cleanup). Use for files consumed once and discarded — captured screenshots, stitched GIFs, intermediate build outputs, recordings, delegation prompts/results, single-run checkpoints. The resulting path is opaque (on macOS it resolves under `$TMPDIR`/`/var/folders/...`) — that is appropriate for throwaway files users are not meant to access.
-    - **Cross-invocation reusable**: stable path `/tmp/compound-engineering/<skill-name>/<run-id>/` — **not** `mktemp -d` — so later invocations of the same skill can discover sibling run-ids. Use `/tmp` directly rather than `$TMPDIR` so paths stay accessible: `$TMPDIR` on macOS resolves to `/var/folders/64/.../T/`, which is hostile for users who want to inspect checkpoints, grep them, or copy them out. The per-user isolation `$TMPDIR` provides is not valuable for cross-invocation reusable scratch where users are the intended audience. Use for caches keyed by session, checkpoints meant to survive context compaction within a loose session, or any state where later runs of the same skill need to locate prior outputs.
+    - **Cross-invocation reusable**: stable path `/tmp/rg-engineering/<skill-name>/<run-id>/` — **not** `mktemp -d` — so later invocations of the same skill can discover sibling run-ids. Use `/tmp` directly rather than `$TMPDIR` so paths stay accessible: `$TMPDIR` on macOS resolves to `/var/folders/64/.../T/`, which is hostile for users who want to inspect checkpoints, grep them, or copy them out. The per-user isolation `$TMPDIR` provides is not valuable for cross-invocation reusable scratch where users are the intended audience. Use for caches keyed by session, checkpoints meant to survive context compaction within a loose session, or any state where later runs of the same skill need to locate prior outputs.
   - **Exception: `.context/`** — use only when the artifact is genuinely bound to the CWD repo AND meets at least one of:
     - (a) **User-curated**: the user is expected to inspect, manipulate, or manually curate the artifact outside the skill (e.g., a per-repo TODO database, a per-spec optimization log that survives across sessions on the same checkout).
     - (b) **Repo+branch-inseparable**: the artifact's meaning is inseparable from this specific repo or branch (e.g., branch-specific resume state that a user expects to pick up again in the same checkout).
     - (c) **Path is core UX**: surfacing the artifact path back to the user is a core part of the skill's output and that path is easier to communicate as a repo-relative location than an OS-temp one.
-    Namespace under `.context/compound-engineering/<workflow-or-skill-name>/`, add a per-run subdirectory when concurrent runs are plausible, and decide cleanup behavior per the artifact's lifecycle (per-run scratch clears on success; user-curated state persists). "Shared between skills" is not by itself sufficient — OS temp handles that equally well.
+    Namespace under `.context/rg-engineering/<workflow-or-skill-name>/`, add a per-run subdirectory when concurrent runs are plausible, and decide cleanup behavior per the artifact's lifecycle (per-run scratch clears on success; user-curated state persists). "Shared between skills" is not by itself sufficient — OS temp handles that equally well.
   - **Durable outputs** (plans, specs, learnings, docs, final deliverables) belong in `docs/` or another repo-tracked location, not in either scratch tier.
   - **Cross-platform note:** `/tmp` is writable on macOS (symlink to `/private/tmp`), Linux, and WSL. `mktemp -d -t <prefix>-XXXXXX` also works on all three. Skills authored here assume Unix-like shells; native Windows is not a current target.
 - **Character encoding:**
@@ -44,7 +44,7 @@ bun run release:validate  # check plugin/marketplace consistency
 
 ```
 src/              CLI entry point, parsers, converters, target writers
-skills/           Compound Engineering plugin skills
+skills/           RG Engineering plugin skills
 .claude-plugin/   Claude plugin manifest and marketplace catalog metadata
 .codex-plugin/    Codex plugin manifest
 .cursor-plugin/   Cursor plugin manifest and marketplace catalog metadata
@@ -70,13 +70,13 @@ Do not assume a repo change is "just CLI" or "just plugin" without checking whic
 When changing plugin content:
 
 - Update substantive docs like `README.md` when the plugin behavior, inventory, or usage changes.
-- When adding a user-facing skill, document it: create a `docs/skills/<skill-name>.md` page (purpose, novel mechanics, when to use, chain position — follow the shape of the existing pages) and add a catalog row under the right category in `docs/skills/README.md`, alongside the root `README.md` inventory row and the skill-count bump in `tests/release-metadata.test.ts`. Keep these in sync when a skill's purpose or inventory changes. This is convention, not yet validated by a test, so it is easy to miss — most skills have a page; the few that don't (e.g. `lfg`, `ce-dogfood-beta`) are the exception, not the rule.
+- When adding a user-facing skill, document it: create a `docs/skills/<skill-name>.md` page (purpose, novel mechanics, when to use, chain position — follow the shape of the existing pages) and add a catalog row under the right category in `docs/skills/README.md`, alongside the root `README.md` inventory row and the skill-count bump in `tests/release-metadata.test.ts`. Keep these in sync when a skill's purpose or inventory changes. This is convention, not yet validated by a test, so it is easy to miss — most skills have a page; the few that don't (e.g. `lfg`, `rg-dogfood-beta`) are the exception, not the rule.
 - Do not hand-bump release-owned versions in plugin or marketplace manifests.
 - Do not hand-add release entries to `CHANGELOG.md` or treat it as the canonical source for new releases.
 - Run `bun run release:validate` if agents, commands, skills, MCP servers, or release-owned descriptions/counts may have changed.
 - When removing a skill, agent, or command, add its name to both cleanup registries so stale flat-install artifacts are swept on upgrade:
   - `STALE_SKILL_DIRS` / `STALE_AGENT_NAMES` / `STALE_PROMPT_FILES` in `src/utils/legacy-cleanup.ts`
-  - `EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN["compound-engineering"]` in `src/data/plugin-legacy-artifacts.ts`
+  - `EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN["rg-engineering"]` in `src/data/plugin-legacy-artifacts.ts`
 
 Useful validation commands:
 
@@ -103,7 +103,7 @@ When a skill needs to discover a project convention at runtime — the issue tra
 **Name a concrete file only where the skill must do something a context reference can't express:**
 
 - **Writing a convention back** (e.g., persisting `project_tracker: linear`) needs a target — name it minimally and as an example ("the project's root agent-instructions file, e.g., `AGENTS.md`; if it `@`-includes another, write to the substantive one").
-- **Reading content that is genuinely not auto-loaded** — a subdirectory-scoped instruction file governing the area being changed, an optional project doc like `STRATEGY.md` / `CONCEPTS.md` / `README.md`, or any file a *fresh subagent* (which does not inherit the parent's loaded instructions) must open to do its job. Auditing tools that must enumerate every standards file (e.g., `ce-code-review`'s project-standards reviewer globbing all `CLAUDE.md`/`AGENTS.md`) are a legitimate exception — they review the files, they don't re-read them for context.
+- **Reading content that is genuinely not auto-loaded** — a subdirectory-scoped instruction file governing the area being changed, an optional project doc like `STRATEGY.md` / `CONCEPTS.md` / `README.md`, or any file a *fresh subagent* (which does not inherit the parent's loaded instructions) must open to do its job. Auditing tools that must enumerate every standards file (e.g., `rg-code-review`'s project-standards reviewer globbing all `CLAUDE.md`/`AGENTS.md`) are a legitimate exception — they review the files, they don't re-read them for context.
 
 **Describe the capability, not the tool.** Pair this with naming the *category* of thing rather than a closed set: "the project's issue tracker (e.g., GitHub Issues, Linear, Jira)" and "whatever interface that tracker exposes (connector/MCP, documented API, or a documented CLI)" — never assume a specific CLI exists, and never treat a missing binary / env var / MCP server as proof the capability is unavailable.
 
@@ -159,7 +159,7 @@ Skill content carried from trigger time rides in every subsequent message — ev
 
 - **Prefix is based on intent, not file type.** Use conventional prefixes (`feat:`, `fix:`, `docs:`, `refactor:`, etc.) but classify by what the change does, not the file extension. Files under `skills/` and plugin manifests are product code even though they are Markdown or JSON. Reserve `docs:` for files whose sole purpose is documentation (`README.md`, `docs/`, `CHANGELOG.md`).
 - **Type selection — classify by intent, not diff shape.** Where `fix:` and `feat:` could both seem to fit, default to `fix:`: a change that remedies broken or missing behavior is `fix:` even when implemented by adding code, and net additions do not turn a fix into a `feat:`. Reserve `feat:` for capabilities the user could not previously accomplish where nothing was broken. Other conventional types (`chore:`, `refactor:`, `docs:`, `perf:`, `test:`, `ci:`, `build:`, `style:`) remain primary when they describe the change more precisely than either. Heuristic: if a regression test you could write today would have failed *before* the change, it's `fix:`. The user may override this default for a specific change.
-- **Include a component scope.** The scope appears verbatim in the changelog. Pick the narrowest useful label: skill/agent name (`document-review`, `learnings-researcher`), CLI or marketplace area (`cli`, `marketplace`), or shared area when cross-cutting (`review`, `research`, `converters`). Never use `compound-engineering` — it's the entire plugin and tells the reader nothing. Omit scope only when no single label adds clarity.
+- **Include a component scope.** The scope appears verbatim in the changelog. Pick the narrowest useful label: skill/agent name (`document-review`, `learnings-researcher`), CLI or marketplace area (`cli`, `marketplace`), or shared area when cross-cutting (`review`, `research`, `converters`). Never use `rg-engineering` — it's the entire plugin and tells the reader nothing. Omit scope only when no single label adds clarity.
 - **Never use `!` or a `BREAKING CHANGE:` footer without explicit user confirmation.** These markers trigger release-please's automatic major version bump — a decision the user may not want even when a change is technically breaking. If a change appears breaking, surface that to the user and let them decide whether to apply the marker.
 
 ## Adding a New Target Provider
@@ -190,13 +190,13 @@ Only add a provider when the target format is stable, documented, and has a clea
 
 ## Specialist Prompt Assets in Skills
 
-The compound-engineering plugin no longer ships standalone agent definitions under `agents/`. When a skill needs a specialist persona, store it inside that skill directory, usually under `references/agents/` or `references/personas/`, and have the calling skill dispatch a generic subagent with that file's contents in the prompt.
+The rg-engineering plugin no longer ships standalone agent definitions under `agents/`. When a skill needs a specialist persona, store it inside that skill directory, usually under `references/agents/` or `references/personas/`, and have the calling skill dispatch a generic subagent with that file's contents in the prompt.
 
 Internal prompt asset file names should be descriptive and unprefixed because they are not externally exposed agent names.
 
 Example:
 - `references/agents/learnings-researcher.md` (correct)
-- `references/agents/ce-learnings-researcher.md` (wrong for an internal prompt asset)
+- `references/agents/rg-learnings-researcher.md` (wrong for an internal prompt asset)
 
 These prompt assets must not include YAML frontmatter. Model selection, tool constraints, and dispatch policy belong in the calling skill's `SKILL.md`, not in the prompt asset.
 
@@ -207,8 +207,8 @@ Each skill directory is a self-contained unit. A SKILL.md file must only referen
 Broken patterns:
 
 - `../other-skill/references/schema.yaml` — relative traversal into a sibling skill
-- `/home/user/compound-engineering-plugin/skills/other-skill/file.md` — absolute path to another skill
-- `~/.claude/plugins/cache/marketplace/compound-engineering/1.0.0/skills/other-skill/file.md` — absolute path to an installed plugin location
+- `/home/user/rg-engineering-plugin/skills/other-skill/file.md` — absolute path to another skill
+- `~/.claude/plugins/cache/marketplace/rg-engineering/1.0.0/skills/other-skill/file.md` — absolute path to an installed plugin location
 
 Why this matters:
 
@@ -222,7 +222,7 @@ If two skills need the same supporting file, duplicate it into each skill's dire
 
 ## Shared Repo-Grounding Profile Cache
 
-Repo-grounding skills (`ce-pov`, `ce-plan`, `ce-optimize`, `ce-ideate`, `ce-brainstorm`, `ce-code-review`, plus lighter consumers `ce-compound` — which still derives **and persists** on a miss — and `ce-debug`, which only opportunistically reads `conventions.testing` and never derives/persists) reuse one cached **question-agnostic project profile** (stack, deps, conventions, structure) instead of each re-deriving it. The profile is git-keyed and stored at `/tmp/compound-engineering/repo-profile/<root-sha>/<head-sha>.json`.
+Repo-grounding skills (`rg-pov`, `rg-plan`, `rg-optimize`, `rg-ideate`, `rg-brainstorm`, `rg-code-review`, plus lighter consumers `rg-compound` — which still derives **and persists** on a miss — and `rg-debug`, which only opportunistically reads `conventions.testing` and never derives/persists) reuse one cached **question-agnostic project profile** (stack, deps, conventions, structure) instead of each re-deriving it. The profile is git-keyed and stored at `/tmp/rg-engineering/repo-profile/<root-sha>/<head-sha>.json`.
 
 The mechanism is three **byte-duplicated** assets per consuming skill (the plugin has no cross-skill import — see "File References in Skills"):
 
@@ -247,7 +247,7 @@ How a bundled-file reference resolves depends on *who* resolves it and whether a
 
 **Tier 2 — Prose pointers to a bundled file the agent acts on (relative + a "from this skill's directory" cue):** When skill prose names a bundled file the agent will use but does *not* put it in an executed shell command (e.g., "drive the loop with `scripts/hitl-loop.template.sh`" or "generate the package with `scripts/review-package BASE HEAD`"), use a relative path plus an explicit "from this skill's directory" phrase. The cue tells the agent what to resolve against without the verbosity of an anchor.
 
-**Tier 3 — Executed shell commands (the `SKILL_DIR` anchor):** When skill content puts a bundled script in a command the agent runs through the Bash tool — a fenced ` ```bash ` block **or** an inline `bash …` / `python …` — anchor it to the skill dir. The Bash tool's working directory is the user's **project**, not the skill directory, on Claude Code, Codex, and Cursor alike, so a bare `bash scripts/my-script.sh` resolves to `<project>/scripts/…`. Relative paths here *often still work* — a capable agent resolves them against the skill dir it loaded (which is how the agentskills.io spec and other ecosystems ship them) — but that relies on the agent translating the path, and the failure mode is a fenced block copied **verbatim** into a Bash call, which runs literally and misses (`exit 127`; recovery is a wasted round-trip that weaker models / mid-tier subagents botch). Anchoring bakes the resolution into the command, so it is **deterministic**. Use the anchor for executed shell as the house default — a conservative choice, not a claim that bare relative *cannot* work (recurring bug class: #764 `ce-worktree`, #811 `ce-code-review`, #898 `ce-compound`):
+**Tier 3 — Executed shell commands (the `SKILL_DIR` anchor):** When skill content puts a bundled script in a command the agent runs through the Bash tool — a fenced ` ```bash ` block **or** an inline `bash …` / `python …` — anchor it to the skill dir. The Bash tool's working directory is the user's **project**, not the skill directory, on Claude Code, Codex, and Cursor alike, so a bare `bash scripts/my-script.sh` resolves to `<project>/scripts/…`. Relative paths here *often still work* — a capable agent resolves them against the skill dir it loaded (which is how the agentskills.io spec and other ecosystems ship them) — but that relies on the agent translating the path, and the failure mode is a fenced block copied **verbatim** into a Bash call, which runs literally and misses (`exit 127`; recovery is a wasted round-trip that weaker models / mid-tier subagents botch). Anchoring bakes the resolution into the command, so it is **deterministic**. Use the anchor for executed shell as the house default — a conservative choice, not a claim that bare relative *cannot* work (recurring bug class: #764 `rg-worktree`, #811 `rg-code-review`, #898 `rg-compound`):
 
 ```
 # set inline in the SAME command (shell state does not persist between Bash calls):
@@ -257,9 +257,9 @@ bash "$SKILL_DIR/scripts/my-script.sh" ARG
 
 An existence guard (`if [ -f "$SKILL_DIR/scripts/my-script.sh" ]; then … else echo "not found — re-check the SKILL.md path"; fi`) is optional — useful when there's a real fallback, but see the permission caveat below before guarding a pinned call.
 
-`SKILL_DIR` is a **model-filled** value, not a harness variable: every harness loads SKILL.md from a real absolute path the agent knows, so the skill instructs the agent to set `SKILL_DIR` to that directory. This works identically on Claude Code, Codex, and Cursor precisely because it depends on no host-specific variable — `SKILL_DIR`, `CLAUDE_SKILL_DIR`, `CODEX_SKILL_DIR`, `AGENT_SKILL_DIR` are **not** env vars on any of them, yet the script runs because the agent supplies the path. This is the production pattern used by widely-installed cross-host skills (e.g. `last30days`). Two constraints: (1) shell state does **not** persist between separate Bash-tool calls, so `SKILL_DIR` cannot be set once and reused — each invocation must carry the absolute path (set it inline in the same command). (2) A script that needs its *own* directory (to read a sibling file) derives it from `BASH_SOURCE`, not `SKILL_DIR`, since `SKILL_DIR` is the orchestrator's shell var and is not exported to the child process — see `skills/ce-code-review/scripts/cross-model-adversarial-review.sh` for the reference implementation. `last30days` adopted this anchor for its critical multi-host engine after a path-resolution regression; it is the right tool when a script must run *reliably*, which is why it is the tier-3 default — but tiers 1 and 2 deliberately stay lighter.
+`SKILL_DIR` is a **model-filled** value, not a harness variable: every harness loads SKILL.md from a real absolute path the agent knows, so the skill instructs the agent to set `SKILL_DIR` to that directory. This works identically on Claude Code, Codex, and Cursor precisely because it depends on no host-specific variable — `SKILL_DIR`, `CLAUDE_SKILL_DIR`, `CODEX_SKILL_DIR`, `AGENT_SKILL_DIR` are **not** env vars on any of them, yet the script runs because the agent supplies the path. This is the production pattern used by widely-installed cross-host skills (e.g. `last30days`). Two constraints: (1) shell state does **not** persist between separate Bash-tool calls, so `SKILL_DIR` cannot be set once and reused — each invocation must carry the absolute path (set it inline in the same command). (2) A script that needs its *own* directory (to read a sibling file) derives it from `BASH_SOURCE`, not `SKILL_DIR`, since `SKILL_DIR` is the orchestrator's shell var and is not exported to the child process — see `skills/rg-code-review/scripts/cross-model-adversarial-review.sh` for the reference implementation. `last30days` adopted this anchor for its critical multi-host engine after a path-resolution regression; it is the right tool when a script must run *reliably*, which is why it is the tier-3 default — but tiers 1 and 2 deliberately stay lighter.
 
-**Avoid `${CLAUDE_SKILL_DIR}` here — in this cross-agent plugin it is a footgun, not a neutral alternative.** Every skill in this repo is authored once and installed across Claude Code, Codex, Cursor, and Gemini, and `${CLAUDE_SKILL_DIR}` is a Claude-Code-only SKILL.md *content* substitution (not an env var) that is **empty on every other host**. So a `${CLAUDE_SKILL_DIR}`-guarded call's `then` branch quietly never fires off-Claude — the **genuine silent skip** — and a Claude-only mechanism breaks on Codex/Cursor because the converter doesn't rewrite these paths and the native Codex install loads raw `SKILL.md` (no `ce_platforms` filtering). The model-filled `SKILL_DIR` anchor works on every host, so it is the right replacement wherever a `${CLAUDE_SKILL_DIR}`-guarded executed-shell call exists today (tier 3). Do not reach for `${CLAUDE_SKILL_DIR}` as a "portable" option — it isn't. Reach for it only for behavior that is genuinely Claude-Code-only and will *never* run on another harness — which, given this plugin's cross-host install model, is essentially never; treat any new use as a smell to justify or remove. (Existing guarded uses such as `ce-compound`'s `validate-frontmatter.py` survive off-Claude only via an inline `else` fallback and should migrate to the anchor.)
+**Avoid `${CLAUDE_SKILL_DIR}` here — in this cross-agent plugin it is a footgun, not a neutral alternative.** Every skill in this repo is authored once and installed across Claude Code, Codex, Cursor, and Gemini, and `${CLAUDE_SKILL_DIR}` is a Claude-Code-only SKILL.md *content* substitution (not an env var) that is **empty on every other host**. So a `${CLAUDE_SKILL_DIR}`-guarded call's `then` branch quietly never fires off-Claude — the **genuine silent skip** — and a Claude-only mechanism breaks on Codex/Cursor because the converter doesn't rewrite these paths and the native Codex install loads raw `SKILL.md` (no `rg_platforms` filtering). The model-filled `SKILL_DIR` anchor works on every host, so it is the right replacement wherever a `${CLAUDE_SKILL_DIR}`-guarded executed-shell call exists today (tier 3). Do not reach for `${CLAUDE_SKILL_DIR}` as a "portable" option — it isn't. Reach for it only for behavior that is genuinely Claude-Code-only and will *never* run on another harness — which, given this plugin's cross-host install model, is essentially never; treat any new use as a smell to justify or remove. (Existing guarded uses such as `rg-compound`'s `validate-frontmatter.py` survive off-Claude only via an inline `else` fallback and should migrate to the anchor.)
 
 So: a skill's *core* behavior **can** live in a bundled script across hosts — invoke it via the `SKILL_DIR`-from-read-path anchor. You no longer need to avoid bundled scripts for portability; anchor them instead. Read-time references (`references/*.md`) still resolve against the skill dir on all targets and need no anchor.
 
@@ -279,8 +279,8 @@ This applies equally to any platform's variables — a skill converted from Code
 
 ## Repository Docs Convention
 
-- **Plans** live in `docs/plans/` — unified plan artifacts. New `ce-brainstorm` outputs are requirements-only unified plans (`artifact_readiness: requirements-only`); `ce-plan` enriches them to implementation-ready plans (`artifact_readiness: implementation-ready`). Historical `docs/brainstorms/*-requirements.*` files remain readable legacy inputs and should not be migrated just because a new plan is created.
-- **Brainstorm evidence / legacy requirements** may live in `docs/brainstorms/` — historical requirements docs and specialized analysis artifacts such as `docs/brainstorms/riffrec-feedback/`. Do not treat this as the canonical output path for new `ce-brainstorm` artifacts.
+- **Plans** live in `docs/plans/` — unified plan artifacts. New `rg-brainstorm` outputs are requirements-only unified plans (`artifact_readiness: requirements-only`); `rg-plan` enriches them to implementation-ready plans (`artifact_readiness: implementation-ready`). Historical `docs/brainstorms/*-requirements.*` files remain readable legacy inputs and should not be migrated just because a new plan is created.
+- **Brainstorm evidence / legacy requirements** may live in `docs/brainstorms/` — historical requirements docs and specialized analysis artifacts such as `docs/brainstorms/riffrec-feedback/`. Do not treat this as the canonical output path for new `rg-brainstorm` artifacts.
 - **Solutions** live in `docs/solutions/` — documented solutions to past problems (bugs, best practices, workflow patterns), organized by category with YAML frontmatter (`module`, `tags`, `problem_type`). Relevant when implementing or debugging in documented areas.
 - **Specs** live in `docs/specs/` — target platform format specifications.
 
@@ -292,4 +292,4 @@ This repo builds a plugin *for* developers. Categorize solutions from the perspe
 - **`integrations/`** — Issues where plugin output doesn't work correctly on a target platform or OS. Cross-platform bugs, target writer output problems, and converter compatibility issues go here.
 - **`workflow/`**, **`skill-design/`** — Plugin skill and agent design patterns, workflow improvements.
 
-When in doubt: if the bug affects someone running `bun install compound-engineering` or `bun convert`, it's an integration or product issue, not developer-experience.
+When in doubt: if the bug affects someone running `bun install rg-engineering` or `bun convert`, it's an integration or product issue, not developer-experience.

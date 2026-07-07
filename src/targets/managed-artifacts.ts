@@ -3,7 +3,7 @@ import path from "path"
 import { ensureDir, isSafeManagedPath, pathExists, readText, sanitizePathName, writeJson } from "../utils/files"
 
 const MANAGED_INSTALL_MANIFEST = "install-manifest.json"
-const LEGACY_MANAGED_SEGMENT = "compound-engineering"
+const LEGACY_MANAGED_SEGMENT = "rg-engineering"
 
 export type ManagedInstallManifest = {
   version: 1
@@ -21,7 +21,7 @@ export function sanitizeManagedPluginName(name: string): string {
  * name is supplied, it is used verbatim so multiple plugins installed into
  * the same target root keep independent manifests. When no plugin name is
  * supplied (legacy callers / bundles without `pluginName`), the historical
- * `compound-engineering` segment is returned to preserve pre-existing paths.
+ * `rg-engineering` segment is returned to preserve pre-existing paths.
  */
 export function resolveManagedSegment(pluginName?: string): string {
   return pluginName ?? LEGACY_MANAGED_SEGMENT
@@ -31,8 +31,8 @@ export function resolveManagedSegment(pluginName?: string): string {
  * Resolves the legacy shared managed directory that lived next to the
  * current plugin-scoped directory before the per-plugin namespacing fix.
  * `managedDir` is the plugin-scoped path (e.g. `<root>/coding-tutor`);
- * the legacy sibling is `<root>/compound-engineering`. When `pluginName`
- * is the historical `compound-engineering`, the legacy path and the
+ * the legacy sibling is `<root>/rg-engineering`. When `pluginName`
+ * is the historical `rg-engineering`, the legacy path and the
  * current path are the same, so there is nothing to migrate -- this
  * returns null in that case.
  */

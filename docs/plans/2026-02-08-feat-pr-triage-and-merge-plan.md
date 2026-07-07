@@ -48,7 +48,7 @@ Show the diff for each PR, get a go/no-go, then either merge or comment. PRs are
 
 ### PR #108 - Note new repository URL
 - **Author:** akx | **Files:** 5 | docs-only
-- **What:** Updates URLs from `kieranklaassen/compound-engineering-plugin` to `EveryInc/compound-engineering-plugin`
+- **What:** Updates URLs from `kieranklaassen/rg-engineering-plugin` to `Lukas-Rdt/rg-engineering-plugin`
 - **Action:** Review diff → merge
 
 ### PR #113 - docs: add brainstorm command to workflow documentation
@@ -87,7 +87,7 @@ Show the diff for each PR, get a go/no-go, then either merge or comment. PRs are
 - **What:** Adds entirely new VMark markdown editor plugin to marketplace
 - **Comment:** Ask for more context on fit with marketplace scope
 
-### PR #124 - feat(commands): add /compound-engineering-setup
+### PR #124 - feat(commands): add /rg-engineering-setup
 - **Author:** internal | config
 - **What:** Interactive setup command for configuring review agents per project
 - **Comment:** Note overlap with #103, needs unified config strategy
@@ -124,5 +124,5 @@ After merging:
 
 ## References
 
-- PR list: https://github.com/EveryInc/compound-engineering-plugin/pulls
-- Issues: https://github.com/EveryInc/compound-engineering-plugin/issues
+- PR list: https://github.com/Lukas-Rdt/rg-engineering-plugin/pulls
+- Issues: https://github.com/Lukas-Rdt/rg-engineering-plugin/issues

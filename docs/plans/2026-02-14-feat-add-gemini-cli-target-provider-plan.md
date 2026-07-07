@@ -94,7 +94,7 @@ Identical to Claude Code's format. The `description` field is critical -- Gemini
 
 ## Acceptance Criteria
 
-- [x] `bun run src/index.ts convert --to gemini ./plugins/compound-engineering` produces valid Gemini config
+- [x] `bun run src/index.ts convert --to gemini ./plugins/rg-engineering` produces valid Gemini config
 - [x] Agents convert to `.gemini/skills/*/SKILL.md` with populated `description` in frontmatter
 - [x] Commands convert to `.gemini/commands/*.toml` with `prompt` and `description` fields
 - [x] Namespaced commands create directory structure (`workflows:plan` -> `commands/workflows/plan.toml`)
@@ -357,7 +357,7 @@ Skills being identical across platforms simplifies things significantly. The TOM
 ### Implementation Statistics
 - 10 files changed
 - 27 new tests added (129 total, all passing)
-- 148 output files generated from compound-engineering plugin conversion
+- 148 output files generated from rg-engineering plugin conversion
 - 0 dependencies added
 
 ### Git Commits

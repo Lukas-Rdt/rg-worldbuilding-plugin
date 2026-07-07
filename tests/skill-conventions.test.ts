@@ -36,7 +36,7 @@ import { parseFrontmatter } from "../src/utils/frontmatter"
  *        are exempted below with written reasons.
  *      - Bare absolute paths in prose are NOT flagged: skills legitimately
  *        discuss `/tmp` scratch conventions and quote `/Users/...` as
- *        anti-pattern examples (ce-plan, ce-compound, ce-ideate).
+ *        anti-pattern examples (rg-plan, rg-compound, rg-ideate).
  *
  * 2. REFERENCE INTEGRITY (AGENTS.md "File References in Skills"): every
  *    skill-local path mentioned in a skill's markdown must exist on disk
@@ -62,7 +62,7 @@ import { parseFrontmatter } from "../src/utils/frontmatter"
  *    bare path tokens in prose with no backticks, link, or `@` prefix —
  *    unmarked prose is where hypothetical teaching examples live, and the
  *    only real instances (advisory `references/yaml-schema.md` pointers in
- *    HTML comments inside ce-compound's and ce-compound-refresh's asset
+ *    HTML comments inside rg-compound's and rg-compound-refresh's asset
  *    templates) sit in templates that are instantiated OUTSIDE the skill,
  *    where the path is context for a future reader, not a runtime
  *    dependency — and directory-only mentions (`references/` with no
@@ -143,36 +143,36 @@ const DESCRIPTION_CHAR_BUDGET = 1024
 const NAME_CHAR_BUDGET = 64
 
 const EXPECTED_USER_INVOKED_SKILLS = new Set([
-  "ce-dogfood",
-  "ce-polish",
-  "ce-product-pulse",
-  "ce-promote",
-  "ce-setup",
-  "ce-sweep",
-  "ce-test-xcode",
+  "rg-dogfood",
+  "rg-polish",
+  "rg-product-pulse",
+  "rg-promote",
+  "rg-setup",
+  "rg-sweep",
+  "rg-test-xcode",
   "lfg",
 ])
 
 const REQUIRED_MODEL_INVOKED_CALLEES = new Set([
-  "ce-brainstorm",
-  "ce-code-review",
-  "ce-commit",
-  "ce-commit-push-pr",
-  "ce-compound",
-  "ce-compound-refresh",
-  "ce-debug",
-  "ce-doc-review",
-  "ce-ideate",
-  "ce-optimize",
-  "ce-plan",
-  "ce-proof",
-  "ce-resolve-pr-feedback",
-  "ce-riffrec-feedback-analysis",
-  "ce-simplify-code",
-  "ce-strategy",
-  "ce-test-browser",
-  "ce-work",
-  "ce-worktree",
+  "rg-brainstorm",
+  "rg-code-review",
+  "rg-commit",
+  "rg-commit-push-pr",
+  "rg-compound",
+  "rg-compound-refresh",
+  "rg-debug",
+  "rg-doc-review",
+  "rg-ideate",
+  "rg-optimize",
+  "rg-plan",
+  "rg-proof",
+  "rg-resolve-pr-feedback",
+  "rg-riffrec-feedback-analysis",
+  "rg-simplify-code",
+  "rg-strategy",
+  "rg-test-browser",
+  "rg-work",
+  "rg-worktree",
 ])
 
 // ---------------------------------------------------------------------------
@@ -180,7 +180,7 @@ const REQUIRED_MODEL_INVOKED_CALLEES = new Set([
 // ---------------------------------------------------------------------------
 
 type SkillDir = {
-  /** repo-root-relative skill dir, e.g. skills/ce-plan */
+  /** repo-root-relative skill dir, e.g. skills/rg-plan */
   relPath: string
   absPath: string
 }
@@ -328,7 +328,7 @@ function extractLocalPathCodeSpans(markdown: string): Located[] {
 /**
  * Extracts `@`-include targets from prose (the at-include syntax that inlines
  * a file at load time, e.g. `@./references/persona-catalog.md` in
- * ce-code-review's "Included References"). These are load-bearing — a deleted
+ * rg-code-review's "Included References"). These are load-bearing — a deleted
  * target breaks the skill at load — yet invisible to the other extractors:
  * no backticks, no markdown-link syntax, and the `@`/`./` prefix fails the
  * bare token shape. Placeholder-bearing targets are excluded by the token
@@ -625,7 +625,7 @@ describe("skill self-containment (AGENTS.md 'File References in Skills')", () =>
       }
       expect(
         offenders,
-        `Skills must be self-contained: no \`../\` traversal out of the skill, no absolute paths, no installed-plugin (~/.claude/plugins/...) paths — see ${AGENTS_MD_REF} "File References in Skills". Duplicate shared files into each skill or reference the other skill semantically ("load the ce-X skill"). If the file's purpose is reading installed-plugin machine state, add it to INSTALLED_PLUGIN_PATH_EXEMPTIONS in tests/skill-conventions.test.ts with a written reason.\nOffending references:\n${offenders.join("\n")}`,
+        `Skills must be self-contained: no \`../\` traversal out of the skill, no absolute paths, no installed-plugin (~/.claude/plugins/...) paths — see ${AGENTS_MD_REF} "File References in Skills". Duplicate shared files into each skill or reference the other skill semantically ("load the rg-X skill"). If the file's purpose is reading installed-plugin machine state, add it to INSTALLED_PLUGIN_PATH_EXEMPTIONS in tests/skill-conventions.test.ts with a written reason.\nOffending references:\n${offenders.join("\n")}`,
       ).toEqual([])
     })
   }
@@ -662,7 +662,7 @@ describe("skill reference integrity (AGENTS.md 'File References in Skills')", ()
       }
       expect(
         missing,
-        `Every references/, scripts/, or assets/ path (and relative markdown link) mentioned in a skill must exist inside that skill's directory — see ${AGENTS_MD_REF} "File References in Skills". A path that exists only in ANOTHER skill is a cross-skill reference: duplicate the file into this skill or replace the file-level pointer with semantic wording ("the <name> reference in the ce-X skill" without a path).\nMissing paths:\n${missing.join("\n")}`,
+        `Every references/, scripts/, or assets/ path (and relative markdown link) mentioned in a skill must exist inside that skill's directory — see ${AGENTS_MD_REF} "File References in Skills". A path that exists only in ANOTHER skill is a cross-skill reference: duplicate the file into this skill or replace the file-level pointer with semantic wording ("the <name> reference in the rg-X skill" without a path).\nMissing paths:\n${missing.join("\n")}`,
       ).toEqual([])
     })
   }
@@ -1022,7 +1022,7 @@ describe("extractLocalReferenceCandidates", () => {
       "scripts/session-history/extract-metadata.py",
       "scripts/deleted-tool.sh",
     ])
-    const skillRoot = path.join(SKILLS_ROOT, "ce-compound")
+    const skillRoot = path.join(SKILLS_ROOT, "rg-compound")
     const existing = resolveInsideSkill(skillRoot, skillRoot, "scripts/session-history/extract-metadata.py")
     const missing = resolveInsideSkill(skillRoot, skillRoot, "scripts/deleted-tool.sh")
     expect(existing).not.toBeNull()
@@ -1046,13 +1046,13 @@ describe("extractLocalReferenceCandidates", () => {
     // The documented cross-platform style: the variable prefix means
     // "skill-root-relative" (AGENTS.md "Platform-Specific Variables in
     // Skills"), so the unwrapped remainder must resolve at the skill root —
-    // demonstrated against a real bundled script (ce-compound's).
+    // demonstrated against a real bundled script (rg-compound's).
     const sample =
       '```bash\nbash "${CLAUDE_SKILL_DIR:-.}/scripts/validate-frontmatter.py"\n```'
     expect(extractLocalReferenceCandidates(sample).map((c) => c.value)).toEqual([
       "scripts/validate-frontmatter.py",
     ])
-    const skillRoot = path.join(SKILLS_ROOT, "ce-compound")
+    const skillRoot = path.join(SKILLS_ROOT, "rg-compound")
     const resolved = resolveInsideSkill(skillRoot, skillRoot, "scripts/validate-frontmatter.py")
     expect(resolved).not.toBeNull()
     expect(statSync(resolved!).isFile()).toBe(true)
@@ -1062,11 +1062,11 @@ describe("extractLocalReferenceCandidates", () => {
 describe("resolveInsideSkill", () => {
   const skillRoot = path.join(
     SKILLS_ROOT,
-    "ce-resolve-pr-feedback",
+    "rg-resolve-pr-feedback",
   )
 
   test("rejects ../ traversal to a sibling skill even when the target exists there", () => {
-    const sibling = "../ce-plan/references/plan-handoff.md"
+    const sibling = "../rg-plan/references/plan-handoff.md"
     // The target genuinely exists in the sibling skill — existence outside
     // the skill must not satisfy Rule 2; it is the cross-skill reference.
     expect(statSync(path.resolve(skillRoot, sibling)).isFile()).toBe(true)
@@ -1075,7 +1075,7 @@ describe("resolveInsideSkill", () => {
 
   test("rejects obfuscated in-prefix traversal (references/../../other-skill/...)", () => {
     expect(
-      resolveInsideSkill(skillRoot, skillRoot, "references/../../ce-plan/references/plan-handoff.md"),
+      resolveInsideSkill(skillRoot, skillRoot, "references/../../rg-plan/references/plan-handoff.md"),
     ).toBeNull()
   })
 
@@ -1127,7 +1127,7 @@ describe("findPlatformVarViolations", () => {
     // Verbatim from AGENTS.md "Platform-Specific Variables in Skills" — the
     // documented pre-resolution pattern. Its fallback lives in prose, which
     // the scanner deliberately does not judge: the occurrence is reported,
-    // and the real ce-setup use of this pattern is acknowledged in
+    // and the real rg-setup use of this pattern is acknowledged in
     // PLATFORM_VAR_ACKNOWLEDGED instead.
     const agentsMdCanonicalExample = [
       '**Plugin version (pre-resolved):** !`jq -r .version "${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json"`',

@@ -16,11 +16,11 @@ root_cause: outdated_target_model
 
 The Codex target used to treat Compound workflow entrypoints as converter-generated skill/prompt artifacts. That made sense when Codex lacked a native plugin install path and the plugin still shipped standalone agents, but it is no longer the primary model.
 
-The current Compound Engineering package is root-native and skills-only:
+The current RG Engineering package is root-native and skills-only:
 
 - Codex native install reads `.codex-plugin/plugin.json`.
 - The Codex manifest declares `skills: "./skills/"`.
-- User-facing skills are root directories like `skills/ce-plan`, `skills/ce-work`, and `skills/ce-code-review`.
+- User-facing skills are root directories like `skills/rg-plan`, `skills/rg-work`, and `skills/rg-code-review`.
 - Specialist review/research behavior lives in skill-local prompt assets under `references/agents/` or `references/personas/`.
 - There are 0 standalone CE agents in the plugin surface.
 
@@ -34,7 +34,7 @@ For users, Codex skills come from the native plugin install:
 
 ```json
 {
-  "name": "compound-engineering",
+  "name": "rg-engineering",
   "skills": "./skills/"
 }
 ```
@@ -43,7 +43,7 @@ The Bun converter's default `--to codex` behavior is intentionally not a second 
 
 ### Converter default mode is compatibility-only
 
-`convertClaudeToCodex()` still converts formal Claude agents to Codex custom-agent TOML because older plugin shapes and fixtures may contain agents. For the current Compound Engineering package, `plugin.agents` is empty, so default Codex conversion emits no standalone agents.
+`convertClaudeToCodex()` still converts formal Claude agents to Codex custom-agent TOML because older plugin shapes and fixtures may contain agents. For the current RG Engineering package, `plugin.agents` is empty, so default Codex conversion emits no standalone agents.
 
 Default mode passes `externallyManagedSkillNames` to the writer so cleanup does not mistake natively installed skills for stale converter-owned artifacts.
 
@@ -63,8 +63,8 @@ When maintaining Codex conversion code:
 
 - Do not reintroduce prompt wrappers for current native CE skills.
 - Keep unknown slash references unchanged in copied skill content; otherwise the converter can corrupt URLs or app routes.
-- Treat old `ce:*` and `workflows:*` names as legacy artifacts for cleanup and reference rewriting only.
-- Keep native skill names hyphenated (`ce-plan`, not `ce:plan`) because current source directories and frontmatter use hyphenated names.
+- Treat old `rg:*` and `workflows:*` names as legacy artifacts for cleanup and reference rewriting only.
+- Keep native skill names hyphenated (`rg-plan`, not `rg:plan`) because current source directories and frontmatter use hyphenated names.
 - Preserve `externallyManagedSkillNames` in default mode so re-running `install --to codex` cannot sweep active native skills into backup.
 
 ## Prevention
@@ -74,7 +74,7 @@ Before changing the Codex converter again:
 1. Decide whether the target behavior belongs to native plugin install, default compatibility conversion, or full legacy conversion.
 2. Verify whether the artifact surface is a skill, prompt, custom agent, or cleanup-only legacy path.
 3. Add tests for copied skill content when changing full converter mode.
-4. Add cleanup tests when changing stale prompt or old `ce:*` ownership detection.
+4. Add cleanup tests when changing stale prompt or old `rg:*` ownership detection.
 5. Keep README language focused on native Codex plugin install, not converter-generated prompts.
 
 ## Related files
@@ -89,6 +89,6 @@ Before changing the Codex converter again:
 - `tests/legacy-cleanup.test.ts`
 - `.codex-plugin/plugin.json`
 - `README.md`
-- `skills/ce-brainstorm/SKILL.md`
-- `skills/ce-plan/SKILL.md`
+- `skills/rg-brainstorm/SKILL.md`
+- `skills/rg-plan/SKILL.md`
 - `docs/solutions/integrations/native-plugin-install-strategy.md`

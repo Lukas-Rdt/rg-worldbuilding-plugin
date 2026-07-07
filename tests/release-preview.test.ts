@@ -8,8 +8,8 @@ describe("release preview", () => {
   test("uses changed files to determine affected components and next versions", async () => {
     const versions = await loadCurrentVersions()
     const preview = await buildReleasePreview({
-      title: "fix: adjust ce-plan wording",
-      files: ["skills/ce-plan/SKILL.md"],
+      title: "fix: adjust rg-plan wording",
+      files: ["skills/rg-plan/SKILL.md"],
     })
 
     expect(preview.components).toHaveLength(1)

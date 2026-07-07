@@ -17,7 +17,7 @@ tags: [security, prompt-injection, cache, tmp, file-ownership, shared-host]
 
 ## Context
 
-The repo-grounding cache stored profiles at `/tmp/compound-engineering/repo-profile/<root-sha>/<head-sha>.json`. Both SHAs are knowable for any public or shared repo (the root commit and HEAD), and `/tmp/compound-engineering/` is world-traversable. Security review found: on a multi-user host, a local co-tenant can **pre-create** that exact path and plant a `<head-sha>.json` that satisfies every validity gate (it sets `head_sha` to the victim's HEAD, the current schema version, and a `profile` object — cleanliness is checked against the victim's working tree, not the file's authenticity). The victim's skill then prints `HIT` and feeds the attacker's JSON into the agent as the "project profile" — attacker-controlled text into the LLM context, i.e. **indirect prompt injection**.
+The repo-grounding cache stored profiles at `/tmp/rg-engineering/repo-profile/<root-sha>/<head-sha>.json`. Both SHAs are knowable for any public or shared repo (the root commit and HEAD), and `/tmp/rg-engineering/` is world-traversable. Security review found: on a multi-user host, a local co-tenant can **pre-create** that exact path and plant a `<head-sha>.json` that satisfies every validity gate (it sets `head_sha` to the victim's HEAD, the current schema version, and a `profile` object — cleanliness is checked against the victim's working tree, not the file's authenticity). The victim's skill then prints `HIT` and feeds the attacker's JSON into the agent as the "project profile" — attacker-controlled text into the LLM context, i.e. **indirect prompt injection**.
 
 Impact is calibrated (needs a local co-tenant + predictable SHAs; payload is text, not code-exec or secret disclosure), but the injection elevation is why it is worth fixing rather than dismissing as "just repo metadata."
 
@@ -29,7 +29,7 @@ When a cache/scratch file in shared `/tmp` will be **read back into an agent's c
 - This composes with the cache's existing principle that it is **never a correctness dependency**: a rejected entry simply degrades to "derive fresh," never blocks.
 - Write side is already safe if you use `tempfile.mkstemp` (`O_EXCL`, mode `0600`) + `os.replace` (atomic). The exposure is purely on the *read* path.
 
-Alternatives considered and why ownership-check won: per-uid namespacing the cache root (`/tmp/compound-engineering-$(id -u)/...`) also works but deviates from the project's `/tmp/compound-engineering/` convention and the deliberate choice of `/tmp` over `$TMPDIR` for user-inspectability. The fstat-on-read check is minimal, keeps the path convention, and closes both the planted-file and planted-symlink cases.
+Alternatives considered and why ownership-check won: per-uid namespacing the cache root (`/tmp/rg-engineering-$(id -u)/...`) also works but deviates from the project's `/tmp/rg-engineering/` convention and the deliberate choice of `/tmp` over `$TMPDIR` for user-inspectability. The fstat-on-read check is minimal, keeps the path convention, and closes both the planted-file and planted-symlink cases.
 
 ## Why This Matters
 
@@ -63,4 +63,4 @@ with open(path) as f:
 
 - `docs/solutions/skill-design/cross-skill-shared-cache-primitive.md` — the cache this hardened
 - `docs/solutions/best-practices/cache-invalidation-input-set-completeness.md` — the cache's correctness (separate) property
-- AGENTS.md "Scratch Space" (the `/tmp/compound-engineering/` convention)
+- AGENTS.md "Scratch Space" (the `/tmp/rg-engineering/` convention)

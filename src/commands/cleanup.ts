@@ -249,7 +249,7 @@ async function cleanupCodex(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>
     // Ownership gate: `~/.codex/prompts/` is a shared directory across plugins
     // and user-authored prompts. A filename match against the historical CE
     // allow-list is not a strong enough signal — a user who creates
-    // `~/.codex/prompts/ce-plan.md` for their own workflow would otherwise see
+    // `~/.codex/prompts/rg-plan.md` for their own workflow would otherwise see
     // it swept into `rg-engineering/legacy-backup/` on every cleanup run.
     // Mirror the body + frontmatter check used by `cleanupStalePrompts` so
     // install-time and standalone cleanup paths treat ownership identically.
@@ -446,7 +446,7 @@ async function cleanupCopilot(plugin: Awaited<ReturnType<typeof loadClaudePlugin
   // (see EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN). Mirrors the Codex/Droid/Windsurf
   // cleanup fixes: seeding candidates from the current plugin bundle would
   // sweep up user-authored files at workspace paths like
-  // `.github/skills/ce-plan/SKILL.md` or `.github/agents/<name>.agent.md` that
+  // `.github/skills/rg-plan/SKILL.md` or `.github/agents/<name>.agent.md` that
   // happen to share a name with a current CE artifact but were never
   // installed by this plugin. The Copilot writer has been removed — users now
   // install via `copilot plugin install` — so this cleanup exists solely to
@@ -505,8 +505,8 @@ async function cleanupQwen(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>,
   // `qwen extensions install`, so this cleanup exists solely to back up stale
   // files from legacy manual installs. Seeding from the current plugin bundle
   // (`plugin.skills`, `plugin.agents`, `plugin.commands`) would sweep up
-  // user-authored files at paths like `~/.qwen/skills/ce-debug/SKILL.md` or
-  // `~/.qwen/agents/ce-correctness-reviewer.md` that happen to share a name
+  // user-authored files at paths like `~/.qwen/skills/rg-debug/SKILL.md` or
+  // `~/.qwen/agents/rg-correctness-reviewer.md` that happen to share a name
   // with a current CE artifact but were never installed by this plugin.
   const managedDir = path.join(qwenRoot, plugin.manifest.name)
   const extras = getLegacyPluginArtifacts(plugin.manifest.name)
@@ -649,7 +649,7 @@ function resolveCleanupTargets(targetArg: string): CleanupTarget[] {
 }
 
 async function resolveCleanupPluginPath(input: string): Promise<string> {
-  if (input.startsWith(".") || input.startsWith("/") || input.startsWith("~")) {
+  if (input.startsWith(".") || input.startsWith("/") || input.startsWith("\\") || input.startsWith("~") || path.isAbsolute(input)) {
     const expanded = expandHome(input)
     const directPath = path.resolve(expanded)
     if (await pathExists(directPath)) return directPath

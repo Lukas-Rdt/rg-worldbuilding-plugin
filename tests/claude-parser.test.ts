@@ -97,15 +97,15 @@ describe("loadClaudePlugin", () => {
     expect(normalCommand?.disableModelInvocation).toBeUndefined()
   })
 
-  test("parses ce_platforms from skills", async () => {
+  test("parses rg_platforms from skills", async () => {
     const plugin = await loadClaudePlugin(fixtureRoot)
 
     const claudeOnly = plugin.skills.find((skill) => skill.name === "claude-only-skill")
     expect(claudeOnly).toBeDefined()
-    expect(claudeOnly?.ce_platforms).toEqual(["claude"])
+    expect(claudeOnly?.rg_platforms).toEqual(["claude"])
 
     const normalSkill = plugin.skills.find((skill) => skill.name === "skill-one")
-    expect(normalSkill?.ce_platforms).toBeUndefined()
+    expect(normalSkill?.rg_platforms).toBeUndefined()
   })
 
   test("filterSkillsByPlatform includes skills without platforms field", async () => {

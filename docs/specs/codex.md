@@ -51,7 +51,7 @@ https://developers.openai.com/codex/mcp
 - At startup, Codex loads only each skill’s name/description; full content is injected when invoked. citeturn3view3turn3view4
 - Skills can be repo-scoped in `.agents/skills/` and are discovered from the current working directory up to the repository root. User-scoped skills live in `~/.agents/skills/`. citeturn1view1turn1view4
 - Inference: some existing tooling and user setups still use `.codex/skills/` and `~/.codex/skills/` as compatibility paths, but those locations are not documented in the current OpenAI Codex skills docs linked above.
-- Compound Engineering should avoid `~/.agents/skills` for managed installs because that shared root can shadow Copilot's native plugin skills. Use the Codex-specific compatibility root `~/.codex/skills/compound-engineering/<skill-name>/SKILL.md` for CE Codex skills, and track generated files with a CE manifest.
+- RG Engineering should avoid `~/.agents/skills` for managed installs because that shared root can shadow Copilot's native plugin skills. Use the Codex-specific compatibility root `~/.codex/skills/rg-engineering/<skill-name>/SKILL.md` for CE Codex skills, and track generated files with a CE manifest.
 - Codex also supports admin-scoped skills in `/etc/codex/skills` plus built-in system skills bundled with Codex. citeturn1view4
 - Skills can be invoked explicitly using `/skills` or `$skill-name`. citeturn3view3
 
@@ -70,7 +70,7 @@ https://developers.openai.com/codex/mcp
 - Generated agents should live under `~/.codex/agents`, not `~/.agents/skills`, because `~/.agents` is shared across harnesses and can shadow native plugin installs.
 - Generated TOML agent names preserve source naming and may include source category context for nested agent trees.
 - Empirical test on 2026-04-19 confirmed Codex discovers nested custom-agent TOML files under `~/.codex/agents/<plugin>/` and accepts hyphenated TOML `name` values.
-- Empirical plugin test on 2026-04-19 found Codex native plugins did not register custom agents bundled under plugin-local `agents/`, plugin-local `.codex/agents/`, or an undocumented plugin manifest `agents` field. Compound Engineering now avoids that gap by shipping specialist behavior as skill-local prompt assets inside native skills; no CE custom-agent installer is required.
+- Empirical plugin test on 2026-04-19 found Codex native plugins did not register custom agents bundled under plugin-local `agents/`, plugin-local `.codex/agents/`, or an undocumented plugin manifest `agents` field. RG Engineering now avoids that gap by shipping specialist behavior as skill-local prompt assets inside native skills; no CE custom-agent installer is required.
 
 ## MCP (Model Context Protocol)
 

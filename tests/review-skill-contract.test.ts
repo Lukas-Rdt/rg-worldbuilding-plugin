@@ -7,19 +7,19 @@ async function readRepoFile(relativePath: string): Promise<string> {
 }
 
 function personaPromptPath(personaName: string): string {
-  return `skills/ce-code-review/references/personas/${personaName}.md`
+  return `skills/rg-code-review/references/personas/${personaName}.md`
 }
 
-describe("ce-code-review contract", () => {
+describe("rg-code-review contract", () => {
   test("documents explicit modes and orchestration boundaries", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     expect(content).toContain("## Argument Parsing")
     expect(content).toContain("mode:autofix` is no longer supported")
     expect(content).toContain("mode:report-only")
     expect(content).toContain("mode:agent")
     expect(content).toContain("mode:headless")
-    expect(content).toContain("/tmp/rg-engineering/ce-code-review/<run-id>/")
+    expect(content).toContain("/tmp/rg-engineering/rg-code-review/<run-id>/")
     expect(content).toMatch(/Never push, open PRs, or file tickets/i)
     expect(content).toContain("run artifact")
     expect(content).toMatch(/check out the PR branch/i)
@@ -28,7 +28,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("keeps plan requirements completeness compatible with current and legacy unit formats", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     expect(content).toContain("current numeric subsections")
     expect(content).toContain("`### U1.`")
@@ -38,7 +38,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("documents agent mode contract for programmatic callers", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // mode:agent is report-only (skips Stage 5c apply); same reviewer pipeline as default
     expect(content).toContain("## Operating principles")
@@ -72,7 +72,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("documents policy-driven routing and actionable handoff", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // Action Routing: autofix_class is signal only; mode:agent never mutates, default applies
     expect(content).toContain("## Action Routing")
@@ -93,7 +93,7 @@ describe("ce-code-review contract", () => {
     expect(content).toContain("Actionable Findings")
     expect(content).toContain("Actionable findings: none.")
 
-    expect(content).not.toContain("ce-todo-create")
+    expect(content).not.toContain("rg-todo-create")
     expect(content).not.toContain("create durable todo files")
     expect(content).not.toMatch(/harness task primitive|task-tracking primitive/)
 
@@ -101,7 +101,7 @@ describe("ce-code-review contract", () => {
     // rejected synthesis-time rewrite pass. Assert presence of the observable-behavior
     // rule and the required-field reminder without pinning exact prose.
     const subagentTemplate = await readRepoFile(
-      "skills/ce-code-review/references/subagent-template.md",
+      "skills/rg-code-review/references/subagent-template.md",
     )
     expect(subagentTemplate).toMatch(/observable behavior/i)
     expect(subagentTemplate).toMatch(/required/i)
@@ -111,7 +111,7 @@ describe("ce-code-review contract", () => {
 
   test("keeps findings schema and downstream docs aligned", async () => {
     const rawSchema = await readRepoFile(
-      "skills/ce-code-review/references/findings-schema.json",
+      "skills/rg-code-review/references/findings-schema.json",
     )
     const schema = JSON.parse(rawSchema) as {
       _meta: {
@@ -169,7 +169,7 @@ describe("ce-code-review contract", () => {
 
   test("subagent template carries verbatim 5-anchor rubric and lint-ignore suppression", async () => {
     const template = await readRepoFile(
-      "skills/ce-code-review/references/subagent-template.md",
+      "skills/rg-code-review/references/subagent-template.md",
     )
 
     // Anchored rubric: each anchor named with behavioral criterion
@@ -196,7 +196,7 @@ describe("ce-code-review contract", () => {
 
   test("subagent template points to action-class rubric without safe_auto", async () => {
     const template = await readRepoFile(
-      "skills/ce-code-review/references/subagent-template.md",
+      "skills/rg-code-review/references/subagent-template.md",
     )
 
     expect(template).toContain("references/action-class-rubric.md")
@@ -207,7 +207,7 @@ describe("ce-code-review contract", () => {
 
   test("action-class rubric defines caller routing without safe_auto", async () => {
     const rubric = await readRepoFile(
-      "skills/ce-code-review/references/action-class-rubric.md",
+      "skills/rg-code-review/references/action-class-rubric.md",
     )
 
     expect(rubric).toContain("gated_auto")
@@ -218,7 +218,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("Stage 4 spawning restates model-override imperative at point of action", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // Model tiering subsection still enumerates the three session-model exceptions
     expect(content).toMatch(/correctness-reviewer.*security-reviewer.*adversarial-reviewer/s)
@@ -248,7 +248,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("Stage 5 synthesis uses anchor gate and one-anchor promotion", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // Confidence value constraint is integer enum
     expect(content).toMatch(/confidence:\s*integer in \{0, 25, 50, 75, 100\}/)
@@ -271,9 +271,9 @@ describe("ce-code-review contract", () => {
   })
 
   test("Stage 5b validation pass dispatches conditionally and bounds parallelism", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
     const validatorTemplate = await readRepoFile(
-      "skills/ce-code-review/references/validator-template.md",
+      "skills/rg-code-review/references/validator-template.md",
     )
 
     // Stage 5b exists between Stage 5 and Stage 6
@@ -304,9 +304,9 @@ describe("ce-code-review contract", () => {
   })
 
   test("Stage 5c applies safe fixes in default mode, report-only in mode:agent, no deny-list", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
     const template = await readRepoFile(
-      "skills/ce-code-review/references/review-output-template.md",
+      "skills/rg-code-review/references/review-output-template.md",
     )
 
     // New act stage, default-mode only; mode:agent stays report-only
@@ -334,9 +334,9 @@ describe("ce-code-review contract", () => {
   })
 
   test("findings presentation is action-shaped and enforces hard constraints, mirrors the template", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
     const template = await readRepoFile(
-      "skills/ce-code-review/references/review-output-template.md",
+      "skills/rg-code-review/references/review-output-template.md",
     )
 
     // Render-time load of the canonical skeleton (not just "see the template")
@@ -372,7 +372,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("PR-mode skip-condition pre-check stops without dispatching reviewers", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // Skip-check section exists
     expect(content).toContain("**Skip-condition pre-check.**")
@@ -401,12 +401,12 @@ describe("ce-code-review contract", () => {
   })
 
   test("remote scope modes forbid workspace inspection on wrong tree", async () => {
-    const skill = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const skill = await readRepoFile("skills/rg-code-review/SKILL.md")
     const diffScope = await readRepoFile(
-      "skills/ce-code-review/references/diff-scope.md",
+      "skills/rg-code-review/references/diff-scope.md",
     )
     const validator = await readRepoFile(
-      "skills/ce-code-review/references/validator-template.md",
+      "skills/rg-code-review/references/validator-template.md",
     )
 
     expect(skill).toContain("<pr-scope-mode>branch-remote</pr-scope-mode>")
@@ -422,7 +422,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("mode-aware demotion routes weak general-quality findings to soft buckets", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // Mode-aware demotion step exists (sub-step within Stage 5; numbering may shift if steps reorder)
     expect(content).toMatch(/Mode-aware demotion of weak general-quality findings/i)
@@ -481,9 +481,9 @@ describe("ce-code-review contract", () => {
   })
 
   test("documents stack-specific conditional reviewers for the JSON pipeline", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
     const catalog = await readRepoFile(
-      "skills/ce-code-review/references/persona-catalog.md",
+      "skills/rg-code-review/references/persona-catalog.md",
     )
 
     for (const agent of ["julik-frontend-races-reviewer", "swift-ios-reviewer"]) {
@@ -492,10 +492,10 @@ describe("ce-code-review contract", () => {
     }
 
     for (const removed of [
-      "ce-dhh-rails-reviewer",
-      "ce-kieran-rails-reviewer",
-      "ce-kieran-python-reviewer",
-      "ce-kieran-typescript-reviewer",
+      "rg-dhh-rails-reviewer",
+      "rg-kieran-rails-reviewer",
+      "rg-kieran-python-reviewer",
+      "rg-kieran-typescript-reviewer",
     ]) {
       expect(content).not.toContain(removed)
       expect(catalog).not.toContain(removed)
@@ -529,13 +529,13 @@ describe("ce-code-review contract", () => {
   })
 
   test("JSON-pipeline prompt assets stay frontmatter-free while template permits artifact write", async () => {
-    // The ce-code-review subagent template instructs each persona to write its full
-    // analysis to /tmp/rg-engineering/ce-code-review/{run_id}/{reviewer}.json.
+    // The rg-code-review subagent template instructs each persona to write its full
+    // analysis to /tmp/rg-engineering/rg-code-review/{run_id}/{reviewer}.json.
     // Prompt assets no longer carry tool frontmatter; the caller/template owns
     // artifact-write permission in the generic subagent dispatch.
-    const skill = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const skill = await readRepoFile("skills/rg-code-review/SKILL.md")
     const template = await readRepoFile(
-      "skills/ce-code-review/references/subagent-template.md",
+      "skills/rg-code-review/references/subagent-template.md",
     )
     const personas = [
       "correctness-reviewer",
@@ -566,19 +566,19 @@ describe("ce-code-review contract", () => {
 
   test("data-migration reviewer consolidates schema drift and migration safety", async () => {
     const content = await readRepoFile(personaPromptPath("data-migration-reviewer"))
-    const skill = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const skill = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     expect(content).toContain("## Step 0: Schema drift")
     expect(content).toContain('"reviewer": "data-migration"')
     expect(content).toContain("Return your findings as JSON matching the findings schema.")
     expect(skill).toContain("data-migration` spawn gate")
-    expect(skill).not.toContain("ce-schema-drift-detector")
-    expect(skill).not.toContain("ce-data-migration-expert")
-    expect(skill).not.toContain("ce-data-migrations-reviewer")
+    expect(skill).not.toContain("rg-schema-drift-detector")
+    expect(skill).not.toContain("rg-data-migration-expert")
+    expect(skill).not.toContain("rg-data-migrations-reviewer")
   })
 
   test("PR mode uses gh pr diff without checkout; branch/standalone fail closed on missing base", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // No scope path should fall back to `git diff HEAD` or `git diff --cached` — those only
     // show uncommitted changes and silently produce empty diffs on clean feature branches.
@@ -597,34 +597,34 @@ describe("ce-code-review contract", () => {
 
   test("orchestration callers invoke review-only code review", async () => {
     const lfg = await readRepoFile("skills/lfg/SKILL.md")
-    expect(lfg).toMatch(/ce-code-review[^\n]*mode:agent/)
+    expect(lfg).toMatch(/rg-code-review[^\n]*mode:agent/)
     expect(lfg).toContain("references/review-followup.md")
     expect(lfg).not.toMatch(/mode:autofix/)
   })
 
-  test("ce-work documents review-findings followup after Tier 2", async () => {
+  test("rg-work documents review-findings followup after Tier 2", async () => {
     const followup = await readRepoFile(
-      "skills/ce-work/references/review-findings-followup.md",
+      "skills/rg-work/references/review-findings-followup.md",
     )
-    const skill = await readRepoFile("skills/ce-work/SKILL.md")
+    const skill = await readRepoFile("skills/rg-work/SKILL.md")
     expect(followup).toContain("review-only")
     expect(followup).toContain("suggested_fix")
     // The apply followup consumes the review the caller already ran; re-invocation is a
-    // cold-caller fallback only (it must not start a second review in the ce-work Tier 2 path).
+    // cold-caller fallback only (it must not start a second review in the rg-work Tier 2 path).
     expect(followup).toMatch(/consume the completed review/i)
     expect(followup).toMatch(/invoke[^\n]*review[^\n]*cold caller/i)
     expect(followup).toMatch(/does not investigate findings/i)
     expect(followup).toMatch(/Group by `file`/i)
     expect(followup).toMatch(/batch/i)
     expect(followup).toContain("mode:agent")
-    expect(skill).toMatch(/ce-code-review.*review-only|review-only.*ce-code-review/i)
+    expect(skill).toMatch(/rg-code-review.*review-only|review-only.*rg-code-review/i)
     expect(skill).toContain("review-findings-followup.md")
     expect(skill).toMatch(/batch.*file|batch applicable findings by file/i)
   })
 
-  test("ce-work shipping-workflow enforces a residual-work gate after Tier 2 review", async () => {
+  test("rg-work shipping-workflow enforces a residual-work gate after Tier 2 review", async () => {
     for (const path of [
-      "skills/ce-work/references/shipping-workflow.md",
+      "skills/rg-work/references/shipping-workflow.md",
     ]) {
       const workflow = await readRepoFile(path)
       await expect(readRepoFile(path.replace("shipping-workflow.md", "tracker-defer.md"))).resolves.toContain(
@@ -647,7 +647,7 @@ describe("ce-code-review contract", () => {
       // Accept-and-proceed path threads findings into the PR description.
       expect(workflow).toContain("Known Residuals")
       expect(workflow).toContain("docs/residual-review-findings/<branch-or-head-sha>.md")
-      expect(workflow).toContain("If the user later chooses the no-PR `ce-commit` path")
+      expect(workflow).toContain("If the user later chooses the no-PR `rg-commit` path")
       expect(workflow).toContain("must not live only in the transient session")
     }
   })
@@ -671,7 +671,7 @@ describe("ce-code-review contract", () => {
 
     // tracker-defer is invoked in non-interactive mode.
     expect(lfg).toContain("references/tracker-defer.md")
-    expect(lfg).not.toContain("skills/ce-code-review/references/tracker-defer.md")
+    expect(lfg).not.toContain("skills/rg-code-review/references/tracker-defer.md")
 
     // Structured return buckets drive PR description content.
     expect(lfg).toMatch(/filed/)
@@ -681,7 +681,7 @@ describe("ce-code-review contract", () => {
     // PR description update path is non-interactive and does not route through
     // confirmation-driven PR update skills. The positive assertion on
     // `gh pr edit` below is the actual check; a broad `not.toContain` would
-    // falsely trip on step 7's legitimate use of ce-commit-push-pr for the
+    // falsely trip on step 7's legitimate use of rg-commit-push-pr for the
     // post-work commit/PR-open step.
     expect(lfg).toContain("do not load any confirmation-driven PR update skill")
     expect(lfg).toContain("gh pr edit PR_NUMBER --body-file BODY_FILE")
@@ -703,20 +703,20 @@ describe("ce-code-review contract", () => {
     expect(lfg).toMatch(/Never block DONE on tracker filing failures/i)
   })
 
-  test("ce-code-review emits actionable findings summary for callers", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+  test("rg-code-review emits actionable findings summary for callers", async () => {
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
     expect(content).toContain("### Emit actionable findings summary")
     expect(content).toContain("Actionable Findings")
     expect(content).toContain("with stable `#`, severity, file:line, title, `autofix_class`")
     expect(content).toContain("Actionable findings: none.")
   })
 
-  test("ce-code-review uses stable sequential finding numbers across grouped output", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+  test("rg-code-review uses stable sequential finding numbers across grouped output", async () => {
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
     const template = await readRepoFile(
-      "skills/ce-code-review/references/review-output-template.md",
+      "skills/rg-code-review/references/review-output-template.md",
     )
-    const fixture = await readRepoFile("tests/fixtures/ce-code-review-stable-numbering.md")
+    const fixture = await readRepoFile("tests/fixtures/rg-code-review-stable-numbering.md")
 
     const stage5 = content.split("### Stage 5b:")[0].split("### Stage 5:")[1]
     expect(stage5).toMatch(/Sort and number/)
@@ -760,7 +760,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("documents grouping tokens as presentation with conflict handling", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // Three grouping tokens in the Argument Parsing table, auto as default
     expect(content).toContain("`grouping:auto`")
@@ -776,7 +776,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("Stage 5 builds triage groups without mutating findings", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
     const stage5 = content.split("### Stage 5b:")[0].split("### Stage 5:")[1]
 
     expect(stage5).toMatch(/Build thematic triage groups/)
@@ -792,7 +792,7 @@ describe("ce-code-review contract", () => {
   })
 
   test("triage groups are pruned after validation drops and after apply", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
 
     // Stage 5b: groups never reference findings dropped by validation
     const stage5b = content.split("### Stage 5c:")[0].split("### Stage 5b:")[1]
@@ -806,11 +806,11 @@ describe("ce-code-review contract", () => {
   })
 
   test("triage groups render as a stable-numbered pipe table and JSON field", async () => {
-    const content = await readRepoFile("skills/ce-code-review/SKILL.md")
+    const content = await readRepoFile("skills/rg-code-review/SKILL.md")
     const template = await readRepoFile(
-      "skills/ce-code-review/references/review-output-template.md",
+      "skills/rg-code-review/references/review-output-template.md",
     )
-    const fixture = await readRepoFile("tests/fixtures/ce-code-review-stable-numbering.md")
+    const fixture = await readRepoFile("tests/fixtures/rg-code-review-stable-numbering.md")
 
     // Stage 6 renders groups as a compact table that supplements, never replaces, the findings,
     // and marks each group as an apply-queue or a decision-gate for downstream actors

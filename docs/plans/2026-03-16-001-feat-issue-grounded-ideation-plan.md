@@ -1,20 +1,20 @@
 ---
-title: "feat: Add issue-grounded ideation mode to ce:ideate"
+title: "feat: Add issue-grounded ideation mode to rg:ideate"
 type: feat
 status: complete
 date: 2026-03-16
 origin: docs/brainstorms/2026-03-16-issue-grounded-ideation-requirements.md
 ---
 
-# feat: Add issue-grounded ideation mode to ce:ideate
+# feat: Add issue-grounded ideation mode to rg:ideate
 
 ## Overview
 
-Add an issue intelligence agent and integrate it into ce:ideate so that when a user's argument indicates they want issue-tracker data as input, the skill fetches, clusters, and analyzes GitHub issues — then uses the resulting themes to drive ideation frames. The agent is also independently useful outside ce:ideate for understanding a project's issue landscape.
+Add an issue intelligence agent and integrate it into rg:ideate so that when a user's argument indicates they want issue-tracker data as input, the skill fetches, clusters, and analyzes GitHub issues — then uses the resulting themes to drive ideation frames. The agent is also independently useful outside rg:ideate for understanding a project's issue landscape.
 
 ## Problem Statement / Motivation
 
-ce:ideate currently grounds ideation in codebase context and past learnings only. Teams' issue trackers hold rich signal about real user pain, recurring failures, and severity patterns that ideation misses. The goal is strategic improvement ideas grounded in bug patterns ("invest in collaboration reliability") not individual bug fixes ("fix LIVE_DOC_UNAVAILABLE").
+rg:ideate currently grounds ideation in codebase context and past learnings only. Teams' issue trackers hold rich signal about real user pain, recurring failures, and severity patterns that ideation misses. The goal is strategic improvement ideas grounded in bug patterns ("invest in collaboration reliability") not individual bug fixes ("fix LIVE_DOC_UNAVAILABLE").
 
 (See brainstorm: docs/brainstorms/2026-03-16-issue-grounded-ideation-requirements.md — R1-R9)
 
@@ -23,13 +23,13 @@ ce:ideate currently grounds ideation in codebase context and past learnings only
 Two deliverables:
 
 1. **New agent**: `issue-intelligence-analyst` in `agents/research/` — fetches GitHub issues via `gh` CLI, clusters by theme, returns structured analysis. Standalone-capable.
-2. **ce:ideate modifications**: detect issue-tracker intent in arguments, dispatch the agent as a third Phase 1 scan, derive Phase 2 ideation frames from issue clusters using a hybrid strategy.
+2. **rg:ideate modifications**: detect issue-tracker intent in arguments, dispatch the agent as a third Phase 1 scan, derive Phase 2 ideation frames from issue clusters using a hybrid strategy.
 
 ## Technical Approach
 
 ### Deliverable 1: Issue Intelligence Analyst Agent
 
-**File**: `plugins/compound-engineering/agents/research/ce-issue-intelligence-analyst.agent.md`
+**File**: `plugins/rg-engineering/agents/research/rg-issue-intelligence-analyst.agent.md`
 
 **Frontmatter:**
 ```yaml
@@ -117,7 +117,7 @@ model: inherit
 {Issues that didn't fit any theme, with a brief note}
 ```
 
-This format is human-readable (standalone use) and structured enough for orchestrator consumption (ce:ideate use).
+This format is human-readable (standalone use) and structured enough for orchestrator consumption (rg:ideate use).
 
 **Data source priority:**
 1. **`gh` CLI (preferred)** — most reliable, works in all terminal environments, no MCP dependency
@@ -139,9 +139,9 @@ The agent runs as a sub-agent with its own context window. Every token of fetche
 - Use native content-search/grep for label or pattern searches
 - Do not chain shell commands with `&&`, `||`, `;`, or pipes
 
-### Deliverable 2: ce:ideate Skill Modifications
+### Deliverable 2: rg:ideate Skill Modifications
 
-**File**: `plugins/compound-engineering/skills/ce-ideate/SKILL.md`
+**File**: `plugins/rg-engineering/skills/rg-ideate/SKILL.md`
 
 Four targeted modifications:
 
@@ -163,7 +163,7 @@ Add a third numbered item to the Phase 1 parallel dispatch:
 
 ```
 3. **Issue intelligence** (conditional) — if issue-tracker intent was detected in Phase 0.2,
-   dispatch `compound-engineering:research:issue-intelligence-analyst` with the focus hint.
+   dispatch `rg-engineering:research:issue-intelligence-analyst` with the focus hint.
    If a focus hint is present, pass it so the agent can weight its clustering.
 ```
 
@@ -193,7 +193,7 @@ When checking for recent ideation documents, treat issue-grounded and non-issue 
 | File | Change |
 |------|--------|
 | `agents/research/issue-intelligence-analyst.md` | **New file** — the agent |
-| `skills/ce-ideate/SKILL.md` | **Modified** — 4 targeted modifications (Phase 0.1, 0.2, 1, 2) |
+| `skills/rg-ideate/SKILL.md` | **Modified** — 4 targeted modifications (Phase 0.1, 0.2, 1, 2) |
 | `.claude-plugin/plugin.json` | **Modified** — increment agent count, add agent to list, update description |
 | `../../.claude-plugin/marketplace.json` | **Modified** — update description with new agent count |
 | `README.md` | **Modified** — add agent to research agents table |
@@ -218,14 +218,14 @@ When checking for recent ideation documents, treat issue-grounded and non-issue 
 - [ ] Agent clusters issues into themes, not individual bug reports
 - [ ] Agent reads 2-3 sample bodies per cluster for enrichment
 - [ ] Agent output includes theme title, description, why_it_matters, issue_count, trend, representative issues, confidence
-- [ ] Agent is independently useful when dispatched directly (not just as ce:ideate sub-agent)
-- [ ] ce:ideate detects issue-tracker intent from arguments like `bugs`, `github issues`
-- [ ] ce:ideate does NOT trigger issue mode on focus hints like `bug in auth`
-- [ ] ce:ideate dispatches issue intelligence agent as third parallel Phase 1 scan when triggered
-- [ ] ce:ideate falls back to default ideation with warning when agent fails
-- [ ] ce:ideate derives ideation frames from issue clusters (hybrid: clusters + default padding)
-- [ ] ce:ideate caps at 6 frames, padding with defaults when < 4 clusters
-- [ ] Running `/ce:ideate bugs` on proof repo produces clustered themes from 25+ LIVE_DOC_UNAVAILABLE variants, not 25 separate ideas
+- [ ] Agent is independently useful when dispatched directly (not just as rg:ideate sub-agent)
+- [ ] rg:ideate detects issue-tracker intent from arguments like `bugs`, `github issues`
+- [ ] rg:ideate does NOT trigger issue mode on focus hints like `bug in auth`
+- [ ] rg:ideate dispatches issue intelligence agent as third parallel Phase 1 scan when triggered
+- [ ] rg:ideate falls back to default ideation with warning when agent fails
+- [ ] rg:ideate derives ideation frames from issue clusters (hybrid: clusters + default padding)
+- [ ] rg:ideate caps at 6 frames, padding with defaults when < 4 clusters
+- [ ] Running `/rg:ideate bugs` on proof repo produces clustered themes from 25+ LIVE_DOC_UNAVAILABLE variants, not 25 separate ideas
 - [ ] Surviving ideas are strategic improvements, not individual bug fixes
 - [ ] plugin.json, marketplace.json, README.md updated with correct counts
 
@@ -240,7 +240,7 @@ When checking for recent ideation documents, treat issue-grounded and non-issue 
 ## Sources & References
 
 - **Origin brainstorm:** [docs/brainstorms/2026-03-16-issue-grounded-ideation-requirements.md](docs/brainstorms/2026-03-16-issue-grounded-ideation-requirements.md) — Key decisions: pattern-first ideation, hybrid frame strategy, flexible argument detection, additive to Phase 1, standalone agent
-- **Exemplar agent:** `plugins/compound-engineering/agents/research/ce-repo-research-analyst.agent.md` — agent structure pattern
-- **ce:ideate skill:** `plugins/compound-engineering/skills/ce-ideate/SKILL.md` — integration target
+- **Exemplar agent:** `plugins/rg-engineering/agents/research/rg-repo-research-analyst.agent.md` — agent structure pattern
+- **rg:ideate skill:** `plugins/rg-engineering/skills/rg-ideate/SKILL.md` — integration target
 - **Institutional learning:** `docs/solutions/skill-design/compound-refresh-skill-improvements.md` — impact clustering pattern, platform-agnostic tool references, evidence-first interaction
-- **Real-world test repo:** `EveryInc/proof` (555 issues, 25+ LIVE_DOC_UNAVAILABLE duplicates, structured labels)
+- **Real-world test repo:** `Lukas-Rdt/proof` (555 issues, 25+ LIVE_DOC_UNAVAILABLE duplicates, structured labels)

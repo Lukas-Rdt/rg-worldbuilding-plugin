@@ -13,15 +13,15 @@ component: plugin-development
 
 ## Problem
 
-When making changes to the compound-engineering plugin, documentation can get out of sync with the actual components (agents, commands, skills). This leads to confusion about what's included in each version and makes it difficult to track changes over time.
+When making changes to the rg-engineering plugin, documentation can get out of sync with the actual components (agents, commands, skills). This leads to confusion about what's included in each version and makes it difficult to track changes over time.
 
-This document applies to release-owned plugin metadata and changelog surfaces for the `compound-engineering` plugin, not ordinary feature work.
+This document applies to release-owned plugin metadata and changelog surfaces for the `rg-engineering` plugin, not ordinary feature work.
 
 The broader repo-level release model now lives in:
 
 - `docs/solutions/workflow/manual-release-please-github-releases.md`
 
-That doc covers the standing release PR, component ownership across the root `compound-engineering` package and the marketplace packages, and the GitHub Releases model for published release notes. This document stays narrower: it is the plugin-scoped reminder for contributors changing the root plugin surface.
+That doc covers the standing release PR, component ownership across the root `rg-engineering` package and the marketplace packages, and the GitHub Releases model for published release notes. This document stays narrower: it is the plugin-scoped reminder for contributors changing the root plugin surface.
 
 ## Solution
 
@@ -33,7 +33,7 @@ Contributors should:
 
 1. **Avoid release bookkeeping in normal PRs**
    - Do not manually bump `package.json`, `.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json`, `.codex-plugin/plugin.json`, or `.agy/plugin.json`
-   - Do not manually bump the `compound-engineering` entry in `.claude-plugin/marketplace.json`
+   - Do not manually bump the `rg-engineering` entry in `.claude-plugin/marketplace.json`
    - Do not cut release sections in the root `CHANGELOG.md`
 
 2. **Keep substantive docs accurate**
@@ -45,10 +45,10 @@ Contributors should:
 ## Checklist for Plugin Changes
 
 ```markdown
-Before committing changes to compound-engineering plugin:
+Before committing changes to rg-engineering plugin:
 
 - [ ] No manual version bump in root package/plugin manifests
-- [ ] No manual version bump in the `compound-engineering` entry inside `.claude-plugin/marketplace.json`
+- [ ] No manual version bump in the `rg-engineering` entry inside `.claude-plugin/marketplace.json`
 - [ ] No manual release section added to `CHANGELOG.md`
 - [ ] README.md component counts verified
 - [ ] README.md tables updated (if adding/removing/renaming)

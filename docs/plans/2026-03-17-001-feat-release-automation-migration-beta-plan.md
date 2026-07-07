@@ -21,12 +21,12 @@ The current repo mixes one automated root CLI release line with manual plugin re
 - R1. Manual release; no publish on every merge to `main`
 - R2. Batched releasable changes may accumulate on `main`
 - R3. One release PR for the whole repo that auto-accumulates releasable merges
-- R4. Independent version bumps for `cli`, `compound-engineering`, `coding-tutor`, and `marketplace`
+- R4. Independent version bumps for `cli`, `rg-engineering`, `coding-tutor`, and `marketplace`
 - R5. Untouched components do not bump
 - R6. Root `CHANGELOG.md` remains canonical
 - R7. Root changelog uses top-level component-version entries
 - R8. Existing changelog history is preserved
-- R9. `plugins/compound-engineering/CHANGELOG.md` is no longer canonical
+- R9. `plugins/rg-engineering/CHANGELOG.md` is no longer canonical
 - R10. Retire `release-docs` as release authority
 - R11. Replace `release-docs` with narrow scripts
 - R12. Release automation owns versions, counts, and release metadata
@@ -60,7 +60,7 @@ The current repo mixes one automated root CLI release line with manual plugin re
 - `.releaserc.json` is the current single-line release configuration and only writes `CHANGELOG.md` and `package.json`.
 - `package.json` already exposes repo-maintenance scripts and is the natural place to add release preview/validation script entrypoints.
 - `src/commands/install.ts` resolves named plugin installs by cloning the GitHub repo and reading `plugins/<name>` at runtime; this means plugin content releases can remain independent from npm CLI releases when CLI code is unchanged.
-- `.claude-plugin/marketplace.json`, `plugins/compound-engineering/.claude-plugin/plugin.json`, and `plugins/coding-tutor/.claude-plugin/plugin.json` are the current version-bearing metadata surfaces that need explicit ownership.
+- `.claude-plugin/marketplace.json`, `plugins/rg-engineering/.claude-plugin/plugin.json`, and `plugins/coding-tutor/.claude-plugin/plugin.json` are the current version-bearing metadata surfaces that need explicit ownership.
 - `.claude/commands/release-docs.md` is stale and mixes docs generation, metadata synchronization, validation, and release guidance; it should be replaced rather than modernized in place.
 - Existing planning docs in `docs/plans/` use one file per plan, frontmatter with `origin`, and dependency-ordered implementation units with explicit file paths; this plan follows that pattern.
 
@@ -83,10 +83,10 @@ The current repo mixes one automated root CLI release line with manual plugin re
 - **Use explicit release scripts for repo-specific logic**: Count computation, metadata sync, dry-run summaries, and root changelog shaping should live in versioned scripts rather than hidden maintainer-local command prompts.
 - **Preserve current plugin delivery assumptions**: Plugin content updates do not force CLI version bumps unless the converter/installer behavior in `src/` changes.
 - **Marketplace is catalog-scoped**: Marketplace version bumps depend on marketplace file changes such as plugin additions/removals or marketplace metadata edits, not routine plugin release version updates.
-- **Use conventional type as release intent, not mandatory component scope**: `feat`, `fix`, and explicit breaking-change markers remain important release signals, but component scope in PR or merge titles is optional and should not be required for common compound-engineering work.
+- **Use conventional type as release intent, not mandatory component scope**: `feat`, `fix`, and explicit breaking-change markers remain important release signals, but component scope in PR or merge titles is optional and should not be required for common rg-engineering work.
 - **File ownership is authoritative for component selection**: Optional title scope can help notes and validation, but changed-file ownership rules should decide which components bump.
 - **Support manual bump overrides as an explicit escape hatch**: Inferred bumping remains the default, but the CI-driven release flow should allow per-component `patch` / `minor` / `major` overrides for exceptional cases without requiring synthetic commits on `main`.
-- **Deprecate, do not rely on, legacy changelog/docs surfaces**: `plugins/compound-engineering/CHANGELOG.md` and `release-docs` should stop being live authorities; they should be removed, frozen, or reduced to pointer guidance only after the new flow is in place.
+- **Deprecate, do not rely on, legacy changelog/docs surfaces**: `plugins/rg-engineering/CHANGELOG.md` and `release-docs` should stop being live authorities; they should be removed, frozen, or reduced to pointer guidance only after the new flow is in place.
 
 ## Root Changelog Format
 
@@ -105,7 +105,7 @@ The root `CHANGELOG.md` should remain the only canonical changelog and should us
 ### Recommended Heading Shape
 
 ```md
-## compound-engineering v2.43.0 - 2026-04-10
+## rg-engineering v2.43.0 - 2026-04-10
 
 ### Features
 - ...
@@ -138,7 +138,7 @@ Additional examples:
 - Preserve all existing root changelog history as published.
 - Add a short migration note near the top stating that, starting with the cutover release, entries are recorded per component version in the root file.
 - Do not attempt to rewrite or normalize all older entries into the new structure.
-- `plugins/compound-engineering/CHANGELOG.md` should no longer receive new canonical entries after cutover.
+- `plugins/rg-engineering/CHANGELOG.md` should no longer receive new canonical entries after cutover.
 
 ## Component Release Rules
 
@@ -147,7 +147,7 @@ The release system should use explicit file-to-component ownership rules so unch
 ### Component Definitions
 
 - **`cli`**: The npm-distributed `@every-env/compound-plugin` package and its release-owned root metadata.
-- **`compound-engineering`**: The plugin rooted at `plugins/compound-engineering/`.
+- **`rg-engineering`**: The plugin rooted at `plugins/rg-engineering/`.
 - **`coding-tutor`**: The plugin rooted at `plugins/coding-tutor/`.
 - **`marketplace`**: Marketplace-level metadata rooted at `.claude-plugin/` and any future repo-owned marketplace-only surfaces.
 
@@ -172,17 +172,17 @@ Changes that should **not** trigger `cli` by themselves:
 - Marketplace metadata changes under `.claude-plugin/**`
 - Docs or brainstorm/plan documents unless the repo explicitly decides docs-only changes are releasable for the CLI
 
-#### `compound-engineering`
+#### `rg-engineering`
 
-Changes that should trigger a `compound-engineering` release:
+Changes that should trigger a `rg-engineering` release:
 
-- `plugins/compound-engineering/**`
-- Tests or fixtures whose primary purpose is validating compound-engineering content or conversion results derived from that plugin
-- Release-owned metadata updates for the compound-engineering plugin:
-  - `plugins/compound-engineering/.claude-plugin/plugin.json`
-- Root `CHANGELOG.md` entry generation for the `compound-engineering` component
+- `plugins/rg-engineering/**`
+- Tests or fixtures whose primary purpose is validating rg-engineering content or conversion results derived from that plugin
+- Release-owned metadata updates for the rg-engineering plugin:
+  - `plugins/rg-engineering/.claude-plugin/plugin.json`
+- Root `CHANGELOG.md` entry generation for the `rg-engineering` component
 
-Changes that should **not** trigger `compound-engineering` by themselves:
+Changes that should **not** trigger `rg-engineering` by themselves:
 
 - `plugins/coding-tutor/**`
 - Root CLI implementation changes in `src/**`
@@ -200,7 +200,7 @@ Changes that should trigger a `coding-tutor` release:
 
 Changes that should **not** trigger `coding-tutor` by themselves:
 
-- `plugins/compound-engineering/**`
+- `plugins/rg-engineering/**`
 - Root CLI implementation changes in `src/**`
 - Marketplace-only metadata changes
 
@@ -217,7 +217,7 @@ Changes that should trigger a `marketplace` release:
 Changes that should **not** trigger `marketplace` by themselves:
 
 - Routine version bumps to existing plugin manifests
-- Plugin-only content changes under `plugins/compound-engineering/**` or `plugins/coding-tutor/**`
+- Plugin-only content changes under `plugins/rg-engineering/**` or `plugins/coding-tutor/**`
 - Root CLI implementation changes in `src/**`
 
 ### Multi-Component Rules
@@ -322,7 +322,7 @@ The dry-run summary should include:
 
 - What exact combination of `release-please` config and custom post-processing yields the chosen root changelog output without fighting the tool too hard?
 - Should conventional-format enforcement happen on PR titles, squash-merge titles, commit messages, or a combination of them?
-- Should `plugins/compound-engineering/CHANGELOG.md` be deleted outright or replaced with a short pointer note after the migration is stable?
+- Should `plugins/rg-engineering/CHANGELOG.md` be deleted outright or replaced with a short pointer note after the migration is stable?
 - Should release preview be implemented by invoking `release-please` in dry-run mode directly, or by a repo-owned script that computes the same summary from component rules and current git state?
 - Should final post-merge release execution live in a dedicated publish workflow keyed off merged release PR state, or remain in a renamed/adapted version of the current `publish.yml`?
 - Should override inputs be encoded directly into release workflow inputs only, or also persisted into the generated release PR body for auditability?
@@ -345,7 +345,7 @@ The dry-run summary should include:
 - Delete or freeze: `.releaserc.json`
 
 **Approach:**
-- Define components for `cli`, `compound-engineering`, `coding-tutor`, and `marketplace`.
+- Define components for `cli`, `rg-engineering`, `coding-tutor`, and `marketplace`.
 - Use manifest configuration so version lines are independent and untouched components do not bump.
 - Rework the existing publish workflow so it no longer releases on every push to `main` and instead supports the release-please-driven model.
 - Add package scripts for release preview, metadata sync, and validation so CI can call stable entrypoints instead of embedding release logic inline.
@@ -361,7 +361,7 @@ The dry-run summary should include:
 - A marketplace metadata/catalog change maps to marketplace only.
 - A `src/` CLI behavior change maps to the CLI component.
 - A combined change yields multiple component updates inside one release PR.
-- A title like `fix: adjust ce:plan-beta wording` remains valid without component scope and still produces the right component mapping from files.
+- A title like `fix: adjust rg:plan-beta wording` remains valid without component scope and still produces the right component mapping from files.
 - A manual override can promote an inferred patch bump for one component to minor without affecting unrelated components.
 
 **Verification:**
@@ -466,13 +466,13 @@ The dry-run summary should include:
 
 **Files:**
 - Modify: `CHANGELOG.md`
-- Modify or replace: `plugins/compound-engineering/CHANGELOG.md`
+- Modify or replace: `plugins/rg-engineering/CHANGELOG.md`
 - Optionally create: `plugins/coding-tutor/CHANGELOG.md` only if needed as a non-canonical pointer or future placeholder
 
 **Approach:**
 - Add a migration note near the top of the root changelog clarifying that it is the canonical changelog for the repo and future releases.
 - Render future canonical entries into the root file as top-level component-version entries using the agreed heading shape.
-- Stop writing future canonical entries into `plugins/compound-engineering/CHANGELOG.md`.
+- Stop writing future canonical entries into `plugins/rg-engineering/CHANGELOG.md`.
 - Replace the plugin-local changelog with either a short pointer note or a frozen historical file, depending on the least confusing path discovered during implementation.
 - Keep existing root changelog entries intact; do not attempt to rewrite historical releases into a new structure retroactively.
 
@@ -502,7 +502,7 @@ The dry-run summary should include:
 **Files:**
 - Modify: `AGENTS.md`
 - Modify: `CLAUDE.md`
-- Modify: `plugins/compound-engineering/AGENTS.md`
+- Modify: `plugins/rg-engineering/AGENTS.md`
 - Modify: `docs/solutions/plugin-versioning-requirements.md`
 - Delete: `.claude/commands/release-docs.md` or replace with a deprecation stub
 
@@ -553,7 +553,7 @@ The dry-run summary should include:
 
 **Test scenarios:**
 - Change only `plugins/coding-tutor/**` and confirm only `coding-tutor` bumps.
-- Change only `plugins/compound-engineering/**` and confirm only CE bumps.
+- Change only `plugins/rg-engineering/**` and confirm only CE bumps.
 - Change only marketplace catalog metadata and confirm only marketplace bumps.
 - Change only `src/**` and confirm only CLI bumps.
 - Combined `src/**` + plugin change yields both component bumps.
@@ -591,7 +591,7 @@ The dry-run summary should include:
 - Document one canonical release path: release PR maintenance on push to `main`, dry-run preview on manual dispatch, actual release on merge of the generated release PR.
 - Document one canonical changelog: root `CHANGELOG.md`.
 - Document one rule for contributors: ordinary feature PRs do not hand-bump release-owned versions or changelog entries.
-- Add a short migration note anywhere old release instructions are likely to be rediscovered, especially around `plugins/compound-engineering/CHANGELOG.md` and the removed `release-docs` command.
+- Add a short migration note anywhere old release instructions are likely to be rediscovered, especially around `plugins/rg-engineering/CHANGELOG.md` and the removed `release-docs` command.
 - After merge, run one live GitHub Actions validation pass to confirm `release-please` tag/output wiring and conditional CLI publish behavior end to end.
 
 ## Sources & References

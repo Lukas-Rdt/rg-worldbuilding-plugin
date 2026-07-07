@@ -29,7 +29,7 @@ related_components:
 
 ## Context
 
-Skills bundle files the agent uses at runtime: reference docs, schemas, and `scripts/`. Getting paths to those files to resolve correctly across harnesses (Claude Code, Codex, Cursor) has been a recurring bug class — see closed issues #764 (`ce-worktree`), #811 (`ce-code-review`), #898 (`ce-compound`), all "script path resolved against the project root, not the skill dir," plus the still-open #944 ("reconcile contradictory AGENTS.md guidance on bare relative paths") and #949 (a live prose-reference variant).
+Skills bundle files the agent uses at runtime: reference docs, schemas, and `scripts/`. Getting paths to those files to resolve correctly across harnesses (Claude Code, Codex, Cursor) has been a recurring bug class — see closed issues #764 (`rg-worktree`), #811 (`rg-code-review`), #898 (`rg-compound`), all "script path resolved against the project root, not the skill dir," plus the still-open #944 ("reconcile contradictory AGENTS.md guidance on bare relative paths") and #949 (a live prose-reference variant).
 
 The trigger for this learning was a wrong turn. An empirical finding — *the Bash tool's working directory is the user's project root, not the skill directory, on Claude Code, Codex, and Cursor* — was over-generalized into "bare relative paths like `bash scripts/x.sh` are broken, so anchor every invocation." That conclusion was codified and acted on before it was checked against the cross-tool skill spec or any independent implementation. It turned out to be wrong on the strong form: bare relative paths work fine in practice. The correction produced the tiered model below, and a transferable lesson about validating findings before codifying them.
 
@@ -65,7 +65,7 @@ Two adjacent rules:
 
 ### Where this is codified
 
-`AGENTS.md` > "Platform-Specific Variables in Skills" codifies this three-tier model as the repo's authoring rule; this learning is the rationale and worked examples behind it. A few legacy `${CLAUDE_SKILL_DIR}` uses are still being migrated to the anchor (e.g. `ce-compound`'s `validate-frontmatter.py`), tracked by #944. Note `tests/skill-conventions.test.ts` enforces an existence guard only when a skill-dir *platform var* is used — it does not forbid the model-filled `SKILL_DIR` anchor (which uses no platform var), so anchor-based skills pass it.
+`AGENTS.md` > "Platform-Specific Variables in Skills" codifies this three-tier model as the repo's authoring rule; this learning is the rationale and worked examples behind it. A few legacy `${CLAUDE_SKILL_DIR}` uses are still being migrated to the anchor (e.g. `rg-compound`'s `validate-frontmatter.py`), tracked by #944. Note `tests/skill-conventions.test.ts` enforces an existence guard only when a skill-dir *platform var* is used — it does not forbid the model-filled `SKILL_DIR` anchor (which uses no platform var), so anchor-based skills pass it.
 
 ## Why This Matters
 

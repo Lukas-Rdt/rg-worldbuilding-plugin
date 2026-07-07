@@ -11,11 +11,11 @@ import {
 describe("release component detection", () => {
   test("maps plugin-only changes to the matching plugin component", () => {
     const components = detectComponentsFromFiles([
-      "skills/ce-plan/SKILL.md",
+      "skills/rg-plan/SKILL.md",
     ])
 
     expect(components.get("rg-engineering")).toEqual([
-      "skills/ce-plan/SKILL.md",
+      "skills/rg-plan/SKILL.md",
     ])
     expect(components.get("marketplace")).toEqual([])
   })
@@ -76,7 +76,7 @@ describe("release intent parsing", () => {
   })
 
   test("supports conventional titles without scope", () => {
-    const parsed = parseReleaseIntent("fix: adjust ce-plan wording")
+    const parsed = parseReleaseIntent("fix: adjust rg-plan wording")
     expect(parsed.type).toBe("fix")
     expect(parsed.scope).toBeNull()
     expect(parsed.breaking).toBe(false)

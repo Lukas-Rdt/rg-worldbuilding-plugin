@@ -76,4 +76,4 @@ This leaves volume as the only working gate. The skill misses the exact scenario
 
 ## Next Steps
 
--> `/ce:plan` for structured implementation planning
+-> `/rg:plan` for structured implementation planning

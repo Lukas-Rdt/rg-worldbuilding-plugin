@@ -2,7 +2,7 @@
 title: "Prove a skill prose change moved behavior with paired old-vs-new blind injection"
 date: 2026-07-01
 category: skill-design
-module: compound-engineering-plugin skill evaluation
+module: rg-engineering-plugin skill evaluation
 problem_type: design_pattern
 component: testing_framework
 severity: medium
@@ -33,7 +33,7 @@ Editing the prose of an agent skill (a `SKILL.md`, an embedded persona, or any b
 - **The change is a no-op at the current model tier.** A frontier model may already do the "new" thing by default, so the added rule buys nothing you can observe — you shipped tokens, not behavior.
 - **The change creates a cross-skill contract that no test enforces.** One skill's output is supposed to be gated by another skill (or a test), but the two ends can drift independently and every existing test stays green.
 
-This methodology came out of validating a set of prose edits that added a *behavior-verification evidence* contract across four orchestration skills (`ce-work`, `ce-debug`, `ce-plan`, `lfg`): one producer skill emits verification evidence, and a downstream orchestrator gates shipping on that evidence. The goal was to prove — not assume — that the edits changed behavior, and to leave behind a test that fails when the contract is broken.
+This methodology came out of validating a set of prose edits that added a *behavior-verification evidence* contract across four orchestration skills (`rg-work`, `rg-debug`, `rg-plan`, `lfg`): one producer skill emits verification evidence, and a downstream orchestrator gates shipping on that evidence. The goal was to prove — not assume — that the edits changed behavior, and to leave behind a test that fails when the contract is broken.
 
 ## Guidance
 
@@ -101,7 +101,7 @@ Note on tooling: use a skill-authoring/eval harness that **injects the excerpt i
 
 ```
 # Extract the real bytes of the changed section, both sides.
-git show HEAD~1:skills/ce-work/SKILL.md   # -> OLD excerpt of the Return-to-Caller block
+git show HEAD~1:skills/rg-work/SKILL.md   # -> OLD excerpt of the Return-to-Caller block
 # working tree                            # -> NEW excerpt of the same block
 
 Subagent A (blind): [OLD excerpt] + [identical scenario] -> "return the structured object you would emit"
@@ -135,7 +135,7 @@ const EVIDENCE_FACTS = {
 };
 
 const producerBlock = slice(ceWorkSrc, "## Return-to-Caller Mode", "Engine selection ("); // owning section
-const consumerGate  = slice(lfgSrc, "2. Invoke the `ce-work`", "3. Invoke the `ce-simplify-code`");
+const consumerGate  = slice(lfgSrc, "2. Invoke the `rg-work`", "3. Invoke the `rg-simplify-code`");
 
 for (const [token, prose] of Object.entries(EVIDENCE_FACTS)) {
   expect(producerBlock).toContain(token);  // producer names the field
@@ -159,5 +159,5 @@ If step 2 does not turn the test red, the parity test is not actually guarding t
 - [frontier-model-skill-modernization-methodology](frontier-model-skill-modernization-methodology.md) — parent eval methodology; its "fresh subagent, bypass the plugin cache, mechanical transcript grading" step is what paired old-vs-new injection refines into a controlled A/B.
 - [safe-auto-rubric-calibration](safe-auto-rubric-calibration.md) — prior art for technique 2: frames a shipped prose change as "mostly a determinism patch, not a rate increase," and argues for measuring variance, not just outcome shift.
 - [cross-skill-shared-cache-primitive](cross-skill-shared-cache-primitive.md) — origin of the field-name contract and the parity-drift gap: renaming a schema field can pass a byte-identity parity test yet silently break per-skill consumers. Technique 4 is the mitigation.
-- [ce-doc-review-calibration-patterns](ce-doc-review-calibration-patterns.md) — reinforces technique 2: skill judgment is non-deterministic, so grade across reps rather than trusting a single run.
-- Source: PR [#1054](https://github.com/EveryInc/compound-engineering-plugin/pull/1054) "fix(testing): require behavior verification evidence" (HEAD `3923315a`), plus the follow-up parity test in `tests/pipeline-review-contract.test.ts`.
+- [rg-doc-review-calibration-patterns](rg-doc-review-calibration-patterns.md) — reinforces technique 2: skill judgment is non-deterministic, so grade across reps rather than trusting a single run.
+- Source: PR [#1054](https://github.com/Lukas-Rdt/rg-engineering-plugin/pull/1054) "fix(testing): require behavior verification evidence" (HEAD `3923315a`), plus the follow-up parity test in `tests/pipeline-review-contract.test.ts`.

@@ -1,5 +1,5 @@
 ---
-title: "feat(ce-optimize): Add iterative optimization loop skill"
+title: "feat(rg-optimize): Add iterative optimization loop skill"
 type: feat
 status: completed
 date: 2026-03-29
@@ -7,11 +7,11 @@ origin: docs/brainstorms/2026-03-29-iterative-optimization-loop-requirements.md
 deepened: 2026-03-29
 ---
 
-# feat(ce-optimize): Add iterative optimization loop skill
+# feat(rg-optimize): Add iterative optimization loop skill
 
 ## Overview
 
-Add a new `/ce-optimize` skill that implements metric-driven iterative optimization — the pattern where you define a measurable goal, build measurement scaffolding first, then run an automated loop that tries many parallel experiments, measures each against hard gates and/or LLM-as-judge quality scores, keeps improvements, and converges toward the best solution. Inspired by Karpathy's autoresearch but generalized for multi-file code changes, complex metrics, and non-ML domains.
+Add a new `/rg-optimize` skill that implements metric-driven iterative optimization — the pattern where you define a measurable goal, build measurement scaffolding first, then run an automated loop that tries many parallel experiments, measures each against hard gates and/or LLM-as-judge quality scores, keeps improvements, and converges toward the best solution. Inspired by Karpathy's autoresearch but generalized for multi-file code changes, complex metrics, and non-ML domains.
 
 ## Problem Frame
 
@@ -28,7 +28,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - R7. Dependencies are pre-approved in bulk during hypothesis generation; unapproved deps defer the hypothesis without blocking the pipeline
 - R8. Flaky metrics are configurable (repeat N times, aggregate via median/mean, noise threshold)
 - R9. All experiments preserved in git for later reference; experiment log captures hypothesis, metrics, outcome, and learnings
-- R10. The winning strategy is documented via `/ce:compound` integration
+- R10. The winning strategy is documented via `/rg:compound` integration
 - R11. Codex support from v1 using established `codex exec` stdin-pipe pattern
 - R12. Loop handles failures gracefully (bad experiments don't corrupt state)
 - R13. Multiple stopping criteria: target reached, max iterations, max hours, plateau (N iterations no improvement), manual stop
@@ -46,20 +46,20 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 
 ### Relevant Code and Patterns
 
-- **Skill format**: `plugins/compound-engineering/skills/ce-work/SKILL.md` — multi-phase skill with YAML frontmatter, `#$ARGUMENTS` input, parallel subagent dispatch
-- **Parallel dispatch**: `plugins/compound-engineering/skills/ce-review/SKILL.md` — spawns N reviewers in parallel, merges structured JSON results
-- **Subagent template**: `plugins/compound-engineering/skills/ce-review/references/subagent-template.md` — confidence rubric, false-positive suppression
-- **Codex delegation**: `plugins/compound-engineering/skills/ce-work-beta/SKILL.md` — `codex exec` stdin pipe, security posture, 3-failure auto-disable, environment guard
-- **Worktree management**: `plugins/compound-engineering/skills/git-worktree/SKILL.md` + `scripts/worktree-manager.sh`
-- **Scratch space**: `.context/compound-engineering/<skill-name>/` with per-run subdirs for concurrent runs
-- **State file patterns**: YAML frontmatter in plan files, JSON schemas in ce:review references
-- **Skill-to-skill references**: `Load the <skill> skill` for pass-through; `/ce:compound` slash syntax for published commands
+- **Skill format**: `plugins/rg-engineering/skills/rg-work/SKILL.md` — multi-phase skill with YAML frontmatter, `#$ARGUMENTS` input, parallel subagent dispatch
+- **Parallel dispatch**: `plugins/rg-engineering/skills/rg-review/SKILL.md` — spawns N reviewers in parallel, merges structured JSON results
+- **Subagent template**: `plugins/rg-engineering/skills/rg-review/references/subagent-template.md` — confidence rubric, false-positive suppression
+- **Codex delegation**: `plugins/rg-engineering/skills/rg-work-beta/SKILL.md` — `codex exec` stdin pipe, security posture, 3-failure auto-disable, environment guard
+- **Worktree management**: `plugins/rg-engineering/skills/git-worktree/SKILL.md` + `scripts/worktree-manager.sh`
+- **Scratch space**: `.context/rg-engineering/<skill-name>/` with per-run subdirs for concurrent runs
+- **State file patterns**: YAML frontmatter in plan files, JSON schemas in rg:review references
+- **Skill-to-skill references**: `Load the <skill> skill` for pass-through; `/rg:compound` slash syntax for published commands
 
 ### Institutional Learnings
 
 - **State machine design is mandatory** for multi-phase workflows — re-read state after every transition, never carry stale values (`docs/solutions/skill-design/git-workflow-skills-need-explicit-state-machines.md`)
 - **Script-first for measurement harnesses** — 60-75% token savings by moving mechanical work (parsing, classification, aggregation) into bundled scripts (`docs/solutions/skill-design/script-first-skill-architecture.md`)
-- **Confidence rubric pattern** — use 0.0-1.0 scale with explicit suppression threshold (0.60 proven in production), define false-positive categories (`ce:review subagent-template.md`)
+- **Confidence rubric pattern** — use 0.0-1.0 scale with explicit suppression threshold (0.60 proven in production), define false-positive categories (`rg:review subagent-template.md`)
 - **Pass paths not content to sub-agents** — orchestrator discovers paths, workers read what they need (`docs/solutions/skill-design/pass-paths-not-content-to-subagents.md`)
 - **State transitions must be load-bearing** — if experiment states exist (proposed/running/measured/evaluated), at least one consumer must branch on them (`docs/solutions/workflow/todo-status-lifecycle.md`)
 - **Branch name sanitization** — `/` to `~` is injective for filesystem paths (`docs/solutions/developer-experience/branch-based-plugin-install-and-testing.md`)
@@ -74,18 +74,18 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - **Worktree isolation for parallel experiments**: Each experiment gets a git worktree under `.worktrees/` (aligned with existing convention) with copied shared resources. Codex sandboxes as opt-in alternative. Orchestrator retains git control. Max concurrent capped at 6 for worktree backend (git performance degrades beyond ~10-15 concurrent worktrees); 8+ only valid for Codex backend. (see origin: D6)
 - **Codex dispatch via stdin pipe**: Write prompt to temp file, pipe to `codex exec`, collect diff after completion. Security posture selected once per session. (see origin: D5)
 - **Context window management via rolling window + strategy digest**: The experiment log grows unboundedly (20-30 lines per experiment). The orchestrator does NOT read the full log each iteration. Instead: (1) maintain a rolling window of the last 10 experiments in working memory, (2) after each batch write a strategy digest summarizing what categories have been tried, what succeeded/failed, and the exploration frontier, (3) read the full log only in filtered sections (e.g., by category) when checking whether a specific hypothesis was already tried. The full log remains the durable ground truth on disk.
-- **Judge dispatch via batched parallel sub-agents**: Orchestrator selects samples per stratification config, groups them into batches of `judge.batch_size` (default: 10), dispatches `ceil(sample_size / batch_size)` parallel sub-agents. Each sub-agent evaluates its batch and returns structured JSON scores. Orchestrator aggregates. This follows the ce:review parallel reviewer dispatch pattern and avoids the overhead of spawning one sub-agent per sample.
+- **Judge dispatch via batched parallel sub-agents**: Orchestrator selects samples per stratification config, groups them into batches of `judge.batch_size` (default: 10), dispatches `ceil(sample_size / batch_size)` parallel sub-agents. Each sub-agent evaluates its batch and returns structured JSON scores. Orchestrator aggregates. This follows the rg:review parallel reviewer dispatch pattern and avoids the overhead of spawning one sub-agent per sample.
 
 ## Open Questions
 
 ### Resolved During Planning
 
-- **Skill naming**: `ce-optimize` with directory `ce-optimize/`. The frontmatter name now matches the directory and slash command.
-- **Where does experiment state live**: `.context/compound-engineering/ce-optimize/<spec-name>/` — contains spec, experiment log, strategy digest, and per-batch scratch. Cleaned after successful completion except the final experiment log which moves to the optimization branch.
+- **Skill naming**: `rg-optimize` with directory `rg-optimize/`. The frontmatter name now matches the directory and slash command.
+- **Where does experiment state live**: `.context/rg-engineering/rg-optimize/<spec-name>/` — contains spec, experiment log, strategy digest, and per-batch scratch. Cleaned after successful completion except the final experiment log which moves to the optimization branch.
 - **How are experiment branches named**: `optimize/<spec-name>` for the main optimization branch. Per-experiment worktree branches: `optimize/<spec-name>/exp-<NNN>`. Sanitized with `/` to `~` for filesystem paths.
 - **Judge model selection**: Haiku by default (fast, cheap), Sonnet optional. Specified in spec file.
 - **Who parses the YAML spec**: The orchestrating agent (model), not the measurement script. No CE scripts parse YAML — the established pattern is model reads structure, scripts handle I/O. The measurement script receives flat arguments and returns raw JSON.
-- **Judge dispatch mechanism**: Batched parallel sub-agents following ce:review pattern. Orchestrator selects samples, groups into batches of `judge.batch_size` (default: 10), dispatches parallel sub-agents, aggregates JSON scores.
+- **Judge dispatch mechanism**: Batched parallel sub-agents following rg:review pattern. Orchestrator selects samples, groups into batches of `judge.batch_size` (default: 10), dispatches parallel sub-agents, aggregates JSON scores.
 - **Branch collision on re-run**: Phase 0 detects existing `optimize/<spec-name>` branch and experiment log. Presents user with choice: resume (inherit existing state, continue from last iteration) or fresh start (archive old branch to `optimize/<spec-name>/archived-<timestamp>`, clear log).
 - **Judge score comparability**: Add `judge.minimum_improvement` (default: 0.3 on 1-5 scale) as minimum improvement to accept. This accounts for sample-composition variance when output structure changes. Distinct from `noise_threshold` which handles run-to-run flakiness.
 
@@ -150,8 +150,8 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
                     +--------v--------+
                     | Phase 4: Wrap-Up|
                     | Summarize       |
-                    | /ce:compound    |
-                    | /ce:review      |
+                    | /rg:compound    |
+                    | /rg:review      |
                     +--------+--------+
                              |
                         [DONE]
@@ -170,7 +170,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-optimize/references/optimize-spec-schema.yaml`
+- Create: `plugins/rg-engineering/skills/rg-optimize/references/optimize-spec-schema.yaml`
 
 **Approach:**
 - Define a commented YAML schema document (not JSON Schema — YAML is more readable for skill-authoring context) that the skill references to validate user-provided specs
@@ -180,8 +180,8 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - Use the two example specs from the brainstorm (hard-metric primary and LLM-judge primary) as validation targets
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-review/references/findings-schema.json` for structured schema reference
-- `plugins/compound-engineering/skills/ce-compound/references/schema.yaml` for YAML schema with inline comments
+- `plugins/rg-engineering/skills/rg-review/references/findings-schema.json` for structured schema reference
+- `plugins/rg-engineering/skills/rg-compound/references/schema.yaml` for YAML schema with inline comments
 
 **Test scenarios:**
 - Schema covers all fields from both example specs in the brainstorm
@@ -202,7 +202,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-optimize/references/experiment-log-schema.yaml`
+- Create: `plugins/rg-engineering/skills/rg-optimize/references/experiment-log-schema.yaml`
 
 **Approach:**
 - Define the structure: baseline metrics, experiments array (iteration, batch, hypothesis, category, changes, gates, diagnostics, judge, outcome, primary_delta, learnings, commit), and best-so-far summary
@@ -210,7 +210,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - These states are load-bearing — the loop branches on them (per todo-status-lifecycle learning)
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-compound/references/schema.yaml`
+- `plugins/rg-engineering/skills/rg-compound/references/schema.yaml`
 
 **Test scenarios:**
 - Schema covers the full experiment log example from the brainstorm
@@ -230,7 +230,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-optimize/references/experiment-prompt-template.md`
+- Create: `plugins/rg-engineering/skills/rg-optimize/references/experiment-prompt-template.md`
 
 **Approach:**
 - Template with variable substitution slots: `{iteration}`, `{spec.name}`, `{current_best_metrics}`, `{hypothesis.description}`, `{scope.mutable}`, `{scope.immutable}`, `{constraints}`, `{approved_dependencies}`, `{recent_experiment_summaries}`
@@ -239,7 +239,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - Follow the path-not-content pattern — pass file paths for large context, inline only small structural data
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-review/references/subagent-template.md` for variable substitution pattern and output contract
+- `plugins/rg-engineering/skills/rg-review/references/subagent-template.md` for variable substitution pattern and output contract
 
 **Test scenarios:**
 - Template produces a clear, unambiguous prompt when all slots are filled
@@ -260,17 +260,17 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-optimize/references/judge-prompt-template.md`
+- Create: `plugins/rg-engineering/skills/rg-optimize/references/judge-prompt-template.md`
 
 **Approach:**
 - Two template sections: cluster/item evaluation (using the user's rubric from the spec) and singleton evaluation (using the user's singleton_rubric)
 - Template includes: the rubric text, the sample data to evaluate, and explicit JSON output format instructions
-- Include confidence calibration guidance adapted from ce:review's rubric pattern: each judge call returns a score + structured metadata
+- Include confidence calibration guidance adapted from rg:review's rubric pattern: each judge call returns a score + structured metadata
 - Template is designed for Haiku by default — keep prompts concise and well-structured for smaller models
 - Include the false-positive suppression concept: judge should flag if a sample is ambiguous rather than forcing a score
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-review/references/subagent-template.md` — confidence rubric structure, JSON output contract
+- `plugins/rg-engineering/skills/rg-review/references/subagent-template.md` — confidence rubric structure, JSON output contract
 
 **Test scenarios:**
 - Template works with both the cluster coherence rubric and a generic quality rubric
@@ -291,7 +291,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-optimize/scripts/measure.sh`
+- Create: `plugins/rg-engineering/skills/rg-optimize/scripts/measure.sh`
 
 **Approach:**
 - Division of labor follows established plugin pattern: scripts handle I/O, the model interprets structure
@@ -302,8 +302,8 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - The script does NOT: parse YAML spec files, evaluate gate checks, aggregate stability repeats, or produce structured result envelopes. These are all orchestrator responsibilities.
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/git-worktree/scripts/worktree-manager.sh` — flat positional arguments, no structured data parsing
-- `plugins/compound-engineering/skills/resolve-pr-feedback/scripts/get-pr-comments` — simple script that runs a command and returns JSON
+- `plugins/rg-engineering/skills/git-worktree/scripts/worktree-manager.sh` — flat positional arguments, no structured data parsing
+- `plugins/rg-engineering/skills/resolve-pr-feedback/scripts/get-pr-comments` — simple script that runs a command and returns JSON
 
 **Test scenarios:**
 - Command succeeds: JSON output passed through to stdout
@@ -325,7 +325,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-optimize/scripts/parallel-probe.sh`
+- Create: `plugins/rg-engineering/skills/rg-optimize/scripts/parallel-probe.sh`
 
 **Approach:**
 - Input: spec file path (for measurement command and mutable scope), project directory
@@ -338,7 +338,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - This is advisory — the skill presents results to the user for approval, does not auto-mitigate
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/git-worktree/scripts/worktree-manager.sh`
+- `plugins/rg-engineering/skills/git-worktree/scripts/worktree-manager.sh`
 
 **Test scenarios:**
 - No blockers found: mode = parallel
@@ -360,7 +360,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-optimize/scripts/experiment-worktree.sh`
+- Create: `plugins/rg-engineering/skills/rg-optimize/scripts/experiment-worktree.sh`
 
 **Approach:**
 - Subcommands: `create`, `cleanup`, `cleanup-all`
@@ -375,7 +375,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - Error handling: verify git repo, check for existing worktrees, handle cleanup of partially created worktrees
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/git-worktree/scripts/worktree-manager.sh` — worktree creation, `.env` copying, branch management
+- `plugins/rg-engineering/skills/git-worktree/scripts/worktree-manager.sh` — worktree creation, `.env` copying, branch management
 
 **Test scenarios:**
 - Create worktree: directory exists, branch created, shared files copied
@@ -400,22 +400,22 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** Units 1-7
 
 **Files:**
-- Create: `plugins/compound-engineering/skills/ce-optimize/SKILL.md`
+- Create: `plugins/rg-engineering/skills/rg-optimize/SKILL.md`
 
 **Approach:**
 
 *Frontmatter:*
-- `name: ce-optimize`
+- `name: rg-optimize`
 - `description:` — rich description covering what it does (iterative optimization), when to use it (measurable improvement goals), and key capabilities (parallel experiments, LLM-as-judge, git-native history)
 - No `disable-model-invocation` — this is a v1 skill, not beta
 
 *Phase 0: Setup*
 - Accept spec file path as argument, or interactively create one guided by the spec schema reference (`references/optimize-spec-schema.yaml`)
 - Agent reads and validates spec (required fields, valid metric types, valid operators). Agent parses YAML natively — no shell script parsing.
-- Search learnings via `compound-engineering:research:learnings-researcher` for prior optimization work on similar topics
+- Search learnings via `rg-engineering:research:learnings-researcher` for prior optimization work on similar topics
 - **Run identity detection**: Check if `optimize/<spec-name>` branch already exists. If yes, check for existing experiment log. Present user with choice via platform question tool: resume (inherit state, continue from last iteration) or fresh start (archive old branch to `optimize/<spec-name>/archived-<timestamp>`, clear log)
 - Create or switch to optimization branch
-- Create scratch directory: `.context/compound-engineering/ce-optimize/<spec-name>/`
+- Create scratch directory: `.context/rg-engineering/rg-optimize/<spec-name>/`
 
 *Phase 1: Measurement Scaffolding (HARD GATE)*
 - **Clean-tree gate**: Verify `git status` shows no uncommitted changes to files within `scope.mutable` or `scope.immutable`. If dirty, require commit or stash before proceeding.
@@ -428,8 +428,8 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - State re-read: after gate approval, re-read spec and baseline from disk (per state-machine learning)
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-work/SKILL.md` — Phase 0 input triage and Phase 1 setup pattern
-- `plugins/compound-engineering/skills/ce-plan/SKILL.md` — Phase 0 resume detection pattern
+- `plugins/rg-engineering/skills/rg-work/SKILL.md` — Phase 0 input triage and Phase 1 setup pattern
+- `plugins/rg-engineering/skills/rg-plan/SKILL.md` — Phase 0 resume detection pattern
 
 **Test scenarios:**
 - Spec validation catches missing required fields
@@ -454,13 +454,13 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** Unit 8
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-optimize/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/rg-optimize/SKILL.md`
 
 **Approach:**
 
 *Phase 2: Hypothesis Generation*
 - Analyze mutable scope code to understand current approach
-- Generate hypothesis list — optionally via `compound-engineering:research:repo-research-analyst` for deeper codebase analysis
+- Generate hypothesis list — optionally via `rg-engineering:research:repo-research-analyst` for deeper codebase analysis
 - Categorize hypotheses (signal-extraction, graph-signals, embedding, algorithm, preprocessing, etc.)
 - Identify new dependencies across all hypotheses
 - Present dependency list for bulk approval via platform question tool
@@ -468,7 +468,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - Include user-provided hypotheses if any were given as input
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-ideate/SKILL.md` — hypothesis generation, categorization, iterative refinement
+- `plugins/rg-engineering/skills/rg-ideate/SKILL.md` — hypothesis generation, categorization, iterative refinement
 
 **Test scenarios:**
 - Hypotheses generated from codebase analysis
@@ -490,7 +490,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** Unit 9
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-optimize/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/rg-optimize/SKILL.md`
 
 **Approach:**
 
@@ -499,7 +499,7 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
   1. Select hypotheses (batch_size = min(backlog_size, max_concurrent)). Prefer diversity across categories within each batch.
   2. Dispatch experiments in parallel:
      - **Worktree backend**: create worktree per experiment (via script), dispatch subagent with experiment prompt template (`references/experiment-prompt-template.md`)
-     - **Codex backend**: write prompt to temp file, dispatch via `codex exec` stdin pipe (per ce-work-beta pattern)
+     - **Codex backend**: write prompt to temp file, dispatch via `codex exec` stdin pipe (per rg-work-beta pattern)
      - Environment guard: check for `CODEX_SANDBOX`/`CODEX_SESSION_ID` to prevent recursive delegation
   3. Wait for batch completion
   4. For each completed experiment:
@@ -530,9 +530,9 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Execution note:** Execution target: external-delegate — this unit is large and well-specified
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-review/SKILL.md` — parallel subagent dispatch (Stage 4), structured result merging (Stage 5)
-- `plugins/compound-engineering/skills/ce-work-beta/SKILL.md` — Codex delegation section
-- `plugins/compound-engineering/skills/ce-review/references/subagent-template.md` — sub-agent prompt structure and JSON output contract
+- `plugins/rg-engineering/skills/rg-review/SKILL.md` — parallel subagent dispatch (Stage 4), structured result merging (Stage 5)
+- `plugins/rg-engineering/skills/rg-work-beta/SKILL.md` — Codex delegation section
+- `plugins/rg-engineering/skills/rg-review/references/subagent-template.md` — sub-agent prompt structure and JSON output contract
 
 **Test scenarios:**
 - Spec with hard primary metric: gates + hard metric evaluation, no judge calls
@@ -558,14 +558,14 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 
 - [ ] **Unit 11: SKILL.md — Phase 4 (Wrap-Up)**
 
-**Goal:** Add Phase 4 to the SKILL.md — deferred hypothesis presentation, result summary, branch preservation, and integration with ce:review and ce:compound.
+**Goal:** Add Phase 4 to the SKILL.md — deferred hypothesis presentation, result summary, branch preservation, and integration with rg:review and rg:compound.
 
 **Requirements:** R9, R10
 
 **Dependencies:** Unit 10
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-optimize/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/rg-optimize/SKILL.md`
 
 **Approach:**
 
@@ -574,20 +574,20 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 - Summarize: baseline -> final metrics, total iterations run, kept count, reverted count, judge cost total
 - Preserve optimization branch with all commits
 - Offer post-completion options via platform question tool:
-  1. Run `/ce:review` on cumulative diff (baseline -> final)
-  2. Run `/ce:compound` to document the winning strategy
+  1. Run `/rg:review` on cumulative diff (baseline -> final)
+  2. Run `/rg:compound` to document the winning strategy
   3. Create PR from optimization branch
   4. Continue with more experiments (re-enter Phase 3)
   5. Done
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-work/SKILL.md` — Phase 4 (Ship It) post-completion options
-- `plugins/compound-engineering/skills/lfg/SKILL.md` — skill-to-skill handoff pattern
+- `plugins/rg-engineering/skills/rg-work/SKILL.md` — Phase 4 (Ship It) post-completion options
+- `plugins/rg-engineering/skills/lfg/SKILL.md` — skill-to-skill handoff pattern
 
 **Test scenarios:**
 - Deferred hypotheses presented with dep requirements
 - Summary includes all key metrics and cost data
-- Each post-completion option works (ce:review, ce:compound, PR creation, continue, done)
+- Each post-completion option works (rg:review, rg:compound, PR creation, continue, done)
 - "Continue" re-enters Phase 3 cleanly with state re-read
 
 **Verification:**
@@ -607,16 +607,16 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 **Dependencies:** Unit 11
 
 **Files:**
-- Modify: `plugins/compound-engineering/README.md`
+- Modify: `plugins/rg-engineering/README.md`
 
 **Approach:**
-- Add `ce-optimize` to the skills table in README.md with description
+- Add `rg-optimize` to the skills table in README.md with description
 - Update skill count in README.md
 - Run `bun run release:validate` to verify plugin consistency
 - Do NOT bump version in plugin.json or marketplace.json (per versioning rules)
 
 **Patterns to follow:**
-- Existing skill table entries in `plugins/compound-engineering/README.md`
+- Existing skill table entries in `plugins/rg-engineering/README.md`
 
 **Test scenarios:**
 - `bun run release:validate` passes
@@ -629,13 +629,13 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 
 ## System-Wide Impact
 
-- **Interaction graph:** The skill dispatches to learnings-researcher (Phase 0), repo-research-analyst (Phase 2), parallel judge sub-agents (Phase 3), and optionally ce:review and ce:compound (Phase 4). It creates git worktrees and branches. It invokes Codex as an external process.
+- **Interaction graph:** The skill dispatches to learnings-researcher (Phase 0), repo-research-analyst (Phase 2), parallel judge sub-agents (Phase 3), and optionally rg:review and rg:compound (Phase 4). It creates git worktrees and branches. It invokes Codex as an external process.
 - **Error propagation:** Experiment failures are contained — each runs in an isolated worktree. Failures are logged and reverted. The optimization branch only advances on successful, validated improvements. If the orchestrator crashes mid-batch, each completed experiment should have a `result.yaml` marker in its worktree; on resume the orchestrator scans for completed-but-unlogged experiments before starting a new batch.
 - **State lifecycle risks:** The experiment log is the critical state artifact. It must be written after each batch (not just at end) to survive crashes. Log atomicity is ensured by the batch-then-evaluate architecture — only the single-threaded orchestrator writes to the log, never concurrent workers.
 - **Context window pressure:** The experiment log grows ~25 lines per experiment. At 100 experiments that is ~2,500 lines of YAML. The orchestrator manages this via a rolling summary window (last 10 experiments) + a strategy digest file, never reading the full log unless filtering by category for duplicate-hypothesis detection.
 - **Branch collision:** If `optimize/<spec-name>` already exists from a prior run, Phase 0 detects it and offers resume vs. fresh start. This prevents accidental overwrites of prior experiment history.
 - **Dirty working tree:** Phase 1 includes a clean-tree gate: `git status` must show no uncommitted changes to files within `scope.mutable` or `scope.immutable`. If dirty, require commit or stash before proceeding. This prevents baseline measurement from differing between the main worktree and experiment worktrees.
-- **Worktree budget:** Optimization worktrees live under `.worktrees/` (same convention as git-worktree skill). Before creating experiment worktrees, check total worktree count (including non-optimize worktrees from ce:work or ce:review). Refuse to exceed 12 total worktrees to prevent git performance degradation.
+- **Worktree budget:** Optimization worktrees live under `.worktrees/` (same convention as git-worktree skill). Before creating experiment worktrees, check total worktree count (including non-optimize worktrees from rg:work or rg:review). Refuse to exceed 12 total worktrees to prevent git performance degradation.
 - **API surface parity:** This is a new skill, no existing surface to maintain parity with.
 - **Integration coverage:** The parallelism readiness probe should be validated against real projects with known blockers (SQLite DBs, hardcoded ports) to ensure detection works.
 
@@ -651,14 +651,14 @@ CE has knowledge-compounding and quality gates but no skill for systematic exper
 
 ## Documentation / Operational Notes
 
-- Update `plugins/compound-engineering/README.md` skill table
+- Update `plugins/rg-engineering/README.md` skill table
 - No new MCP servers or external dependencies for the plugin itself
 - The skill will appear in Claude Code's skill list automatically once the SKILL.md exists
 
 ## Sources & References
 
 - **Origin document:** [docs/brainstorms/2026-03-29-iterative-optimization-loop-requirements.md](docs/brainstorms/2026-03-29-iterative-optimization-loop-requirements.md)
-- Related code: `plugins/compound-engineering/skills/ce-work-beta/SKILL.md` (Codex delegation), `plugins/compound-engineering/skills/ce-review/SKILL.md` (parallel dispatch)
+- Related code: `plugins/rg-engineering/skills/rg-work-beta/SKILL.md` (Codex delegation), `plugins/rg-engineering/skills/rg-review/SKILL.md` (parallel dispatch)
 - Related PRs: #364 (Codex security posture), #365 (Codex exec pitfalls)
 - External: Karpathy autoresearch (github.com/karpathy/autoresearch), AIDE/WecoAI (github.com/WecoAI/aideml)
 - Learnings: `docs/solutions/skill-design/script-first-skill-architecture.md`, `docs/solutions/skill-design/git-workflow-skills-need-explicit-state-machines.md`, `docs/solutions/skill-design/pass-paths-not-content-to-subagents.md`, `docs/solutions/workflow/todo-status-lifecycle.md`

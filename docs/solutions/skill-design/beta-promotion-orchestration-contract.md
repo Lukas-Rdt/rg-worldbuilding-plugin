@@ -28,11 +28,11 @@ Treat promotion as an orchestration contract change, not a file rename.
 3. Hardcode the intended mode at each callsite instead of relying on the default
 4. Add or update contract tests so the orchestration assumptions are executable
 
-## Applied: ce-review-beta -> ce-code-review (2026-03-24)
+## Applied: rg-review-beta -> rg-code-review (2026-03-24)
 
-This pattern was applied when promoting the review beta (`ce-review-beta`, tracked as the legacy artifact `ce:review-beta`/`ce-review-beta` in the cleanup registry) into the stable `ce-code-review` skill. The caller contract at the time:
+This pattern was applied when promoting the review beta (`rg-review-beta`, tracked as the legacy artifact `rg:review-beta`/`rg-review-beta` in the cleanup registry) into the stable `rg-code-review` skill. The caller contract at the time:
 
-- `lfg` -> `/ce-code-review mode:autofix` (enforced by `tests/review-skill-contract.test.ts`)
+- `lfg` -> `/rg-code-review mode:autofix` (enforced by `tests/review-skill-contract.test.ts`)
 `slfg` has since been removed, but the durable rule remains: every orchestrator that invokes the promoted skill must pass the intended mode explicitly and have contract coverage where the caller still exists.
 
 ## Prevention

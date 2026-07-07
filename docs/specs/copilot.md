@@ -49,20 +49,20 @@ https://docs.github.com/en/copilot/concepts/agents/coding-agent/mcp-and-coding-a
 - Install from a registered marketplace with:
 
 ```text
-/plugin marketplace add EveryInc/compound-engineering-plugin
-/plugin install compound-engineering@compound-engineering-plugin
+/plugin marketplace add Lukas-Rdt/rg-engineering-plugin
+/plugin install rg-engineering@rg-engineering-plugin
 ```
 
 - The terminal equivalents are:
 
 ```bash
-copilot plugin marketplace add EveryInc/compound-engineering-plugin
-copilot plugin install compound-engineering@compound-engineering-plugin
+copilot plugin marketplace add Lukas-Rdt/rg-engineering-plugin
+copilot plugin install rg-engineering@rg-engineering-plugin
 ```
 
 - Copilot CLI looks for plugin manifests at `.plugin/plugin.json`, `plugin.json`, `.github/plugin/plugin.json`, or `.claude-plugin/plugin.json`.
 - Copilot CLI looks for marketplace manifests at `marketplace.json`, `.plugin/marketplace.json`, `.github/plugin/marketplace.json`, or `.claude-plugin/marketplace.json`.
-- Therefore the existing repository-level `.claude-plugin/marketplace.json` and plugin-level `plugins/compound-engineering/.claude-plugin/plugin.json` are expected to be sufficient for Copilot native plugin install. Do not add a parallel `.github/plugin` surface unless Copilot requires a Copilot-only manifest field in the future.
+- Therefore the existing repository-level `.claude-plugin/marketplace.json` and plugin-level `plugins/rg-engineering/.claude-plugin/plugin.json` are expected to be sufficient for Copilot native plugin install. Do not add a parallel `.github/plugin` surface unless Copilot requires a Copilot-only manifest field in the future.
 
 ### Frontmatter fields
 
@@ -165,6 +165,6 @@ Within a repo, `AGENTS.md` files in directories provide nearest-ancestor-wins in
 
 Skills use separate first-found-wins precedence. Current docs list project `.github/skills`, `.agents/skills`, `.claude/skills`, inherited project skills, personal `~/.copilot/skills`, personal `~/.agents/skills`, personal `~/.claude/skills`, then plugin skill directories.
 
-Skills are deduplicated by the `name` field inside `SKILL.md`, not by directory name. If a personal or project skill has the same `name` as a plugin skill, Copilot uses the first-loaded personal/project skill and silently ignores the plugin skill. For example, a stale `~/.agents/skills/ce-plan/SKILL.md` with `name: ce-plan` would shadow the native plugin's `ce-plan`; it should not show as two separate skills in Copilot CLI. Use `/skills info ce-plan` to confirm which location won.
+Skills are deduplicated by the `name` field inside `SKILL.md`, not by directory name. If a personal or project skill has the same `name` as a plugin skill, Copilot uses the first-loaded personal/project skill and silently ignores the plugin skill. For example, a stale `~/.agents/skills/rg-plan/SKILL.md` with `name: rg-plan` would shadow the native plugin's `rg-plan`; it should not show as two separate skills in Copilot CLI. Use `/skills info rg-plan` to confirm which location won.
 
 This makes Copilot cleanup different from Codex duplicate cleanup: stale CE skills in `~/.agents/skills`, `~/.copilot/skills`, `.agents/skills`, or `.github/skills` may not create visible duplicates, but they can silently override newer plugin-provided CE skills.

@@ -10,7 +10,7 @@ Tracker-defer has two execution modes. The caller selects one; the detection, fa
 
 ### Interactive mode (default)
 
-Used by `ce-code-review` Interactive mode's routing question, walk-through Defer actions, and bulk-preview option C. All user-facing prompts fire:
+Used by `rg-code-review` Interactive mode's routing question, walk-through Defer actions, and bulk-preview option C. All user-facing prompts fire:
 
 - First Defer of the session with a generic (non-named) label confirms the effective tracker choice.
 - Execution failures prompt with Retry / Fall back to next sink / Convert to Skip.
@@ -42,7 +42,7 @@ A tracker can be surfaced via MCP tool (e.g., a Linear MCP server), CLI (e.g., `
 Where:
 - `tracker_name` — human-readable name ("Linear", "GitHub Issues", "Jira"), or `null` when detection cannot identify a specific tracker
 - `confidence` — `high` when the tracker is named explicitly in documentation (or via a linked URL to a specific project/workspace) and is unambiguously the project's canonical tracker; `low` when the signal is thin, conflicting, or implied only
-- `named_sink_available` — `true` only when the agent can actually invoke the detected tracker (MCP tool is loaded, CLI is authenticated, or API credentials are in environment); `false` when the tracker is documented but no tool reaches it, or when no tracker is found at all. Drives label confidence: inline tracker naming requires this to be `true`.
+- `named_sink_available` — `true` only when the agent can actually invoke the detected tracker (MCP tool is loaded, CLI is authenticated, or API credentials are in environment); `false` when the tracker is documented but no tool reaches it, or when no tracker is found at all. Drives label confidenrg: inline tracker naming requires this to be `true`.
 - `any_sink_available` — `true` when any tier in the fallback chain (named tracker or GitHub Issues via `gh`) can be invoked this session. Drives whether Defer is offered in Interactive mode, and drives the `no_sink` bucket in Non-interactive mode.
 
 Detection is reasoning-based. Do not maintain an enumerated checklist of files to read. Read the obvious sources and form a confident conclusion; when the obvious sources don't resolve, the label falls back to generic wording and the agent confirms with the user before executing (Interactive mode only).
@@ -53,7 +53,7 @@ Detection is reasoning-based. Do not maintain an enumerated checklist of files t
 
 Availability probes run **at most once per session** and **only when Defer execution is imminent**. Never speculatively at review start, never per-Defer, never per-walk-through-finding. The cached tuple is reused for every Defer action in the same run.
 
-Typical probe sequence:
+Typical probe sequenrg:
 
 1. Consult the project's instructions already in context for tracker references — don't open or name specific instruction files; read one directly only when the relevant instructions aren't in context (subdirectory scope, or a fresh subagent). If nothing found, set `tracker_name = null`, `confidence = low`.
 2. **Probe the named tracker when one was found.** For GitHub Issues, run `gh auth status` and `gh repo view --json hasIssuesEnabled`. For Linear or other connector/MCP-backed trackers, first discover available tools via the platform's tool-discovery primitive (e.g., `ToolSearch` in Claude Code) rather than assuming absence from an unloaded tool, then verify the discovered tool is responsive. For API-backed trackers, verify credentials wherever the platform exposes them (environment, connector auth, or a documented secrets location) — not only shell env vars. Set `named_sink_available` from the probe result.
@@ -94,12 +94,12 @@ Every Defer action creates a ticket with the following content, adapted to the t
 
 - **Title:** the merged finding's `title` (schema-capped at 10 words).
 - **Body:**
-  - Plain-English problem statement — reads the persona-produced `why_it_matters` from the contributing reviewer's artifact file at `/tmp/rg-engineering/ce-code-review/<run-id>/{reviewer}.json`, using the same `file + line_bucket(line, +/-3) + normalize(title)` matching agent mode uses (see SKILL.md Stage 6 detail enrichment). Falls back to the merged finding's `title`, `severity`, `file`, and `suggested_fix` (when present) when no artifact match is available — these fields are guaranteed in the merge-tier compact return.
+  - Plain-English problem statement — reads the persona-produced `why_it_matters` from the contributing reviewer's artifact file at `/tmp/rg-engineering/rg-code-review/<run-id>/{reviewer}.json`, using the same `file + line_bucket(line, +/-3) + normalize(title)` matching agent mode uses (see SKILL.md Stage 6 detail enrichment). Falls back to the merged finding's `title`, `severity`, `file`, and `suggested_fix` (when present) when no artifact match is available — these fields are guaranteed in the merge-tier compact return.
   - Suggested fix (when present in the finding's `suggested_fix`).
   - Evidence (direct quotes from the reviewer's artifact).
-  - Metadata block: `Severity: <level>`, `Confidence: <score>`, `Reviewer(s): <list>`, `Finding ID: <fingerprint>`.
+  - Metadata block: `Severity: <level>`, `Confidenrg: <score>`, `Reviewer(s): <list>`, `Finding ID: <fingerprint>`.
 - **Labels** (when the tracker supports labels): severity tag (`P0`, `P1`, `P2`, `P3`) and, when the tracker convention supports it, a category label sourced from the reviewer name.
-- **Length cap:** when the composed body would exceed a tracker's body length limit, truncate with `... (continued in ce-code-review run artifact: /tmp/rg-engineering/ce-code-review/<run-id>/)` and include the finding_id in both the truncated body and the metadata block so the artifact is discoverable.
+- **Length cap:** when the composed body would exceed a tracker's body length limit, truncate with `... (continued in rg-code-review run artifact: /tmp/rg-engineering/rg-code-review/<run-id>/)` and include the finding_id in both the truncated body and the metadata block so the artifact is discoverable.
 
 The finding_id is a stable fingerprint composed as `normalize(file) + line_bucket(line, +/-3) + normalize(title)` — the same fingerprint used by the merge pipeline.
 

@@ -111,7 +111,7 @@ resolves component dirs relative to the `plugin.json` location, this plugin ship
 `.agy/` directory holding `plugin.json` plus a `skills -> ../skills` symlink (verified:
 `agy plugin validate ./.agy` processes all skills through the symlink). This keeps the repo root
 uncluttered while reusing the canonical root `skills/` rather than duplicating it — and lets users
-`git clone … && agy plugin install ./compound-engineering-plugin/.agy`. (See also the per-platform
+`git clone … && agy plugin install ./rg-engineering-plugin/.agy`. (See also the per-platform
 choices in [native-plugin-install-strategy.md](../integrations/native-plugin-install-strategy.md).)
 
 Related: GitHub issue #911 (Transition to Antigravity CLI); plan

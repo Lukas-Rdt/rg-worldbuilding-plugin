@@ -40,9 +40,9 @@ The skill's cluster analysis has two gates: volume (3+ items) and verify-loop re
 
 ### Relevant Code and Patterns
 
-- `plugins/compound-engineering/skills/resolve-pr-feedback/SKILL.md` — skill orchestration, steps 1-9
-- `plugins/compound-engineering/skills/resolve-pr-feedback/scripts/get-pr-comments` — GraphQL query + jq filter; already fetches resolved threads in the query but drops them in jq (`isResolved == false`)
-- `plugins/compound-engineering/agents/workflow/ce-pr-comment-resolver.agent.md` — resolver agent with standard and cluster modes
+- `plugins/rg-engineering/skills/resolve-pr-feedback/SKILL.md` — skill orchestration, steps 1-9
+- `plugins/rg-engineering/skills/resolve-pr-feedback/scripts/get-pr-comments` — GraphQL query + jq filter; already fetches resolved threads in the query but drops them in jq (`isResolved == false`)
+- `plugins/rg-engineering/agents/workflow/rg-pr-comment-resolver.agent.md` — resolver agent with standard and cluster modes
 
 ### Institutional Learnings
 
@@ -153,7 +153,7 @@ The skill's cluster analysis has two gates: volume (3+ items) and verify-loop re
 **Dependencies:** None
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/resolve-pr-feedback/scripts/get-pr-comments`
+- Modify: `plugins/rg-engineering/skills/resolve-pr-feedback/scripts/get-pr-comments`
 
 **Approach:**
 - Widen the jq filter: keep the existing `review_threads` array (unresolved, non-outdated, as before). Add a new selection for resolved threads (`isResolved == true`), sorted by most-recent comment `createdAt`, limited to the last N=10.
@@ -186,7 +186,7 @@ The skill's cluster analysis has two gates: volume (3+ items) and verify-loop re
 **Dependencies:** Unit 1 (script must output the cross-invocation envelope)
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/resolve-pr-feedback/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/resolve-pr-feedback/SKILL.md`
 
 **Approach:**
 
@@ -254,7 +254,7 @@ Remove the `<just-fixed-files>` element — subsumed by `<prior-resolutions>`.
 **Dependencies:** Unit 2 (SKILL.md must send the new cluster brief format)
 
 **Files:**
-- Modify: `plugins/compound-engineering/agents/workflow/ce-pr-comment-resolver.agent.md`
+- Modify: `plugins/rg-engineering/agents/workflow/rg-pr-comment-resolver.agent.md`
 
 **Approach:**
 
@@ -311,7 +311,7 @@ Update `cluster_assessment` return to include which mode was applied and, for "c
 ## Sources & References
 
 - **Origin document:** [docs/brainstorms/2026-04-01-cross-invocation-cluster-analysis-requirements.md](docs/brainstorms/2026-04-01-cross-invocation-cluster-analysis-requirements.md)
-- Related skill: `plugins/compound-engineering/skills/resolve-pr-feedback/SKILL.md`
-- Related agent: `plugins/compound-engineering/agents/workflow/ce-pr-comment-resolver.agent.md`
-- Related script: `plugins/compound-engineering/skills/resolve-pr-feedback/scripts/get-pr-comments`
+- Related skill: `plugins/rg-engineering/skills/resolve-pr-feedback/SKILL.md`
+- Related agent: `plugins/rg-engineering/agents/workflow/rg-pr-comment-resolver.agent.md`
+- Related script: `plugins/rg-engineering/skills/resolve-pr-feedback/scripts/get-pr-comments`
 - Learnings: `docs/solutions/skill-design/script-first-skill-architecture.md`, `docs/solutions/skill-design/git-workflow-skills-need-explicit-state-machines.md`

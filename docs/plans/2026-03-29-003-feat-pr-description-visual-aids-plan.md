@@ -9,7 +9,7 @@ date: 2026-03-29
 
 ## Overview
 
-Add visual communication guidance to git-commit-push-pr's Step 6 so PR descriptions can include mermaid diagrams, ASCII art, or comparison tables when the change is complex enough to warrant them. Follows the same content-pattern-based conditional approach already used in ce:brainstorm (#437) and ce:plan (#440), adapted for the PR description surface where reviewers scan quickly rather than study deeply.
+Add visual communication guidance to git-commit-push-pr's Step 6 so PR descriptions can include mermaid diagrams, ASCII art, or comparison tables when the change is complex enough to warrant them. Follows the same content-pattern-based conditional approach already used in rg:brainstorm (#437) and rg:plan (#440), adapted for the PR description surface where reviewers scan quickly rather than study deeply.
 
 ## Problem Frame
 
@@ -17,13 +17,13 @@ Complex PRs with architectural changes, user flow modifications, or multi-compon
 
 PR #442 demonstrates this: a cross-target change with a 6-row decision matrix (which it did include as a markdown table) and multi-component interaction patterns. But for PRs involving workflow changes, data flow modifications, or component architecture shifts, the description has no guidance to include flow diagrams or interaction diagrams that would dramatically improve reviewer comprehension.
 
-The gap: ce:brainstorm and ce:plan both now produce visual aids when content warrants it, but the downstream PR description -- the artifact reviewers actually see first -- has no equivalent guidance.
+The gap: rg:brainstorm and rg:plan both now produce visual aids when content warrants it, but the downstream PR description -- the artifact reviewers actually see first -- has no equivalent guidance.
 
 ## Requirements Trace
 
 - R1. The skill includes guidance for when visual aids genuinely improve a PR description
 - R2. Visual aids are conditional on content patterns (what the PR changes), not on PR size alone -- a small PR that changes a complex workflow may warrant a diagram; a large mechanical refactor may not
-- R3. The trigger bar is higher than ce:brainstorm or ce:plan -- PR descriptions are scanned by reviewers, not studied deeply
+- R3. The trigger bar is higher than rg:brainstorm or rg:plan -- PR descriptions are scanned by reviewers, not studied deeply
 - R4. Three visual aid types: mermaid flow/interaction diagrams, ASCII annotated flows, and markdown tables (tables already partially covered by the existing "Markdown tables for data" writing principle)
 - R5. Within generated PR descriptions, visual aids are placed inline at the point of relevance, not in a separate section
 - R6. The existing Step 6 structure, sizing table, writing principles, and state machine flow of the skill remain intact
@@ -39,9 +39,9 @@ The gap: ce:brainstorm and ce:plan both now produce visual aids when content war
 
 ### Relevant Code and Patterns
 
-- `plugins/compound-engineering/skills/git-commit-push-pr/SKILL.md` -- the skill to modify; Step 6 spans lines 187-333 with subsections: Detect base branch, Gather branch scope, Sizing the change, Writing principles, Numbering and references, Compound Engineering badge
-- `plugins/compound-engineering/skills/ce-brainstorm/SKILL.md` (lines 223-249) -- visual communication pattern: "When to include / When to skip" table, format selection, prose-is-authoritative rule
-- `plugins/compound-engineering/skills/ce-plan/SKILL.md` (lines 581-612) -- plan-readability visual aids following the same structural pattern, with disambiguation from Section 3.4
+- `plugins/rg-engineering/skills/git-commit-push-pr/SKILL.md` -- the skill to modify; Step 6 spans lines 187-333 with subsections: Detect base branch, Gather branch scope, Sizing the change, Writing principles, Numbering and references, RG Engineering badge
+- `plugins/rg-engineering/skills/rg-brainstorm/SKILL.md` (lines 223-249) -- visual communication pattern: "When to include / When to skip" table, format selection, prose-is-authoritative rule
+- `plugins/rg-engineering/skills/rg-plan/SKILL.md` (lines 581-612) -- plan-readability visual aids following the same structural pattern, with disambiguation from Section 3.4
 - Existing "Markdown tables for data" writing principle (line 280) -- already covers one visual medium (tables for before/after and trade-off data); the new guidance extends to mermaid and ASCII
 
 ### Institutional Learnings
@@ -55,7 +55,7 @@ The gap: ce:brainstorm and ce:plan both now produce visual aids when content war
 
 - **Insertion point: new `#### Visual communication` subsection after Writing principles (after line 290), before Numbering and references (line 292)**: This extends the writing guidance rather than the sizing logic. The sizing table determines description *depth*; visual aids are about *medium*. Placing here preserves the flow: size the description -> write it following principles -> add visual aids when warranted -> handle numbering -> add badge.
 
-- **Higher trigger bar than sibling skills**: PR descriptions are a scanning surface, not a studying surface. ce:brainstorm triggers on "multi-step user workflow" and ce:plan triggers on "4+ units with non-linear dependencies." PR triggers should reflect what makes a *reviewer's job harder without a visual* -- architectural changes touching 3+ interacting components, workflow/pipeline changes with non-obvious flow, state or mode changes. The "When to skip" list should explicitly reinforce that small/simple changes (already handled by the sizing table) never get diagrams.
+- **Higher trigger bar than sibling skills**: PR descriptions are a scanning surface, not a studying surface. rg:brainstorm triggers on "multi-step user workflow" and rg:plan triggers on "4+ units with non-linear dependencies." PR triggers should reflect what makes a *reviewer's job harder without a visual* -- architectural changes touching 3+ interacting components, workflow/pipeline changes with non-obvious flow, state or mode changes. The "When to skip" list should explicitly reinforce that small/simple changes (already handled by the sizing table) never get diagrams.
 
 - **Extend beyond the existing "Markdown tables for data" principle**: The existing bullet at line 280 covers tables for performance data and trade-offs. The new Visual communication subsection incorporates table format guidance within its own format selection list (consistent with sibling skills' self-contained pattern) and extends coverage to mermaid flow diagrams and ASCII interaction diagrams. The existing bullet stays as-is.
 
@@ -83,18 +83,18 @@ The gap: ce:brainstorm and ce:plan both now produce visual aids when content war
 **Dependencies:** None
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/git-commit-push-pr/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/git-commit-push-pr/SKILL.md`
 
 **Approach:**
 - Insert the new subsection after the Writing principles section (after line 290) and before Numbering and references (line 292)
-- Use the same structural template as ce:brainstorm and ce:plan: opening conditional principle, "When to include" table, "When to skip" list, format selection guidance, prose-is-authoritative rule, verification instruction
+- Use the same structural template as rg:brainstorm and rg:plan: opening conditional principle, "When to include" table, "When to skip" list, format selection guidance, prose-is-authoritative rule, verification instruction
 - Adapt triggers for PR-specific content patterns: architectural changes with 3+ components, workflow/pipeline changes, state/mode introduction, data model changes with entity relationships
 - Calibrate to PR scanning context: higher bar for inclusion, smaller diagrams (5-10 nodes typical), explicit skip for small/simple changes
 - Reference the existing "Markdown tables for data" writing principle for table guidance rather than duplicating it
 
 **Patterns to follow:**
-- `plugins/compound-engineering/skills/ce-brainstorm/SKILL.md` lines 223-249 (visual communication section structure)
-- `plugins/compound-engineering/skills/ce-plan/SKILL.md` lines 581-612 (plan-readability visual aids)
+- `plugins/rg-engineering/skills/rg-brainstorm/SKILL.md` lines 223-249 (visual communication section structure)
+- `plugins/rg-engineering/skills/rg-plan/SKILL.md` lines 581-612 (plan-readability visual aids)
 
 **Test scenarios:**
 - Happy path: The new subsection is syntactically valid markdown with correct heading level (`####`) matching sibling subsections in Step 6
@@ -105,7 +105,7 @@ The gap: ce:brainstorm and ce:plan both now produce visual aids when content war
 
 **Verification:**
 - The SKILL.md file has a new `#### Visual communication` subsection between Writing principles and Numbering and references
-- The subsection follows the same structural pattern as ce:brainstorm lines 223-249 (conditional principle, When to include table, When to skip list, format selection, verification)
+- The subsection follows the same structural pattern as rg:brainstorm lines 223-249 (conditional principle, When to include table, When to skip list, format selection, verification)
 - The triggers are calibrated for PR descriptions (higher bar than plan/brainstorm)
 - No changes outside of Step 6's description writing guidance area
 - `bun test` passes (if any frontmatter or structure tests exist for this skill)

@@ -1,20 +1,20 @@
 ---
-title: "feat: Add CLI agent-readiness conditional persona to ce:review"
+title: "feat: Add CLI agent-readiness conditional persona to rg:review"
 type: feat
 status: active
 date: 2026-03-30
 origin: docs/brainstorms/2026-03-30-cli-readiness-review-persona-requirements.md
 ---
 
-# Add CLI Agent-Readiness Conditional Persona to ce:review
+# Add CLI Agent-Readiness Conditional Persona to rg:review
 
 ## Overview
 
-Create a lightweight review persona that evaluates CLI code for agent readiness during ce:review. The persona distills the standalone `cli-agent-readiness-reviewer` agent's 7 principles into a compact, diff-focused reviewer that produces structured JSON findings -- matching the pattern of every other conditional persona (security-reviewer, performance-reviewer, etc.).
+Create a lightweight review persona that evaluates CLI code for agent readiness during rg:review. The persona distills the standalone `cli-agent-readiness-reviewer` agent's 7 principles into a compact, diff-focused reviewer that produces structured JSON findings -- matching the pattern of every other conditional persona (security-reviewer, performance-reviewer, etc.).
 
 ## Problem Frame
 
-The `cli-agent-readiness-reviewer` agent exists but only fires when someone knows to invoke it. CLI code that passes through ce:review gets no agent-readiness feedback. Adding a conditional persona makes this automatic. (see origin: docs/brainstorms/2026-03-30-cli-readiness-review-persona-requirements.md)
+The `cli-agent-readiness-reviewer` agent exists but only fires when someone knows to invoke it. CLI code that passes through rg:review gets no agent-readiness feedback. Adding a conditional persona makes this automatic. (see origin: docs/brainstorms/2026-03-30-cli-readiness-review-persona-requirements.md)
 
 ## Requirements Trace
 
@@ -32,18 +32,18 @@ The `cli-agent-readiness-reviewer` agent exists but only fires when someone know
 ## Scope Boundaries
 
 - Does not modify the standalone `cli-agent-readiness-reviewer` agent
-- Does not add CLI awareness to ce:brainstorm or ce:plan
+- Does not add CLI awareness to rg:brainstorm or rg:plan
 - Does not introduce autofix for CLI readiness findings
 
 ## Context & Research
 
 ### Relevant Code and Patterns
 
-- Persona agent pattern: `plugins/compound-engineering/agents/review/ce-security-reviewer.agent.md` (3.4 KB), `performance-reviewer.md` (3.0 KB) -- exact structure to follow
-- Persona catalog: `plugins/compound-engineering/skills/ce-review/references/persona-catalog.md` -- cross-cutting conditional section
-- Subagent template: `plugins/compound-engineering/skills/ce-review/references/subagent-template.md` -- provides output schema, scope rules, PR context (persona does not need to include these)
-- Standalone agent: `plugins/compound-engineering/agents/review/ce-cli-agent-readiness-reviewer.agent.md` (24.3 KB) -- source of the 7 principles to distill
-- Agent-native-reviewer: `plugins/compound-engineering/agents/review/ce-agent-native-reviewer.agent.md` -- non-overlapping domain reference
+- Persona agent pattern: `plugins/rg-engineering/agents/review/rg-security-reviewer.agent.md` (3.4 KB), `performance-reviewer.md` (3.0 KB) -- exact structure to follow
+- Persona catalog: `plugins/rg-engineering/skills/rg-review/references/persona-catalog.md` -- cross-cutting conditional section
+- Subagent template: `plugins/rg-engineering/skills/rg-review/references/subagent-template.md` -- provides output schema, scope rules, PR context (persona does not need to include these)
+- Standalone agent: `plugins/rg-engineering/agents/review/rg-cli-agent-readiness-reviewer.agent.md` (24.3 KB) -- source of the 7 principles to distill
+- Agent-native-reviewer: `plugins/rg-engineering/agents/review/rg-agent-native-reviewer.agent.md` -- non-overlapping domain reference
 
 ### Institutional Learnings
 
@@ -81,7 +81,7 @@ The `cli-agent-readiness-reviewer` agent exists but only fires when someone know
 **Dependencies:** None
 
 **Files:**
-- Create: `plugins/compound-engineering/agents/review/ce-cli-readiness-reviewer.agent.md`
+- Create: `plugins/rg-engineering/agents/review/rg-cli-readiness-reviewer.agent.md`
 
 **Approach:**
 - Follow the exact structure of `security-reviewer.md` and `performance-reviewer.md`: frontmatter, identity paragraph, hunting patterns, confidence calibration, suppress list, output format
@@ -95,9 +95,9 @@ The `cli-agent-readiness-reviewer` agent exists but only fires when someone know
 - Include framework detection instruction: "Detect the CLI framework from imports in the diff. Reference framework-idiomatic patterns in suggested_fix (e.g., Click decorators, Cobra persistent flags, clap derive macros)."
 
 **Patterns to follow:**
-- `plugins/compound-engineering/agents/review/ce-security-reviewer.agent.md` -- structure, sections, size
-- `plugins/compound-engineering/agents/review/ce-performance-reviewer.agent.md` -- structure, brevity
-- `plugins/compound-engineering/agents/review/ce-cli-agent-readiness-reviewer.agent.md` -- source of the 7 principles to distill (Principles 1-7, lines 94-252)
+- `plugins/rg-engineering/agents/review/rg-security-reviewer.agent.md` -- structure, sections, size
+- `plugins/rg-engineering/agents/review/rg-performance-reviewer.agent.md` -- structure, brevity
+- `plugins/rg-engineering/agents/review/rg-cli-agent-readiness-reviewer.agent.md` -- source of the 7 principles to distill (Principles 1-7, lines 94-252)
 
 **Test scenarios:**
 - Happy path: persona file parses valid YAML frontmatter with all required fields (name, description, model, tools, color)
@@ -117,26 +117,26 @@ The `cli-agent-readiness-reviewer` agent exists but only fires when someone know
 
 - [ ] **Unit 2: Add persona to the catalog**
 
-**Goal:** Register the new persona in the ce:review persona catalog so the orchestrator knows when to dispatch it.
+**Goal:** Register the new persona in the rg:review persona catalog so the orchestrator knows when to dispatch it.
 
 **Requirements:** R1, R2, R3, R9
 
 **Dependencies:** Unit 1
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-review/references/persona-catalog.md`
-- Modify: `plugins/compound-engineering/README.md`
+- Modify: `plugins/rg-engineering/skills/rg-review/references/persona-catalog.md`
+- Modify: `plugins/rg-engineering/README.md`
 
 **Approach:**
 - Add a row in the cross-cutting conditional personas table
 - Persona name: `cli-readiness`
-- Agent reference: `compound-engineering:review:cli-readiness-reviewer`
+- Agent reference: `rg-engineering:review:cli-readiness-reviewer`
 - Activation: "CLI command definitions, argument parsing, CLI framework usage, command handler implementations"
 - Use domain description style (not framework names) consistent with other conditional personas
 - Place after the existing conditional personas, before the stack-specific section
 - Update the persona catalog section header from "Conditional (7 personas)" to "Conditional (8 personas)"
-- Update the total persona count from 16 to 17 in persona-catalog.md header and ce-review SKILL.md
-- Add cli-readiness-reviewer to the Review agents table in `plugins/compound-engineering/README.md` and verify the agent count
+- Update the total persona count from 16 to 17 in persona-catalog.md header and rg-review SKILL.md
+- Add cli-readiness-reviewer to the Review agents table in `plugins/rg-engineering/README.md` and verify the agent count
 
 **Patterns to follow:**
 - Existing conditional persona entries in `persona-catalog.md` (security, performance, api-contract, etc.)
@@ -153,8 +153,8 @@ The `cli-agent-readiness-reviewer` agent exists but only fires when someone know
 
 ## System-Wide Impact
 
-- **Interaction graph:** ce:review's orchestrator reads the diff, decides to dispatch cli-readiness-reviewer alongside other conditional personas. Findings flow through the standard merge/dedup pipeline (Stage 5) into the review report
-- **API surface parity:** agent-native-reviewer covers UI/agent parity; cli-readiness-reviewer covers CLI agent-friendliness. Both may activate on the same diff -- their findings are complementary and handled by ce:review's existing dedup fingerprinting
+- **Interaction graph:** rg:review's orchestrator reads the diff, decides to dispatch cli-readiness-reviewer alongside other conditional personas. Findings flow through the standard merge/dedup pipeline (Stage 5) into the review report
+- **API surface parity:** agent-native-reviewer covers UI/agent parity; cli-readiness-reviewer covers CLI agent-friendliness. Both may activate on the same diff -- their findings are complementary and handled by rg:review's existing dedup fingerprinting
 - **Unchanged invariants:** The standalone `cli-agent-readiness-reviewer` agent is untouched. Direct invocations continue to work exactly as before
 
 ## Risks & Dependencies
@@ -167,6 +167,6 @@ The `cli-agent-readiness-reviewer` agent exists but only fires when someone know
 ## Sources & References
 
 - **Origin document:** [docs/brainstorms/2026-03-30-cli-readiness-review-persona-requirements.md](docs/brainstorms/2026-03-30-cli-readiness-review-persona-requirements.md)
-- Related code: `plugins/compound-engineering/agents/review/ce-security-reviewer.agent.md`, `performance-reviewer.md`
-- Related code: `plugins/compound-engineering/agents/review/ce-cli-agent-readiness-reviewer.agent.md` (source of 7 principles)
-- Related code: `plugins/compound-engineering/skills/ce-review/references/persona-catalog.md`
+- Related code: `plugins/rg-engineering/agents/review/rg-security-reviewer.agent.md`, `performance-reviewer.md`
+- Related code: `plugins/rg-engineering/agents/review/rg-cli-agent-readiness-reviewer.agent.md` (source of 7 principles)
+- Related code: `plugins/rg-engineering/skills/rg-review/references/persona-catalog.md`

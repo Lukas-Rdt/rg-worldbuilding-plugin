@@ -21,7 +21,7 @@ async function makeFixtureRoot(): Promise<string> {
   tempRoots.push(root)
 
   await mkdir(path.join(root, "agents", "review"), { recursive: true })
-  await mkdir(path.join(root, "skills", "ce-plan"), { recursive: true })
+  await mkdir(path.join(root, "skills", "rg-plan"), { recursive: true })
   await mkdir(path.join(root, ".claude-plugin"), { recursive: true })
   await mkdir(path.join(root, ".cursor-plugin"), { recursive: true })
   await mkdir(path.join(root, ".codex-plugin"), { recursive: true })
@@ -33,8 +33,8 @@ async function makeFixtureRoot(): Promise<string> {
     "# Review Agent\n",
   )
   await writeFile(
-    path.join(root, "skills", "ce-plan", "SKILL.md"),
-    "# ce-plan\n",
+    path.join(root, "skills", "rg-plan", "SKILL.md"),
+    "# rg-plan\n",
   )
   await writeFile(
     path.join(root, ".mcp.json"),
@@ -102,8 +102,8 @@ async function makeFixtureRoot(): Promise<string> {
         plugins: [
           {
             id: "rg-engineering",
-            displayName: "Compound Engineering",
-            source: "https://github.com/EveryInc/rg-engineering-plugin",
+            displayName: "RG Engineering",
+            source: "https://github.com/Lukas-Rdt/rg-engineering-plugin",
           },
         ],
       },
@@ -147,7 +147,7 @@ describe("release metadata", () => {
 
     expect(counts).toEqual({
       agents: 0,
-      skills: 29,
+      skills: 30,
       mcpServers: 0,
     })
   })

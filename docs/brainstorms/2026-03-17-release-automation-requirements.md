@@ -14,12 +14,12 @@ The repository currently has one automated release flow for the npm CLI, but the
 - R1. The release process must be manually triggered; merging to `main` must not automatically publish a release.
 - R2. The release system must support batching: releasable merges may accumulate on `main` until maintainers decide to cut a release.
 - R3. The release system must maintain a single release PR for the whole repo that stays open until merged and automatically accumulates additional releasable changes merged to `main`.
-- R4. The release system must support independent version bumps for these components: `cli`, `compound-engineering`, `coding-tutor`, and `marketplace`.
+- R4. The release system must support independent version bumps for these components: `cli`, `rg-engineering`, `coding-tutor`, and `marketplace`.
 - R5. The release system must not bump untouched plugins or unrelated components.
 - R6. The release system must preserve one centralized root `CHANGELOG.md` as the canonical changelog for the repository.
 - R7. The root changelog must record releases as top-level entries per component version, rather than requiring separate changelog files per plugin.
 - R8. Existing root changelog history must be preserved during the migration; the new release model must not discard or rewrite historical entries in a way that loses continuity.
-- R9. `plugins/compound-engineering/CHANGELOG.md` must no longer be treated as the canonical changelog after the migration.
+- R9. `plugins/rg-engineering/CHANGELOG.md` must no longer be treated as the canonical changelog after the migration.
 - R10. The release process must replace the current `release-docs` workflow; `release-docs` must no longer act as a release authority or required release step.
 - R11. Narrow scripts must replace `release-docs` responsibilities, including metadata synchronization, count calculation, docs generation where still needed, and validation.
 - R12. Release automation must be the sole authority for version bumps, changelog writes, and computed metadata updates such as counts of agents, skills, commands, or similar release-owned descriptions.
@@ -30,7 +30,7 @@ The repository currently has one automated release flow for the npm CLI, but the
 - R17. Plugin-only content changes must be releasable without requiring a CLI version bump when the CLI code itself has not changed.
 - R18. The release model must remain compatible with the current install behavior where `bunx @every-env/compound-plugin install ...` runs the npm CLI but fetches named plugin content from the GitHub repository at runtime.
 - R19. The release process must be triggerable by a maintainer or an AI agent through CI without requiring a local maintainer-only skill.
-- R20. The resulting model must scale to future plugins without requiring the repo to special-case `compound-engineering` forever.
+- R20. The resulting model must scale to future plugins without requiring the repo to special-case `rg-engineering` forever.
 - R21. The release model must continue to rely on conventional release intent signals (`feat`, `fix`, breaking changes, etc.), but component scopes in commit or PR titles must remain optional rather than required.
 - R22. Release automation must infer component ownership primarily from changed files, not from commit or PR title scopes alone.
 - R23. The repo should enforce parseable conventional PR or merge titles strongly enough for release tooling to classify change type, while avoiding mandatory component scoping on every change.
@@ -42,7 +42,7 @@ The repository currently has one automated release flow for the npm CLI, but the
 
 - Maintainers can let multiple PRs merge to `main` without immediately cutting a release.
 - At any point, maintainers can inspect a release PR or dry run and understand what would ship next.
-- A change to `coding-tutor` does not force a version bump to `compound-engineering`.
+- A change to `coding-tutor` does not force a version bump to `rg-engineering`.
 - A plugin version bump does not force a marketplace version bump unless marketplace-level files changed.
 - Release-owned metadata and counts stay in sync without relying on a local slash command.
 - The root changelog remains readable and continuous before and after the migration.
@@ -64,7 +64,7 @@ The repository currently has one automated release flow for the npm CLI, but the
 - **Retire `release-docs`**: Its responsibilities are too broad, stale, and conflated. Release logic, docs logic, and metadata synchronization should be separated.
 - **Scripts for narrow responsibilities**: Explicit scripts are easier to validate, automate, and reuse from CI than a local repo-maintenance skill.
 - **Marketplace version is catalog-scoped**: Plugin version bumps alone should not imply a marketplace release.
-- **Conventional type required, component scope optional**: Release intent should still come from conventional commit semantics, but requiring `(compound-engineering)` on most repo changes would add unnecessary wording overhead. Component detection should remain file-driven.
+- **Conventional type required, component scope optional**: Release intent should still come from conventional commit semantics, but requiring `(rg-engineering)` on most repo changes would add unnecessary wording overhead. Component detection should remain file-driven.
 - **Manual bump override is an explicit escape hatch**: Automatic bump inference remains the default, but maintainers should be able to override a component's release level in CI for exceptional cases without awkward synthetic commits.
 
 ## Dependencies / Assumptions
@@ -80,10 +80,10 @@ The repository currently has one automated release flow for the npm CLI, but the
 - [Affects R7][Technical] What exact root changelog format best balances readability and automation for multiple component-version entries in one file?
 - [Affects R11][Technical] Which responsibilities should become distinct scripts versus steps embedded directly in the CI workflow?
 - [Affects R12][Technical] Which release-owned metadata fields should be computed automatically versus validated and left untouched when no count change is needed?
-- [Affects R9][Technical] Should `plugins/compound-engineering/CHANGELOG.md` be deleted, frozen, or replaced with a short pointer note after the migration?
+- [Affects R9][Technical] Should `plugins/rg-engineering/CHANGELOG.md` be deleted, frozen, or replaced with a short pointer note after the migration?
 - [Affects R21][Technical] Should conventional-format enforcement happen on PR titles, squash-merge titles, commits, or some combination of them?
 - [Affects R24][Technical] Should manual bump overrides be implemented as workflow inputs that shape the generated release PR directly, or as an internal generated release-control commit on the release branch only?
 
 ## Next Steps
 
-→ `/ce:plan` for structured implementation planning
+→ `/rg:plan` for structured implementation planning

@@ -4,7 +4,7 @@
 
 > [!IMPORTANT]
 > **Private Distribution & Installation**
-> This repository is a private fork of the Compound Engineering plugin.
+> This repository is a private fork of the RG Engineering plugin.
 > Since it is hosted privately, choose one of the following methods to install it:
 > 
 > **Option 1: Direct Private Git Import (For users with GitHub access)**
@@ -29,7 +29,7 @@
 
 ---
 
-# Compound Engineering (Original)
+# RG Engineering (Original)
 
 AI skills that make each unit of engineering work easier than the last.
 
@@ -41,9 +41,9 @@ Traditional development accumulates technical debt. Every feature adds complexit
 
 Compound engineering inverts this. 80% is in planning and review, 20% is in execution:
 
-- Plan thoroughly before writing code with `/ce-brainstorm` and `/ce-plan` using one readiness-based plan artifact
-- Review to catch issues and calibrate judgment with `/ce-code-review` and `/ce-doc-review`
-- Codify knowledge so it is reusable with `/ce-compound`
+- Plan thoroughly before writing code with `/rg-brainstorm` and `/rg-plan` using one readiness-based plan artifact
+- Review to catch issues and calibrate judgment with `/rg-code-review` and `/rg-doc-review`
+- Codify knowledge so it is reusable with `/rg-compound`
 - Keep quality high so future changes are easy
 
 The point is not ceremony. The point is leverage. A good brainstorm makes the plan sharper. A good plan makes execution smaller. A good review catches the pattern, not just the bug. A good compound note means the next agent does not have to learn the same lesson from scratch.
@@ -51,7 +51,7 @@ The point is not ceremony. The point is leverage. A good brainstorm makes the pl
 **Learn more**
 
 - [Skill documentation catalog](docs/skills/README.md)
-- [Compound engineering: how Every codes with agents](https://every.to/chain-of-thought/compound-engineering-how-every-codes-with-agents)
+- [Compound engineering: how Every codes with agents](https://every.to/chain-of-thought/rg-engineering-how-every-codes-with-agents)
 - [The story behind compounding engineering](https://every.to/source-code/my-ai-had-already-fixed-the-code-before-i-saw-it)
 
 ## Workflow
@@ -60,14 +60,14 @@ The core loop is six steps: **brainstorm** the requirements, **plan** the implem
 
 | Skill | Purpose |
 |-------|---------|
-| [`/ce-brainstorm`](docs/skills/ce-brainstorm.md) | Interactive Q&A to think through a feature or problem and write a requirements-only unified plan before planning |
-| [`/ce-plan`](docs/skills/ce-plan.md) | Enrich feature ideas or requirements-only plans into implementation-ready plans |
-| [`/ce-work`](docs/skills/ce-work.md) | Execute implementation-ready plans with worktrees and task tracking |
-| [`/ce-simplify-code`](docs/skills/ce-simplify-code.md) | Refine the freshly written code for clarity and reuse before review |
-| [`/ce-code-review`](docs/skills/ce-code-review.md) | Multi-agent review against the plan before merging |
-| [`/ce-compound`](docs/skills/ce-compound.md) | Capture the learning into `docs/solutions/` so the next loop starts smarter |
+| [`/rg-brainstorm`](docs/skills/rg-brainstorm.md) | Interactive Q&A to think through a feature or problem and write a requirements-only unified plan before planning |
+| [`/rg-plan`](docs/skills/rg-plan.md) | Enrich feature ideas or requirements-only plans into implementation-ready plans |
+| [`/rg-work`](docs/skills/rg-work.md) | Execute implementation-ready plans with worktrees and task tracking |
+| [`/rg-simplify-code`](docs/skills/rg-simplify-code.md) | Refine the freshly written code for clarity and reuse before review |
+| [`/rg-code-review`](docs/skills/rg-code-review.md) | Multi-agent review against the plan before merging |
+| [`/rg-compound`](docs/skills/rg-compound.md) | Capture the learning into `docs/solutions/` so the next loop starts smarter |
 
-Each cycle compounds: `/ce-compound` writes learnings that the next `/ce-brainstorm` and `/ce-plan` read as grounding -- brainstorms sharpen plans, plans inform future plans, reviews catch more issues, patterns get documented. That return arrow is the whole point.
+Each cycle compounds: `/rg-compound` writes learnings that the next `/rg-brainstorm` and `/rg-plan` read as grounding -- brainstorms sharpen plans, plans inform future plans, reviews catch more issues, patterns get documented. That return arrow is the whole point.
 
 ### Additional skills
 
@@ -75,12 +75,12 @@ These sit around the loop or get reached for on demand -- not every cycle needs 
 
 | Skill | When to reach for it |
 |-------|---------|
-| [`/ce-ideate`](docs/skills/ce-ideate.md) | *Before the loop*, when you don't yet know what to build -- generates and critically ranks grounded ideas, then routes the strongest one into `/ce-brainstorm` |
-| [`/ce-strategy`](docs/skills/ce-strategy.md) | *Upstream anchor* -- creates and maintains `STRATEGY.md`, read as grounding by ideate, brainstorm, and plan so strategy choices flow into every feature |
-| [`/ce-product-pulse`](docs/skills/ce-product-pulse.md) | *Outer loop* -- a time-windowed report on what users actually experienced (usage, performance, errors), saved to `docs/pulse-reports/`; its follow-ups feed back into ideation and brainstorming |
-| [`/ce-debug`](docs/skills/ce-debug.md) | *Instead of brainstorm -> plan -> work* when the input is a bug rather than a feature -- reproduce, trace root cause, fix, then polish/review before PR handoff when warranted |
-| [`/ce-pov`](docs/skills/ce-pov.md) | *On demand, before you commit* -- a decisive, project-grounded verdict on whether to adopt, switch to, or revisit an external technology, library, pattern, or platform; works cold or mid-session, and proposes the next step (`/ce-plan`, `/ce-brainstorm`, or a spike) from the verdict |
-| [`/ce-explain`](docs/skills/ce-explain.md) | *On demand, to keep learning* -- turns a concept, a diff, an idea, or "what did I do this week?" into a dense, visual explainer written for you personally, with an optional check-in (predict-then-reveal for diffs, corrected exercises) that makes it stick |
+| [`/rg-ideate`](docs/skills/rg-ideate.md) | *Before the loop*, when you don't yet know what to build -- generates and critically ranks grounded ideas, then routes the strongest one into `/rg-brainstorm` |
+| [`/rg-strategy`](docs/skills/rg-strategy.md) | *Upstream anchor* -- creates and maintains `STRATEGY.md`, read as grounding by ideate, brainstorm, and plan so strategy choices flow into every feature |
+| [`/rg-product-pulse`](docs/skills/rg-product-pulse.md) | *Outer loop* -- a time-windowed report on what users actually experienced (usage, performance, errors), saved to `docs/pulse-reports/`; its follow-ups feed back into ideation and brainstorming |
+| [`/rg-debug`](docs/skills/rg-debug.md) | *Instead of brainstorm -> plan -> work* when the input is a bug rather than a feature -- reproduce, trace root cause, fix, then polish/review before PR handoff when warranted |
+| [`/rg-pov`](docs/skills/rg-pov.md) | *On demand, before you commit* -- a decisive, project-grounded verdict on whether to adopt, switch to, or revisit an external technology, library, pattern, or platform; works cold or mid-session, and proposes the next step (`/rg-plan`, `/rg-brainstorm`, or a spike) from the verdict |
+| [`/rg-explain`](docs/skills/rg-explain.md) | *On demand, to keep learning* -- turns a concept, a diff, an idea, or "what did I do this week?" into a dense, visual explainer written for you personally, with an optional check-in (predict-then-reveal for diffs, corrected exercises) that makes it stick |
 
 For the full catalog and how each skill chains together, see [docs/skills](docs/skills/README.md). The complete inventory is [below](#full-skill-inventory).
 
@@ -89,29 +89,29 @@ For the full catalog and how each skill chains together, see [docs/skills](docs/
 **Finding a direction** -- when you don't have a specific idea yet, ideate first, then carry the strongest survivor into the loop:
 
 ```text
-/ce-ideate new drawing tools
-/ce-ideate surprise me
-/ce-ideate github issues   # ground ideas in your open issues instead of a prompt
+/rg-ideate new drawing tools
+/rg-ideate surprise me
+/rg-ideate github issues   # ground ideas in your open issues instead of a prompt
 ```
 
-`/ce-ideate` does the homework first (codebase, past learnings, prior art on the web, optionally your issue tracker), then hands you a ranked set of grounded candidates to take into `/ce-brainstorm`.
+`/rg-ideate` does the homework first (codebase, past learnings, prior art on the web, optionally your issue tracker), then hands you a ranked set of grounded candidates to take into `/rg-brainstorm`.
 
 **Standard feature loop** -- turn a rough idea into shipped, reviewed code:
 
 ```text
-/ce-brainstorm make background job retries safer
-/ce-plan
-/ce-work
-/ce-simplify-code
-/ce-code-review
-/ce-compound
+/rg-brainstorm make background job retries safer
+/rg-plan
+/rg-work
+/rg-simplify-code
+/rg-code-review
+/rg-compound
 ```
 
 **Simplifying code** -- use it after fresh implementation work, or point it at code that keeps slowing changes down:
 
 ```text
-/ce-simplify-code
-/ce-simplify-code simplify the code in my most-churned file
+/rg-simplify-code
+/rg-simplify-code simplify the code in my most-churned file
 ```
 
 The first pass tightens recent branch changes before review. The targeted pass is useful when one file keeps absorbing unrelated fixes, follow-ups, or merge conflicts.
@@ -119,58 +119,58 @@ The first pass tightens recent branch changes before review. The targeted pass i
 **Debugging a bug** -- when you start from broken behavior instead of a feature:
 
 ```text
-/ce-debug the checkout webhook sometimes creates duplicate invoices
-/ce-code-review
-/ce-compound
+/rg-debug the checkout webhook sometimes creates duplicate invoices
+/rg-code-review
+/rg-compound
 ```
 
 **Autonomous** -- hand off a feature and let the agent run the whole pipeline:
 
 ```text
-/ce-brainstorm describe the feature
+/rg-brainstorm describe the feature
 /lfg
 ```
 
-`/lfg` runs the loop hands-off: it plans, works through the plan, simplifies, runs code review and applies the fixes, runs browser tests, commits, pushes, opens a PR, then watches CI and repairs failures until it's green. Start it after `/ce-brainstorm` so it plans against real requirements rather than a one-line prompt. It's the autopilot version of the standard loop -- neat when you want to step away and come back to an open, green PR.
+`/lfg` runs the loop hands-off: it plans, works through the plan, simplifies, runs code review and applies the fixes, runs browser tests, commits, pushes, opens a PR, then watches CI and repairs failures until it's green. Start it after `/rg-brainstorm` so it plans against real requirements rather than a one-line prompt. It's the autopilot version of the standard loop -- neat when you want to step away and come back to an open, green PR.
 
 ## Getting Started
 
-After installing, run `/ce-setup` in any project. It checks repo-local config, reports optional tool capabilities, and helps keep machine-local CE settings safely gitignored.
+After installing, run `/rg-setup` in any project. It checks repo-local config, reports optional tool capabilities, and helps keep machine-local CE settings safely gitignored.
 
-The `compound-engineering` plugin currently ships 29 skills and 0 standalone agents. Specialist review, research, and workflow behavior lives inside the owning skills as skill-local prompt assets.
+The `rg-engineering` plugin currently ships 29 skills and 0 standalone agents. Specialist review, research, and workflow behavior lives inside the owning skills as skill-local prompt assets.
 
 ### Full Skill Inventory
 
 | Skill | Purpose |
 |-------|---------|
-| [`/ce-strategy`](docs/skills/ce-strategy.md) | Create or maintain `STRATEGY.md` |
-| [`/ce-ideate`](docs/skills/ce-ideate.md) | Generate and critically evaluate grounded ideas |
-| [`/ce-pov`](docs/skills/ce-pov.md) | Form a decisive, project-grounded verdict on an external input |
-| [`/ce-explain`](docs/skills/ce-explain.md) | Explain a concept, diff, idea, or window of your own work as a personal learning artifact |
-| [`/ce-brainstorm`](docs/skills/ce-brainstorm.md) | Explore requirements and write a right-sized requirements doc |
-| [`/ce-plan`](docs/skills/ce-plan.md) | Create structured implementation plans |
-| [`/ce-work`](docs/skills/ce-work.md) | Execute implementation plans systematically |
-| [`/ce-code-review`](docs/skills/ce-code-review.md) | Review code with skill-local reviewer personas |
-| [`/ce-doc-review`](docs/skills/ce-doc-review.md) | Review requirements and plan documents |
-| [`/ce-debug`](docs/skills/ce-debug.md) | Reproduce failures, trace root cause, fix bugs, and prepare non-trivial fixes for PR |
-| [`/ce-compound`](docs/skills/ce-compound.md) | Document solved problems to compound team knowledge |
-| [`/ce-compound-refresh`](docs/skills/ce-compound-refresh.md) | Refresh stale or drifting learnings |
-| [`/ce-optimize`](docs/skills/ce-optimize.md) | Run iterative optimization loops |
-| [`/ce-product-pulse`](docs/skills/ce-product-pulse.md) | Generate time-windowed product pulse reports |
-| [`/ce-riffrec-feedback-analysis`](docs/skills/ce-riffrec-feedback-analysis.md) | Convert Riffrec recordings or notes into structured feedback |
-| [`/ce-sweep`](docs/skills/ce-sweep.md) | Sweep feedback sources, track item lifecycles, and emit an `/lfg`-ready plan |
-| [`/ce-resolve-pr-feedback`](docs/skills/ce-resolve-pr-feedback.md) | Resolve PR review feedback |
-| [`/ce-commit`](docs/skills/ce-commit.md) | Create a git commit with a clear message |
-| [`/ce-commit-push-pr`](docs/skills/ce-commit-push-pr.md) | Commit, push, and open a PR with related work references preserved |
-| [`/ce-worktree`](docs/skills/ce-worktree.md) | Ensure work happens in an isolated git worktree |
-| [`/ce-promote`](docs/skills/ce-promote.md) | Draft user-facing announcement copy |
-| [`/ce-test-browser`](docs/skills/ce-test-browser.md) | Run browser tests on PR-affected pages |
-| [`/ce-test-xcode`](docs/skills/ce-test-xcode.md) | Build and test iOS apps on simulator |
-| [`/ce-setup`](docs/skills/ce-setup.md) | Diagnose optional tool capabilities and project config |
-| [`/ce-simplify-code`](docs/skills/ce-simplify-code.md) | Simplify recent code changes |
-| [`/ce-polish`](docs/skills/ce-polish.md) | Start a dev server and iterate on UX polish |
-| [`/ce-proof`](docs/skills/ce-proof.md) | Create, edit, and share Proof documents |
-| [`/ce-dogfood`](docs/skills/ce-dogfood.md) | Hands-off diff-scoped browser QA of the active branch, with autonomous fixes |
+| [`/rg-strategy`](docs/skills/rg-strategy.md) | Create or maintain `STRATEGY.md` |
+| [`/rg-ideate`](docs/skills/rg-ideate.md) | Generate and critically evaluate grounded ideas |
+| [`/rg-pov`](docs/skills/rg-pov.md) | Form a decisive, project-grounded verdict on an external input |
+| [`/rg-explain`](docs/skills/rg-explain.md) | Explain a concept, diff, idea, or window of your own work as a personal learning artifact |
+| [`/rg-brainstorm`](docs/skills/rg-brainstorm.md) | Explore requirements and write a right-sized requirements doc |
+| [`/rg-plan`](docs/skills/rg-plan.md) | Create structured implementation plans |
+| [`/rg-work`](docs/skills/rg-work.md) | Execute implementation plans systematically |
+| [`/rg-code-review`](docs/skills/rg-code-review.md) | Review code with skill-local reviewer personas |
+| [`/rg-doc-review`](docs/skills/rg-doc-review.md) | Review requirements and plan documents |
+| [`/rg-debug`](docs/skills/rg-debug.md) | Reproduce failures, trace root cause, fix bugs, and prepare non-trivial fixes for PR |
+| [`/rg-compound`](docs/skills/rg-compound.md) | Document solved problems to compound team knowledge |
+| [`/rg-compound-refresh`](docs/skills/rg-compound-refresh.md) | Refresh stale or drifting learnings |
+| [`/rg-optimize`](docs/skills/rg-optimize.md) | Run iterative optimization loops |
+| [`/rg-product-pulse`](docs/skills/rg-product-pulse.md) | Generate time-windowed product pulse reports |
+| [`/rg-riffrec-feedback-analysis`](docs/skills/rg-riffrec-feedback-analysis.md) | Convert Riffrec recordings or notes into structured feedback |
+| [`/rg-sweep`](docs/skills/rg-sweep.md) | Sweep feedback sources, track item lifecycles, and emit an `/lfg`-ready plan |
+| [`/rg-resolve-pr-feedback`](docs/skills/rg-resolve-pr-feedback.md) | Resolve PR review feedback |
+| [`/rg-commit`](docs/skills/rg-commit.md) | Create a git commit with a clear message |
+| [`/rg-commit-push-pr`](docs/skills/rg-commit-push-pr.md) | Commit, push, and open a PR with related work references preserved |
+| [`/rg-worktree`](docs/skills/rg-worktree.md) | Ensure work happens in an isolated git worktree |
+| [`/rg-promote`](docs/skills/rg-promote.md) | Draft user-facing announcement copy |
+| [`/rg-test-browser`](docs/skills/rg-test-browser.md) | Run browser tests on PR-affected pages |
+| [`/rg-test-xcode`](docs/skills/rg-test-xcode.md) | Build and test iOS apps on simulator |
+| [`/rg-setup`](docs/skills/rg-setup.md) | Diagnose optional tool capabilities and project config |
+| [`/rg-simplify-code`](docs/skills/rg-simplify-code.md) | Simplify recent code changes |
+| [`/rg-polish`](docs/skills/rg-polish.md) | Start a dev server and iterate on UX polish |
+| [`/rg-proof`](docs/skills/rg-proof.md) | Create, edit, and share Proof documents |
+| [`/rg-dogfood`](docs/skills/rg-dogfood.md) | Hands-off diff-scoped browser QA of the active branch, with autonomous fixes |
 | [`/lfg`](docs/skills/lfg.md) | Full autonomous engineering workflow |
 
 ---
@@ -180,25 +180,25 @@ The `compound-engineering` plugin currently ships 29 skills and 0 standalone age
 ### Claude Code
 
 ```text
-/plugin marketplace add EveryInc/compound-engineering-plugin
-/plugin install compound-engineering
+/plugin marketplace add Lukas-Rdt/rg-engineering-plugin
+/plugin install rg-engineering
 ```
 
-> **Already have Compound Engineering installed?** Compound Engineering moved to a root-native layout. You must refresh the marketplace *before* updating — see [Existing Installs](#existing-installs). Running `/plugin update` alone keeps you on the old version.
+> **Already have RG Engineering installed?** RG Engineering moved to a root-native layout. You must refresh the marketplace *before* updating — see [Existing Installs](#existing-installs). Running `/plugin update` alone keeps you on the old version.
 
 ### Cursor
 
 In Cursor Agent chat, install from the plugin marketplace:
 
 ```text
-/add-plugin compound-engineering
+/add-plugin rg-engineering
 ```
 
 Or search for "compound engineering" in the plugin marketplace.
 
 ### Codex App
 
-Compound Engineering is not listed in Codex's built-in plugin marketplace yet. Add it as a custom marketplace:
+RG Engineering is not listed in Codex's built-in plugin marketplace yet. Add it as a custom marketplace:
 
 1. In the Codex app, open **Plugins** from the sidebar.
 2. Click **Add** / **Add plugin marketplace**.
@@ -206,14 +206,14 @@ Compound Engineering is not listed in Codex's built-in plugin marketplace yet. A
 
    | Field | Value |
    | --- | --- |
-   | Source | `EveryInc/compound-engineering-plugin` |
+   | Source | `Lukas-Rdt/rg-engineering-plugin` |
    | Git ref | `main` |
    | Sparse paths | leave blank |
 
 4. Click **Add marketplace**.
-5. Select **Compound Engineering**, install **compound-engineering**, then restart Codex.
+5. Select **RG Engineering**, install **rg-engineering**, then restart Codex.
 
-The Codex app install is self-contained for Compound Engineering. Specialist reviewer and research behavior lives inside the skills as local prompt assets; no separate custom-agent install step is required.
+The Codex app install is self-contained for RG Engineering. Specialist reviewer and research behavior lives inside the skills as local prompt assets; no separate custom-agent install step is required.
 
 ### Codex CLI
 
@@ -222,40 +222,40 @@ Register the marketplace, then install the plugin.
 1. **Register the marketplace with Codex:**
 
    ```bash
-   codex plugin marketplace add EveryInc/compound-engineering-plugin
+   codex plugin marketplace add Lukas-Rdt/rg-engineering-plugin
    ```
 
 2. **Install the plugin:**
 
    ```bash
-   codex plugin add compound-engineering@compound-engineering-plugin
+   codex plugin add rg-engineering@rg-engineering-plugin
    ```
 
-   You can also launch `codex`, run `/plugins`, find the **Compound Engineering** marketplace, select the **compound-engineering** plugin, and choose **Install**. Restart Codex after install completes.
+   You can also launch `codex`, run `/plugins`, find the **RG Engineering** marketplace, select the **rg-engineering** plugin, and choose **Install**. Restart Codex after install completes.
 
-The native Codex plugin install is self-contained for Compound Engineering. Specialist reviewer and research behavior lives inside the skills as local prompt assets; no separate custom-agent install step is required.
+The native Codex plugin install is self-contained for RG Engineering. Specialist reviewer and research behavior lives inside the skills as local prompt assets; no separate custom-agent install step is required.
 
 For a non-default Codex profile, run every Codex-related step against the same `CODEX_HOME`. This example installs CE into a `work` profile:
 
 ```bash
-CODEX_HOME="$HOME/.codex/profiles/work" codex plugin marketplace add EveryInc/compound-engineering-plugin
-CODEX_HOME="$HOME/.codex/profiles/work" codex plugin add compound-engineering@compound-engineering-plugin
+CODEX_HOME="$HOME/.codex/profiles/work" codex plugin marketplace add Lukas-Rdt/rg-engineering-plugin
+CODEX_HOME="$HOME/.codex/profiles/work" codex plugin add rg-engineering@rg-engineering-plugin
 ```
 
 The marketplace step only makes the plugin available; the plugin install is what activates the native CE skills for that profile.
 
 ### Kimi Code CLI
 
-Kimi Code CLI can install Compound Engineering directly from this repository because the repo ships a native `.kimi-plugin/plugin.json` manifest:
+Kimi Code CLI can install RG Engineering directly from this repository because the repo ships a native `.kimi-plugin/plugin.json` manifest:
 
 ```text
-/plugins install https://github.com/EveryInc/compound-engineering-plugin
+/plugins install https://github.com/Lukas-Rdt/rg-engineering-plugin
 ```
 
 You can also browse it through Kimi's custom marketplace flow:
 
 ```text
-/plugins marketplace https://raw.githubusercontent.com/EveryInc/compound-engineering-plugin/main/.kimi-plugin/marketplace.json
+/plugins marketplace https://raw.githubusercontent.com/Lukas-Rdt/rg-engineering-plugin/main/.kimi-plugin/marketplace.json
 ```
 
 After installing or updating, run `/reload` or start a new Kimi session so the plugin skills are loaded.
@@ -265,23 +265,23 @@ After installing or updating, run `/reload` or start a new Kimi session so the p
 For **VS Code Copilot Agent Plugins**:
 
 1. Run `Chat: Install Plugin from Source` from the VS Code command palette
-2. Use `EveryInc/compound-engineering-plugin` for the repo
-3. Select `compound-engineering` when VS Code shows the plugins in this repository
+2. Use `Lukas-Rdt/rg-engineering-plugin` for the repo
+3. Select `rg-engineering` when VS Code shows the plugins in this repository
 
 For **Copilot CLI**, use:
 
 Inside Copilot CLI:
 
 ```text
-/plugin marketplace add EveryInc/compound-engineering-plugin
-/plugin install compound-engineering@compound-engineering-plugin
+/plugin marketplace add Lukas-Rdt/rg-engineering-plugin
+/plugin install rg-engineering@rg-engineering-plugin
 ```
 
 From a shell with the `copilot` binary:
 
 ```bash
-copilot plugin marketplace add EveryInc/compound-engineering-plugin
-copilot plugin install compound-engineering@compound-engineering-plugin
+copilot plugin marketplace add Lukas-Rdt/rg-engineering-plugin
+copilot plugin install rg-engineering@rg-engineering-plugin
 ```
 
 Copilot CLI reads the existing Claude-compatible plugin manifests, so no separate Bun install step is needed.
@@ -291,38 +291,38 @@ Copilot CLI reads the existing Claude-compatible plugin manifests, so no separat
 From a shell with the `droid` binary:
 
 ```bash
-droid plugin marketplace add https://github.com/EveryInc/compound-engineering-plugin
-droid plugin install compound-engineering@compound-engineering-plugin
+droid plugin marketplace add https://github.com/Lukas-Rdt/rg-engineering-plugin
+droid plugin install rg-engineering@rg-engineering-plugin
 ```
 
-Droid uses `plugin@marketplace` plugin IDs; here `compound-engineering` is the plugin and `compound-engineering-plugin` is the marketplace name. Droid installs the existing Claude Code-compatible plugin and translates the format automatically, so no Bun install step is needed.
+Droid uses `plugin@marketplace` plugin IDs; here `rg-engineering` is the plugin and `rg-engineering-plugin` is the marketplace name. Droid installs the existing Claude Code-compatible plugin and translates the format automatically, so no Bun install step is needed.
 
 ### Qwen Code
 
 ```bash
-qwen extensions install EveryInc/compound-engineering-plugin:compound-engineering
+qwen extensions install Lukas-Rdt/rg-engineering-plugin:rg-engineering
 ```
 
 Qwen Code installs Claude Code-compatible plugins directly from GitHub and converts the plugin format during install, so no Bun install step is needed.
 
 ### OpenCode
 
-Add Compound Engineering to the `plugin` array in your global or project `opencode.json`:
+Add RG Engineering to the `plugin` array in your global or project `opencode.json`:
 
 ```json
 {
-  "plugin": ["compound-engineering@git+https://github.com/EveryInc/compound-engineering-plugin.git"]
+  "plugin": ["rg-engineering@git+https://github.com/Lukas-Rdt/rg-engineering-plugin.git"]
 }
 ```
 
-Restart OpenCode after changing the config. The OpenCode plugin registers the Compound Engineering skills directory directly; no Bun installer or generated skill copy is required. See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for pinning examples.
+Restart OpenCode after changing the config. The OpenCode plugin registers the RG Engineering skills directory directly; no Bun installer or generated skill copy is required. See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for pinning examples.
 
 ### Pi
 
-Install Compound Engineering as a Pi package from this repository:
+Install RG Engineering as a Pi package from this repository:
 
 ```bash
-pi install git:github.com/EveryInc/compound-engineering-plugin
+pi install git:github.com/Lukas-Rdt/rg-engineering-plugin
 ```
 
 Required companion for CE workflows that dispatch reviewer, research, or implementation subagents:
@@ -339,10 +339,10 @@ pi install npm:pi-ask-user
 
 ### Antigravity CLI (`agy`)
 
-Google has replaced the consumer Gemini CLI with [Antigravity CLI](https://antigravity.google) (`agy`), which still runs on Gemini models. Install Compound Engineering directly from GitHub — no clone step required:
+Google has replaced the consumer Gemini CLI with [Antigravity CLI](https://antigravity.google) (`agy`), which still runs on Gemini models. Install RG Engineering directly from GitHub — no clone step required:
 
 ```bash
-agy plugin install https://github.com/EveryInc/compound-engineering-plugin
+agy plugin install https://github.com/Lukas-Rdt/rg-engineering-plugin
 ```
 
 Verify with `agy plugin list`. The repository root is the plugin package (`plugin.json` plus `skills/`).
@@ -350,45 +350,45 @@ Verify with `agy plugin list`. The repository root is the plugin package (`plugi
 For a local checkout or pinned release:
 
 ```bash
-git clone https://github.com/EveryInc/compound-engineering-plugin
-agy plugin install ./compound-engineering-plugin
+git clone https://github.com/Lukas-Rdt/rg-engineering-plugin
+agy plugin install ./rg-engineering-plugin
 ```
 
-The bundled `.agy/` directory remains a compatibility entry point (`agy plugin install ./compound-engineering-plugin/.agy`). `agy` also loads `GEMINI.md` workspace context from the checkout.
+The bundled `.agy/` directory remains a compatibility entry point (`agy plugin install ./rg-engineering-plugin/.agy`). `agy` also loads `GEMINI.md` workspace context from the checkout.
 
 See [`.agy/INSTALL.md`](.agy/INSTALL.md) for pinning, local development, uninstall, and legacy Gemini import.
 
 ### Existing Installs
 
-Compound Engineering moved to a root-native, skills-only layout. An existing marketplace install keeps a **cached** marketplace snapshot that still points at the old `plugins/compound-engineering` path, so updating the plugin on its own reads that stale snapshot and leaves you on the previous version. Refresh the cached marketplace **first**, then update the plugin — order matters.
+RG Engineering moved to a root-native, skills-only layout. An existing marketplace install keeps a **cached** marketplace snapshot that still points at the old `plugins/rg-engineering` path, so updating the plugin on its own reads that stale snapshot and leaves you on the previous version. Refresh the cached marketplace **first**, then update the plugin — order matters.
 
 **Claude Code**
 
 ```text
-/plugin marketplace update compound-engineering-plugin
-/plugin update compound-engineering
+/plugin marketplace update rg-engineering-plugin
+/plugin update rg-engineering
 ```
 
 **Codex CLI**
 
 ```bash
-codex plugin marketplace upgrade compound-engineering-plugin
-codex plugin add compound-engineering@compound-engineering-plugin
+codex plugin marketplace upgrade rg-engineering-plugin
+codex plugin add rg-engineering@rg-engineering-plugin
 ```
 
 There is no `codex plugin update`; re-running `add` reinstalls from the refreshed snapshot. For a non-default profile, run both commands against the same `CODEX_HOME`.
 
 **Codex App**
 
-Refresh the marketplace from the **Plugins** panel (remove and re-add the `EveryInc/compound-engineering-plugin` marketplace if there is no refresh control), then reinstall **compound-engineering** and restart Codex.
+Refresh the marketplace from the **Plugins** panel (remove and re-add the `Lukas-Rdt/rg-engineering-plugin` marketplace if there is no refresh control), then reinstall **rg-engineering** and restart Codex.
 
-If you configured a host with a direct path or sparse path under `plugins/compound-engineering`, edit or reinstall that source so it points at the repository root with no sparse path.
+If you configured a host with a direct path or sparse path under `plugins/rg-engineering`, edit or reinstall that source so it points at the repository root with no sparse path.
 
 If a previous Bun-installed copy is still shadowing native plugin skills, run the current cleanup command from a checkout of this repository:
 
 ```bash
-git clone https://github.com/EveryInc/compound-engineering-plugin.git /tmp/compound-engineering-plugin-cleanup
-cd /tmp/compound-engineering-plugin-cleanup
+git clone https://github.com/Lukas-Rdt/rg-engineering-plugin.git /tmp/rg-engineering-plugin-cleanup
+cd /tmp/rg-engineering-plugin-cleanup
 bun install
 bun run cleanup --target all
 ```
@@ -419,7 +419,7 @@ In the app's **Add plugin marketplace** form, use this checkout as the source:
 
 | Field | Value |
 | --- | --- |
-| Source | `/path/to/compound-engineering-plugin` |
+| Source | `/path/to/rg-engineering-plugin` |
 | Git ref | current branch, or leave blank for a local folder |
 | Sparse paths | leave blank |
 
@@ -427,7 +427,7 @@ In the app's **Add plugin marketplace** form, use this checkout as the source:
 
 ```bash
 codex plugin marketplace add "$PWD"
-codex plugin add compound-engineering@compound-engineering-plugin
+codex plugin add rg-engineering@rg-engineering-plugin
 ```
 
 Use a separate `CODEX_HOME` when you want to keep local testing isolated from your normal Codex profile. The Codex marketplace entry points at the public Git plugin source so root-shaped plugin repos install correctly; use a temporary marketplace catalog with a `source.url` plus `ref` when testing unpublished plugin-content changes end to end.
@@ -437,20 +437,20 @@ Use a separate `CODEX_HOME` when you want to keep local testing isolated from yo
 Inside Kimi Code CLI:
 
 ```text
-/plugins install /path/to/compound-engineering-plugin
+/plugins install /path/to/rg-engineering-plugin
 ```
 
 To test the local marketplace catalog instead, pass the catalog path:
 
 ```text
-/plugins marketplace /path/to/compound-engineering-plugin/.kimi-plugin/marketplace.json
+/plugins marketplace /path/to/rg-engineering-plugin/.kimi-plugin/marketplace.json
 ```
 
 **OpenCode**
 
 ```json
 {
-  "plugin": ["/path/to/compound-engineering-plugin"]
+  "plugin": ["/path/to/rg-engineering-plugin"]
 }
 ```
 
@@ -485,7 +485,7 @@ Release versions are owned by release automation. Routine feature PRs should not
 
 ## FAQ
 
-### Do I need Bun to install Compound Engineering?
+### Do I need Bun to install RG Engineering?
 
 No. Bun is only needed for repo development tasks and converter maintenance.
 
@@ -501,7 +501,7 @@ GitHub Releases are the canonical release-notes surface. The root [`CHANGELOG.md
 
 Contributions are welcome. Issues, bug reports, and pull requests all help make this better, and we genuinely appreciate them — bug reports especially.
 
-A note on what to expect: Compound Engineering is opinionated by design. It's maintained by [@kieranklaassen](https://github.com/kieranklaassen) and [@tmchow](https://github.com/tmchow), and its direction reflects a specific point of view about how AI-assisted engineering should work. So while we welcome help, we can't promise to accept every change — some proposals won't fit that vision even when they're good ideas on their own.
+A note on what to expect: RG Engineering is opinionated by design. It's maintained by [@kieranklaassen](https://github.com/kieranklaassen) and [@tmchow](https://github.com/tmchow), and its direction reflects a specific point of view about how AI-assisted engineering should work. So while we welcome help, we can't promise to accept every change — some proposals won't fit that vision even when they're good ideas on their own.
 
 Open an issue or send a PR, and we'll fold in what moves the plugin in the right direction. We just want to be upfront that not everything will land.
 

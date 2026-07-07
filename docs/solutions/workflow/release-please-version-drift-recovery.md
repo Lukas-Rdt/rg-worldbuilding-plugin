@@ -34,7 +34,7 @@ The current root-native repo has three release components. Release-please reads 
 
 ```text
 .github/.release-please-manifest.json
-├── "."                -> compound-engineering package/plugin (v = X.Y.Z)
+├── "."                -> rg-engineering package/plugin (v = X.Y.Z)
 ├── ".claude-plugin"   -> Claude marketplace                 (v = M.N.O)
 └── ".cursor-plugin"   -> Cursor marketplace                 (v = P.Q.R)
 
@@ -57,7 +57,7 @@ Key invariants:
 - Every extra-file inside the root `.` component must share the same plugin version.
 - Marketplace components are independent; their metadata versions do not move with every plugin release.
 - `bun run release:validate` enforces root package/plugin version parity, marketplace parity, Codex manifest shape, and description sync.
-- The repo no longer has separate `cli`, `plugins/compound-engineering`, or `coding-tutor` release components.
+- The repo no longer has separate `cli`, `plugins/rg-engineering`, or `coding-tutor` release components.
 
 ## How release-please tracks versions
 

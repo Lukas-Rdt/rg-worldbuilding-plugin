@@ -3,19 +3,19 @@ title: "safe_auto rubric calibration: variance reduction beats safe_auto-rate-as
 date: 2026-04-25
 last_updated: 2026-04-25
 category: skill-design
-module: compound-engineering / ce-code-review
+module: rg-engineering / rg-code-review
 problem_type: design_pattern
 component: subagent-template
 severity: low
 tags:
-  - ce-code-review
+  - rg-code-review
   - autofix-class
   - rubric
   - calibration
   - eval
   - eval-methodology
   - variance
-related_issue: EveryInc/compound-engineering-plugin#686
+related_issue: Lukas-Rdt/rg-engineering-plugin#686
 related_pr: "PR #685 (suggested_fix push that this builds on)"
 ---
 
@@ -35,7 +35,7 @@ The shipped change is mostly a determinism patch, not a safe_auto-rate increase.
 
 ## Context
 
-[`ce-code-review`'s subagent template](../../skills/ce-code-review/references/subagent-template.md) classifies each finding into one of four `autofix_class` buckets — `safe_auto`, `gated_auto`, `manual`, `advisory` — that govern downstream fixer dispatch. Headless mode auto-applies only `safe_auto`; everything else surfaces for user routing.
+[`rg-code-review`'s subagent template](../../skills/rg-code-review/references/subagent-template.md) classifies each finding into one of four `autofix_class` buckets — `safe_auto`, `gated_auto`, `manual`, `advisory` — that govern downstream fixer dispatch. Headless mode auto-applies only `safe_auto`; everything else surfaces for user routing.
 
 Issue #686 cited an incident pre-#685 ("8 findings ended up in tickets that should have been fixes") and inferred personas were too conservative on `safe_auto`, pushing genuinely-mechanical fixes into `gated_auto` or `manual`. PR #685 fixed the LFG defer-bias directly via `suggested_fix` propagation. #686 asked: should we also tighten the `safe_auto` boundary so more findings flow into auto-apply?
 
@@ -85,7 +85,7 @@ The "personas under-classify safe_auto" hypothesis assumed personas were systema
 
 What the rubric tightening actually does is reduce **variance** on cases where the rubric's previous wording was genuinely ambiguous. F3b is the headline: an orphan method without an explicit "no callers" comment. The baseline produced `manual`, `safe_auto`, and `gated_auto` across four trials on the same input — essentially random. The tightened rubric pins it to `gated_auto` deterministically by giving the persona a clearer test ("the surrounding refactor obviously displaces it" requires positive signal, which this fixture lacks).
 
-Variance on classification is a real cost: ce-work's headless mode behaves differently across runs on identical inputs when the rubric is ambiguous. Determinism is more valuable than the specific classification chosen, as long as the classification is defensible.
+Variance on classification is a real cost: rg-work's headless mode behaves differently across runs on identical inputs when the rubric is ambiguous. Determinism is more valuable than the specific classification chosen, as long as the classification is defensible.
 
 ### F4b is the one stable disagreement, and it's defensible either way
 
@@ -93,7 +93,7 @@ Cross-file extraction of two service objects with identical bodies: the baseline
 
 Both are internally consistent. The argument for `safe_auto` is "the consolidation is mechanical, the new module's name follows from the shared shape, both call sites update in lockstep within one diff." The argument for `gated_auto` is "in a Rails app, where a shared module lives is a real architectural decision the user should approve before it lands." Reasonable operators could prefer either.
 
-The tightened rubric picks the conservative reading. That's a trade-off, not a regression: ce-work's headless will now flag cross-file extraction for user review instead of auto-applying it. For careful operators that's the right call; for autonomous bulk refactor flows it's modestly more friction.
+The tightened rubric picks the conservative reading. That's a trade-off, not a regression: rg-work's headless will now flag cross-file extraction for user review instead of auto-applying it. For careful operators that's the right call; for autonomous bulk refactor flows it's modestly more friction.
 
 ### What the eval doesn't tell us
 
@@ -153,7 +153,7 @@ All three reads are sampled from the same prompt pair on the same fixture. Only 
 
 Apply the variance-first lens when the eval is on synthetic fixtures (no ground-truth label), the rubric outputs into a small number of discrete buckets, or the change is motivated by an incident report claiming systematic mis-classification. The lens applies less when you have ground-truth labels (rate-shift against truth becomes meaningful) or when the rubric outputs free-text rather than a discrete bucket.
 
-A related precedent in this repo: [`docs/solutions/skill-design/ce-doc-review-calibration-patterns.md`](./ce-doc-review-calibration-patterns.md) has a "Reviewer variance is inherent; single runs aren't baselines" section warning the same thing, scoped to ce-doc-review's tier classification. The principle generalizes: any persona-rubric eval needs N≥3 minimum on cells where the rubric is plausibly ambiguous.
+A related precedent in this repo: [`docs/solutions/skill-design/rg-doc-review-calibration-patterns.md`](./rg-doc-review-calibration-patterns.md) has a "Reviewer variance is inherent; single runs aren't baselines" section warning the same thing, scoped to rg-doc-review's tier classification. The principle generalizes: any persona-rubric eval needs N≥3 minimum on cells where the rubric is plausibly ambiguous.
 
 ---
 
@@ -233,7 +233,7 @@ Skip or downscale when the change is purely textual (typo, link fix), gated behi
 
 ## Related
 
-- PR #685 — `fix(ce-code-review): replace LFG with best-judgment auto-resolve` (the suggested_fix push this builds on)
+- PR #685 — `fix(rg-code-review): replace LFG with best-judgment auto-resolve` (the suggested_fix push this builds on)
 - Issue #686 — the calibration request that prompted the eval
 - [`docs/solutions/skill-design/confidence-anchored-scoring.md`](./confidence-anchored-scoring.md) — prior art for eval-as-validation in this repo; established the A/B-against-baseline pattern this generalizes
-- [`docs/solutions/skill-design/ce-doc-review-calibration-patterns.md`](./ce-doc-review-calibration-patterns.md) — see the "Reviewer variance is inherent; single runs aren't baselines" section, which warns of the same N=1 trap scoped to ce-doc-review's tier classification
+- [`docs/solutions/skill-design/rg-doc-review-calibration-patterns.md`](./rg-doc-review-calibration-patterns.md) — see the "Reviewer variance is inherent; single runs aren't baselines" section, which warns of the same N=1 trap scoped to rg-doc-review's tier classification

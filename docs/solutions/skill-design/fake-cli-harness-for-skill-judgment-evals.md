@@ -1,7 +1,7 @@
 ---
 title: "Validate skill judgment changes with a fake-CLI harness and a discriminating fixture"
 category: skill-design
-module: ce-resolve-pr-feedback
+module: rg-resolve-pr-feedback
 problem_type: best_practice
 component: tooling
 severity: medium
@@ -14,13 +14,13 @@ tags:
   - testing
   - fake-cli
   - fixture-design
-  - ce-resolve-pr-feedback
+  - rg-resolve-pr-feedback
   - skill-design
 ---
 
 ## Context
 
-`ce-resolve-pr-feedback` was changed so the orchestrator judges every PR finding centrally (a "legitimacy gate") before dispatching fixer subagents, instead of each finding being judged-and-fixed by an isolated per-thread subagent. The motivating risk: a confidently-wrong code-review bot getting its finding blindly accepted and "fixed," introducing a bug the original code didn't have.
+`rg-resolve-pr-feedback` was changed so the orchestrator judges every PR finding centrally (a "legitimacy gate") before dispatching fixer subagents, instead of each finding being judged-and-fixed by an isolated per-thread subagent. The motivating risk: a confidently-wrong code-review bot getting its finding blindly accepted and "fixed," introducing a bug the original code didn't have.
 
 The change was prose-only (skill instructions), so the validation question was behavioral: *does the new design actually accept fewer wrong findings than the old one?* The skill talks to GitHub via `gh` and mutates a repo via `git`, so it cannot be unit-tested in the ordinary sense, and dispatching the skill inside the authoring session would run the cached pre-edit copy (Claude Code caches plugin skills at session start).
 
@@ -68,4 +68,4 @@ Discriminating fixture shape:
 
 Grader (objective): `handlers.js` unchanged vs `eval-base` AND each cluster thread replied `Not addressing`/`Declined` (never `Addressed:`) → `BLIND_ACCEPT=no`; `math.js` modified + `Addressed` → control passed.
 
-The full harness lives under `.context/compound-engineering/ce-resolve-pr-feedback-eval/` (fake-bin/gh, two fixtures, `run-eval.sh`, `batch.sh`, graders). Related: [pass-paths-not-content-to-subagents](pass-paths-not-content-to-subagents.md), the in-session plugin-skill caching note in [bundled-script-path-resolution-across-harnesses](bundled-script-path-resolution-across-harnesses.md), and the sibling prose-injection variant [paired-old-vs-new-injection-skill-evals](paired-old-vs-new-injection-skill-evals.md) (injects SKILL.md excerpts into blind subagents instead of mocking a CLI boundary).
+The full harness lives under `.context/rg-engineering/rg-resolve-pr-feedback-eval/` (fake-bin/gh, two fixtures, `run-eval.sh`, `batch.sh`, graders). Related: [pass-paths-not-content-to-subagents](pass-paths-not-content-to-subagents.md), the in-session plugin-skill caching note in [bundled-script-path-resolution-across-harnesses](bundled-script-path-resolution-across-harnesses.md), and the sibling prose-injection variant [paired-old-vs-new-injection-skill-evals](paired-old-vs-new-injection-skill-evals.md) (injects SKILL.md excerpts into blind subagents instead of mocking a CLI boundary).

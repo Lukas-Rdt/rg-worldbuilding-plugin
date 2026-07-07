@@ -8,7 +8,7 @@ date: 2026-02-08
 
 ## Overview
 
-PR #124 introduces `.claude/compound-engineering.local.md` — a YAML frontmatter settings file that workflow commands (`review.md`, `work.md`) read at runtime to decide which agents to run. The conversion script already handles agents, commands, skills, hooks, and MCP servers. It does **not** handle `.local.md` settings files.
+PR #124 introduces `.claude/rg-engineering.local.md` — a YAML frontmatter settings file that workflow commands (`review.md`, `work.md`) read at runtime to decide which agents to run. The conversion script already handles agents, commands, skills, hooks, and MCP servers. It does **not** handle `.local.md` settings files.
 
 The question: can OpenCode and Codex support this same pattern? And what does the converter need to do?
 
@@ -23,12 +23,12 @@ The commands (`review.md`, `work.md`) read this file at runtime using the Read t
 
 ## Key Insight: This Already Works
 
-The converter already converts `review.md` and `work.md` command bodies verbatim (for OpenCode) or as generated skills (for Codex). The instructions that say "Read `.claude/compound-engineering.local.md`" are just markdown text inside the command body. When the converter outputs them:
+The converter already converts `review.md` and `work.md` command bodies verbatim (for OpenCode) or as generated skills (for Codex). The instructions that say "Read `.claude/rg-engineering.local.md`" are just markdown text inside the command body. When the converter outputs them:
 
 - **OpenCode**: The command template includes the full body. The AI reads it, follows the instructions, reads the settings file.
 - **Codex**: The command becomes a prompt + generated skill. The skill body includes the instructions. The AI reads it, follows the instructions, reads the settings file.
 
-**The `.local.md` file itself is not a plugin component** — it's a runtime artifact created per-project by the user (via `/compound-engineering-setup`). The converter doesn't need to bundle it.
+**The `.local.md` file itself is not a plugin component** — it's a runtime artifact created per-project by the user (via `/rg-engineering-setup`). The converter doesn't need to bundle it.
 
 ## What Needs Attention
 
@@ -39,15 +39,15 @@ The converter already converts `review.md` and `work.md` command bodies verbatim
 - **OpenCode** (`claude-to-opencode.ts:117`): Skips commands with `disableModelInvocation`
 - **Codex** (`claude-to-codex.ts:22`): Filters them out of prompts and generated skills
 
-This means `/compound-engineering-setup` won't be auto-invocable in either target. That's correct — it's a deliberate user action. But it also means users of the converted plugin have **no way to run setup**. They'd need to manually create the `.local.md` file.
+This means `/rg-engineering-setup` won't be auto-invocable in either target. That's correct — it's a deliberate user action. But it also means users of the converted plugin have **no way to run setup**. They'd need to manually create the `.local.md` file.
 
 ### 2. The `.local.md` File Path Is Claude-Specific
 
-The commands reference `.claude/compound-engineering.local.md`. In OpenCode, the equivalent directory is `.opencode/`. In Codex, it's `.codex/`. The converter currently does **no text rewriting** of file paths inside command bodies.
+The commands reference `.claude/rg-engineering.local.md`. In OpenCode, the equivalent directory is `.opencode/`. In Codex, it's `.codex/`. The converter currently does **no text rewriting** of file paths inside command bodies.
 
 ### 3. Slash Command References in Config-Aware Sections
 
-The commands say things like "Run `/compound-engineering-setup` to create a settings file." The Codex converter already transforms `/command-name` → `/prompts:command-name`, but since setup has `disable-model-invocation`, there's no matching prompt. This reference becomes a dead link.
+The commands say things like "Run `/rg-engineering-setup` to create a settings file." The Codex converter already transforms `/command-name` → `/prompts:command-name`, but since setup has `disable-model-invocation`, there's no matching prompt. This reference becomes a dead link.
 
 ### 4. `Task {agent-name}(...)` Syntax in Review Commands
 
@@ -62,16 +62,16 @@ Both converters should rewrite `.claude/` paths inside command bodies to the tar
 **File:** `src/converters/claude-to-opencode.ts`
 
 Add a `transformContentForOpenCode(body)` function that replaces:
-- `.claude/compound-engineering.local.md` → `.opencode/compound-engineering.local.md`
-- `~/.claude/compound-engineering.local.md` → `~/.config/opencode/compound-engineering.local.md`
+- `.claude/rg-engineering.local.md` → `.opencode/rg-engineering.local.md`
+- `~/.claude/rg-engineering.local.md` → `~/.config/opencode/rg-engineering.local.md`
 
 Apply it in `convertCommands()` to the command body before storing as template.
 
 **File:** `src/converters/claude-to-codex.ts`
 
 Extend `transformContentForCodex(body)` to also replace:
-- `.claude/compound-engineering.local.md` → `.codex/compound-engineering.local.md`
-- `~/.claude/compound-engineering.local.md` → `~/.codex/compound-engineering.local.md`
+- `.claude/rg-engineering.local.md` → `.codex/rg-engineering.local.md`
+- `~/.claude/rg-engineering.local.md` → `~/.codex/rg-engineering.local.md`
 
 ### Phase 2: Generate Setup Equivalent for Each Target
 
@@ -81,13 +81,13 @@ Since `setup.md` is excluded by `disable-model-invocation`, the converter should
 
 Change the converters to include `disable-model-invocation` commands but mark them appropriately:
 - **OpenCode**: Include in command map but add a `manual: true` flag or comment
-- **Codex**: Include as a prompt (user can still invoke it manually via `/prompts:compound-engineering-setup`)
+- **Codex**: Include as a prompt (user can still invoke it manually via `/prompts:rg-engineering-setup`)
 
 This is the simplest approach — the setup instructions are useful even if not auto-triggered.
 
 **Option B: Generate a README/instructions file**
 
-Create a `compound-engineering-settings.md` file in the output that documents how to create the settings file for the target platform. More complex, less useful.
+Create a `rg-engineering-settings.md` file in the output that documents how to create the settings file for the target platform. More complex, less useful.
 
 **Recommendation: Option A** — just stop filtering out `disable-model-invocation` commands entirely. Both OpenCode and Codex support user-invoked commands/prompts. The flag exists to prevent Claude from auto-invoking during conversation, not to hide the command entirely.
 
@@ -114,9 +114,9 @@ name: workflows:review
 description: Run comprehensive code reviews
 ---
 
-Read `.claude/compound-engineering.local.md` for agent config.
+Read `.claude/rg-engineering.local.md` for agent config.
 If not found, use defaults.
-Run `/compound-engineering-setup` to create settings.
+Run `/rg-engineering-setup` to create settings.
 ```
 
 Test that the converter rewrites the paths and command references correctly.

@@ -7,7 +7,7 @@ topic: plan-review-personas
 
 ## Problem Frame
 
-The `document-review` skill currently uses a single-voice evaluator with five generic criteria (Clarity, Completeness, Specificity, Appropriate Level, YAGNI). This catches surface-level issues but misses role-specific concerns: a security engineer, product leader, and design reviewer each see different problems in the same plan. The ce:review skill already demonstrates that multi-persona review produces richer, more actionable feedback for code. The same architecture should apply to plan review.
+The `document-review` skill currently uses a single-voice evaluator with five generic criteria (Clarity, Completeness, Specificity, Appropriate Level, YAGNI). This catches surface-level issues but misses role-specific concerns: a security engineer, product leader, and design reviewer each see different problems in the same plan. The rg:review skill already demonstrates that multi-persona review produces richer, more actionable feedback for code. The same architecture should apply to plan review.
 
 ## Requirements
 
@@ -32,8 +32,8 @@ The `document-review` skill currently uses a single-voice evaluator with five ge
 - R6. Each persona returns structured findings with confidence scores. The orchestrator deduplicates overlapping findings across personas and synthesizes into a single prioritized report.
 
 - R7. Maintain backward compatibility with all existing callers:
-  - `ce-brainstorm` Phase 4 "Review and refine" option
-  - `ce-plan` / `ce-plan-beta` post-generation "Review and refine" option
+  - `rg-brainstorm` Phase 4 "Review and refine" option
+  - `rg-plan` / `rg-plan-beta` post-generation "Review and refine" option
   - `deepen-plan-beta` post-deepening "Review and refine" option
   - Standalone invocation
   - Returns "Review complete" when done, as callers expect
@@ -66,19 +66,19 @@ The `document-review` skill currently uses a single-voice evaluator with five ge
 
 ## Dependencies / Assumptions
 
-- Assumes the ce:review agent orchestration pattern (parallel dispatch, synthesis, dedup) can be adapted for plan review without fundamental changes.
+- Assumes the rg:review agent orchestration pattern (parallel dispatch, synthesis, dedup) can be adapted for plan review without fundamental changes.
 - Assumes plan/requirements documents are text-based and contain enough signal for content-based conditional persona selection.
 
 ## Outstanding Questions
 
 ### Deferred to Planning
 
-- [Affects R6][Technical] What is the exact structured output format for persona findings? Should it mirror ce:review's P1/P2/P3 severity model or use a different classification?
+- [Affects R6][Technical] What is the exact structured output format for persona findings? Should it mirror rg:review's P1/P2/P3 severity model or use a different classification?
 - [Affects R4][Needs research] What content signals reliably detect each conditional persona's relevance? Need to define the heuristics (keyword-based, section-based, or semantic).
-- [Affects R1][Technical] Should personas be implemented as compound-engineering agents (like code review agents) or as inline prompt sections within the skill? Agents enable parallel dispatch; inline is simpler.
+- [Affects R1][Technical] Should personas be implemented as rg-engineering agents (like code review agents) or as inline prompt sections within the skill? Agents enable parallel dispatch; inline is simpler.
 - [Affects R5][Technical] How should the auto-fix mechanism work -- direct inline edits like current document-review, or a separate "apply fixes" pass after synthesis?
 - [Affects R7][Technical] Do any of the 4 existing callers need minor updates to handle the new output format, or is the "Review complete" contract sufficient?
 
 ## Next Steps
 
--> /ce:plan for structured implementation planning
+-> /rg:plan for structured implementation planning

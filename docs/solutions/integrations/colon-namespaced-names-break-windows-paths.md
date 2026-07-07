@@ -8,13 +8,13 @@ problem_type: integration_issue
 component: tooling
 symptoms:
   - "ENOTDIR error when running bun convert on Windows"
-  - "mkdir fails with '.config\\opencode\\skills\\ce:brainstorm'"
+  - "mkdir fails with '.config\\opencode\\skills\\rg:brainstorm'"
   - "All target writers (opencode, codex, copilot, etc.) produce colon paths"
 root_cause: config_error
 resolution_type: code_fix
 severity: high
 related_issues:
-  - "https://github.com/EveryInc/compound-engineering-plugin/issues/366"
+  - "https://github.com/Lukas-Rdt/rg-engineering-plugin/issues/366"
 related_components:
   - targets
   - sync
@@ -31,27 +31,27 @@ tags:
 
 ## Problem
 
-Earlier plugin versions allowed skill names containing colons (e.g., `ce:brainstorm`, `ce:plan`) to flow directly into target writer paths. Colons are illegal in Windows filenames, causing `ENOTDIR` errors during `bun convert` or `bun install`.
+Earlier plugin versions allowed skill names containing colons (e.g., `rg:brainstorm`, `rg:plan`) to flow directly into target writer paths. Colons are illegal in Windows filenames, causing `ENOTDIR` errors during `bun convert` or `bun install`.
 
 ## Symptoms
 
 ```
-{ [Error: ENOTDIR: not a directory, mkdir '.config\opencode\skills\ce:brainstorm']
+{ [Error: ENOTDIR: not a directory, mkdir '.config\opencode\skills\rg:brainstorm']
   code: 'ENOTDIR',
-  path: '.config\\opencode\\skills\\ce:brainstorm',
+  path: '.config\\opencode\\skills\\rg:brainstorm',
   syscall: 'mkdir',
   errno: -20 }
 ```
 
-This affected every target present at the time because all used `skill.name` directly in `path.join()` calls. Current CE source skills are hyphenated (`ce-brainstorm`, `ce-plan`), but the sanitizer still matters for compatibility fixtures, imported third-party plugins, and legacy artifact cleanup.
+This affected every target present at the time because all used `skill.name` directly in `path.join()` calls. Current CE source skills are hyphenated (`rg-brainstorm`, `rg-plan`), but the sanitizer still matters for compatibility fixtures, imported third-party plugins, and legacy artifact cleanup.
 
 ## What Didn't Work
 
-Using `/` (forward slash) as the replacement character was initially considered — turning `ce:brainstorm` into nested directories `ce/brainstorm/`. This was rejected because:
+Using `/` (forward slash) as the replacement character was initially considered — turning `rg:brainstorm` into nested directories `ce/brainstorm/`. This was rejected because:
 
 1. It introduces unnecessary directory nesting for what's fundamentally a character-replacement problem
 2. The `isValidSkillName` and `validatePathSafe` functions reject `/` and `\`, so sanitized names would fail existing validation
-3. The source directories already use hyphens (`skills/ce-brainstorm/`), so the output should match
+3. The source directories already use hyphens (`skills/rg-brainstorm/`), so the output should match
 
 ## Solution
 
@@ -81,7 +81,7 @@ Currently applied in the maintained target writers and managed-artifact cleanup 
 
 ### Layer 2: Converter dedupe sets and manifests
 
-Sanitizing paths in writers created a secondary bug: converter dedupe logic used unsanitized names, so a pass-through skill `ce:plan` and a generated skill normalizing to `ce-plan` wouldn't detect the collision — both would write to `skills/ce-plan/` on disk.
+Sanitizing paths in writers created a secondary bug: converter dedupe logic used unsanitized names, so a pass-through skill `rg:plan` and a generated skill normalizing to `rg-plan` wouldn't detect the collision — both would write to `skills/rg-plan/` on disk.
 
 Fixed in converters that maintain dedupe sets — currently `src/converters/claude-to-copilot.ts`:
 
@@ -91,13 +91,13 @@ Any future converter that maintains a name-collision set or emits a manifest mus
 
 ## Why This Works
 
-The core issue was a mismatch between the logical name domain (where older plugin data used colons as namespace separators) and the filesystem domain (where colons are illegal on Windows). The fix sanitizes at the boundary: legacy/imported names can keep colons in data structures, but paths use hyphens. Current CE source directories and frontmatter use hyphenated names directly (`skills/ce-brainstorm/`, `name: ce-brainstorm`), so the sanitizer is now primarily a compatibility guard.
+The core issue was a mismatch between the logical name domain (where older plugin data used colons as namespace separators) and the filesystem domain (where colons are illegal on Windows). The fix sanitizes at the boundary: legacy/imported names can keep colons in data structures, but paths use hyphens. Current CE source directories and frontmatter use hyphenated names directly (`skills/rg-brainstorm/`, `name: rg-brainstorm`), so the sanitizer is now primarily a compatibility guard.
 
 ## Prevention
 
 ### 1. Collision detection test
 
-A test in `tests/path-sanitization.test.ts` loads the real compound-engineering plugin and verifies no two skill or agent names collide after sanitization:
+A test in `tests/path-sanitization.test.ts` loads the real rg-engineering plugin and verifies no two skill or agent names collide after sanitization:
 
 ```typescript
 test("no two skill names collide after sanitization", async () => {
@@ -118,4 +118,4 @@ If a converter reserves names for collision detection, the reserved names must b
 
 ### 4. Inconsistency with `resolveCommandPath`
 
-Note that `resolveCommandPath` (used for commands) converts colons to nested directories (`ce:plan` -> `ce/plan.md`), while `sanitizePathName` (used for skills/agents and compatibility artifact paths) converts to hyphens (`ce:plan` -> `ce-plan`). This is intentional — commands and skills are different surfaces with different resolution patterns. If a new component type is added, decide which pattern fits and document the choice.
+Note that `resolveCommandPath` (used for commands) converts colons to nested directories (`rg:plan` -> `ce/plan.md`), while `sanitizePathName` (used for skills/agents and compatibility artifact paths) converts to hyphens (`rg:plan` -> `rg-plan`). This is intentional — commands and skills are different surfaces with different resolution patterns. If a new component type is added, decide which pattern fits and document the choice.

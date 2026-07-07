@@ -1,28 +1,28 @@
 ---
-title: "feat: Close the testing gap in ce:work, ce:plan, and testing-reviewer"
+title: "feat: Close the testing gap in rg:work, rg:plan, and testing-reviewer"
 type: feat
 status: active
 date: 2026-03-29
 origin: docs/brainstorms/2026-03-29-testing-addressed-gate-requirements.md
 ---
 
-# feat: Close the testing gap in ce:work, ce:plan, and testing-reviewer
+# feat: Close the testing gap in rg:work, rg:plan, and testing-reviewer
 
 ## Overview
 
-Targeted edits to three skill/agent files to make "no tests" a deliberate decision rather than an accidental omission. Adds per-task testing deliberation in ce:work's execution loop, blank-test-scenarios handling in ce:plan's review, and a missing-test-pattern check in the testing-reviewer agent. Ships with contract tests following the existing repo pattern.
+Targeted edits to three skill/agent files to make "no tests" a deliberate decision rather than an accidental omission. Adds per-task testing deliberation in rg:work's execution loop, blank-test-scenarios handling in rg:plan's review, and a missing-test-pattern check in the testing-reviewer agent. Ships with contract tests following the existing repo pattern.
 
 ## Problem Frame
 
-ce:work has thorough testing instructions but two narrow gaps let untested behavioral changes slip through silently: the quality gate says "All tests pass" (vacuously true with no tests), and ce:plan allows blank test scenarios without annotation. The testing-reviewer catches some gaps after the fact but doesn't flag the broad pattern of behavioral changes with zero test additions. (see origin: docs/brainstorms/2026-03-29-testing-addressed-gate-requirements.md)
+rg:work has thorough testing instructions but two narrow gaps let untested behavioral changes slip through silently: the quality gate says "All tests pass" (vacuously true with no tests), and rg:plan allows blank test scenarios without annotation. The testing-reviewer catches some gaps after the fact but doesn't flag the broad pattern of behavioral changes with zero test additions. (see origin: docs/brainstorms/2026-03-29-testing-addressed-gate-requirements.md)
 
 ## Requirements Trace
 
-- R1. ce:plan units with no test scenarios should annotate why, not leave the field blank
+- R1. rg:plan units with no test scenarios should annotate why, not leave the field blank
 - R2. Blank test scenarios on feature-bearing units treated as incomplete in Phase 5.1 review
-- R3. Per-task testing deliberation in ce:work's execution loop before marking a task done
+- R3. Per-task testing deliberation in rg:work's execution loop before marking a task done
 - R4. Quality checklist and Final Validation updated from "Tests pass" to "Testing addressed"
-- R5. Apply R3 and R4 to ce:work-beta with explicit sync decision
+- R5. Apply R3 and R4 to rg:work-beta with explicit sync decision
 - R6. testing-reviewer adds a check for behavioral changes with no corresponding test additions
 - R7. New check complements existing checks (untested branches, weak assertions, brittle tests, missing edge cases)
 - R8. Contract tests verifying each behavioral change ships as intended
@@ -38,16 +38,16 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 
 ### Relevant Code and Patterns
 
-- `plugins/compound-engineering/skills/ce-plan/SKILL.md` — Phase 5.1 review checklist at lines 583-601, test scenario quality checks at lines 591-592. Two edit sites: instruction prose for Test scenarios at line 339 (section 3.5), and plan output template with HTML comment at line 499
-- `plugins/compound-engineering/skills/ce-work/SKILL.md` — Phase 2 task loop at lines ~143-155, Final Validation at lines 287-295 ("All tests pass"), Quality Checklist at lines 427-443 ("Tests pass (run project's test command)")
-- `plugins/compound-engineering/skills/ce-work-beta/SKILL.md` — Identical loop/checklist structure. Final Validation at lines 296-304, Quality Checklist at lines 500-516
-- `plugins/compound-engineering/agents/review/ce-testing-reviewer.agent.md` — 4 existing checks in "What you're hunting for" (lines 15-20), confidence calibration (lines 22-29), output format (lines 37-48)
-- `tests/pipeline-review-contract.test.ts` — Contract tests for ce:work, ce:work-beta, ce:brainstorm, ce:plan using `readRepoFile()` + `toContain`/`not.toContain` assertions
-- `tests/review-skill-contract.test.ts` — Contract tests for ce:review agent using same pattern, includes frontmatter parsing and cross-file schema alignment
+- `plugins/rg-engineering/skills/rg-plan/SKILL.md` — Phase 5.1 review checklist at lines 583-601, test scenario quality checks at lines 591-592. Two edit sites: instruction prose for Test scenarios at line 339 (section 3.5), and plan output template with HTML comment at line 499
+- `plugins/rg-engineering/skills/rg-work/SKILL.md` — Phase 2 task loop at lines ~143-155, Final Validation at lines 287-295 ("All tests pass"), Quality Checklist at lines 427-443 ("Tests pass (run project's test command)")
+- `plugins/rg-engineering/skills/rg-work-beta/SKILL.md` — Identical loop/checklist structure. Final Validation at lines 296-304, Quality Checklist at lines 500-516
+- `plugins/rg-engineering/agents/review/rg-testing-reviewer.agent.md` — 4 existing checks in "What you're hunting for" (lines 15-20), confidence calibration (lines 22-29), output format (lines 37-48)
+- `tests/pipeline-review-contract.test.ts` — Contract tests for rg:work, rg:work-beta, rg:brainstorm, rg:plan using `readRepoFile()` + `toContain`/`not.toContain` assertions
+- `tests/review-skill-contract.test.ts` — Contract tests for rg:review agent using same pattern, includes frontmatter parsing and cross-file schema alignment
 
 ### Institutional Learnings
 
-- Beta-to-stable sync must be explicit per AGENTS.md (lines 161-163). The existing `pipeline-review-contract.test.ts` already tests ce:work-beta mirrors ce:work's review contract — follow same pattern.
+- Beta-to-stable sync must be explicit per AGENTS.md (lines 161-163). The existing `pipeline-review-contract.test.ts` already tests rg:work-beta mirrors rg:work's review contract — follow same pattern.
 - Skill review checklist warns against contradictory rules across phases — the new "testing deliberation" must complement, not contradict, existing "Run tests after changes" instruction.
 - Use negative assertions (`not.toContain`) to prevent regression — assert old "Tests pass" / "All tests pass" language is fully replaced.
 
@@ -56,7 +56,7 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 - **Testing deliberation goes after "Run tests after changes" in the loop**: This is the natural deliberation point — tests have just run (or not), and the agent should assess whether testing was adequately addressed before marking the task done. Placing it earlier (before test execution) would be premature; placing it at "Mark task as completed" would intermingle it with completion bookkeeping.
 - **Annotation uses existing template field, not a new field**: `Test expectation: none -- [reason]` goes in the Test scenarios section rather than adding a new template field. This keeps the template stable and leverages the existing Phase 5.1 check surface.
 - **New testing-reviewer check is a 5th bullet, not a replacement**: It's conceptually distinct from check #1 (untested branches within new code). Check #1 looks at branch coverage within tests that exist; the new check flags when no tests exist at all for behavioral changes.
-- **Contract tests extend existing files**: New ce:work/ce:plan assertions go in `pipeline-review-contract.test.ts`. Testing-reviewer assertion goes in `review-skill-contract.test.ts`. This follows the established convention rather than creating a new file.
+- **Contract tests extend existing files**: New rg:work/rg:plan assertions go in `pipeline-review-contract.test.ts`. Testing-reviewer assertion goes in `review-skill-contract.test.ts`. This follows the established convention rather than creating a new file.
 
 ## Open Questions
 
@@ -74,7 +74,7 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 
 ## Implementation Units
 
-- [ ] **Unit 1: ce:plan — Blank test scenarios handling**
+- [ ] **Unit 1: rg:plan — Blank test scenarios handling**
 
 **Goal:** Make blank test scenarios on feature-bearing units flagged as incomplete during plan review, and establish the annotation convention for units that genuinely need no tests.
 
@@ -83,19 +83,19 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 **Dependencies:** None
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-plan/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/rg-plan/SKILL.md`
 
 **Approach:**
-- Two edit sites in ce:plan for the annotation convention:
+- Two edit sites in rg:plan for the annotation convention:
   - The instruction prose (section 3.5, around line 339) that describes how to write Test scenarios — mention the `Test expectation: none -- [reason]` convention here so the planner agent learns it when reading instructions
   - The plan output template (around line 499) which contains the HTML comment `<!-- Include only categories that apply to this unit. Omit categories that don't. -->` — update this comment to also show the annotation convention for units with no test scenarios
-- In Phase 5.1 review checklist (after line 592), add a new bullet: blank or missing test scenarios on a feature-bearing unit (as defined by ce:plan's existing Plan Quality Bar language) should be flagged as incomplete
+- In Phase 5.1 review checklist (after line 592), add a new bullet: blank or missing test scenarios on a feature-bearing unit (as defined by rg:plan's existing Plan Quality Bar language) should be flagged as incomplete
 - In the Phase 5.3.3 confidence-scoring checklist for Implementation Units (around line 717), add a parallel item so the confidence check also catches blank test scenarios
 
 **Patterns to follow:**
 - Existing Phase 5.1 test scenario quality checks at lines 591-592
 - The unit template comment style at line 499
-- ce:plan's existing "feature-bearing unit" terminology in the Plan Quality Bar
+- rg:plan's existing "feature-bearing unit" terminology in the Plan Quality Bar
 
 **Test scenarios:**
 - Happy path: Plan with a feature-bearing unit that has `Test expectation: none -- config-only change` in test scenarios -> Phase 5.1 review accepts it
@@ -109,7 +109,7 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 
 ---
 
-- [ ] **Unit 2: ce:work and ce:work-beta — Testing deliberation and checklist update**
+- [ ] **Unit 2: rg:work and rg:work-beta — Testing deliberation and checklist update**
 
 **Goal:** Add per-task testing deliberation to the execution loop and update both checklist surfaces from "Tests pass" to "Testing addressed."
 
@@ -118,13 +118,13 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 **Dependencies:** None
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-work/SKILL.md`
-- Modify: `plugins/compound-engineering/skills/ce-work-beta/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/rg-work/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/rg-work-beta/SKILL.md`
 
 **Approach:**
-- In the Phase 2 task execution loop (lines ~143-155 in ce:work, ~144-156 in ce:work-beta), add a **new bullet** between "Run tests after changes" and "Mark task as completed". The new bullet should prompt the agent to assess: did this task change behavior? If yes, were tests written or updated? If no tests were added, what is the justification? Keep it concise — 2-3 questions in one bullet, matching the existing loop bullet style. Do not expand into a multi-paragraph section
-- In the Quality Checklist (ce:work line ~433, ce:work-beta line ~506), replace `- [ ] Tests pass (run project's test command)` with `- [ ] Testing addressed -- tests pass AND new/changed behavior has corresponding test coverage (or an explicit justification for why tests are not needed)`
-- In the Final Validation (ce:work line ~289, ce:work-beta line ~298), replace `- All tests pass` with `- Testing addressed -- tests pass and new/changed behavior has corresponding test coverage (or an explicit justification for why tests are not needed)`
+- In the Phase 2 task execution loop (lines ~143-155 in rg:work, ~144-156 in rg:work-beta), add a **new bullet** between "Run tests after changes" and "Mark task as completed". The new bullet should prompt the agent to assess: did this task change behavior? If yes, were tests written or updated? If no tests were added, what is the justification? Keep it concise — 2-3 questions in one bullet, matching the existing loop bullet style. Do not expand into a multi-paragraph section
+- In the Quality Checklist (rg:work line ~433, rg:work-beta line ~506), replace `- [ ] Tests pass (run project's test command)` with `- [ ] Testing addressed -- tests pass AND new/changed behavior has corresponding test coverage (or an explicit justification for why tests are not needed)`
+- In the Final Validation (rg:work line ~289, rg:work-beta line ~298), replace `- All tests pass` with `- Testing addressed -- tests pass and new/changed behavior has corresponding test coverage (or an explicit justification for why tests are not needed)`
 - Ensure both files receive identical changes
 
 **Sync decision:** Propagating to beta — shared testing deliberation guidance, not experimental delegate-mode behavior.
@@ -135,10 +135,10 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 - The mandatory review pattern (which was also synced identically between stable and beta)
 
 **Test scenarios:**
-- Happy path: ce:work execution loop includes the testing deliberation step in the correct position (after "Run tests" and before "Mark task as completed")
+- Happy path: rg:work execution loop includes the testing deliberation step in the correct position (after "Run tests" and before "Mark task as completed")
 - Happy path: Quality Checklist contains "Testing addressed" and does not contain "Tests pass (run project's test command)"
 - Happy path: Final Validation contains "Testing addressed" and does not contain "All tests pass"
-- Integration: ce:work-beta has identical testing deliberation and checklist wording as ce:work
+- Integration: rg:work-beta has identical testing deliberation and checklist wording as rg:work
 
 **Verification:**
 - Both files contain the testing deliberation step in the execution loop
@@ -156,7 +156,7 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 **Dependencies:** None
 
 **Files:**
-- Modify: `plugins/compound-engineering/agents/review/ce-testing-reviewer.agent.md`
+- Modify: `plugins/rg-engineering/agents/review/rg-testing-reviewer.agent.md`
 
 **Approach:**
 - Add a 5th bold-titled bullet in "What you're hunting for" (after the existing 4th check at line 20). The check should: describe the pattern (behavioral code changes — new logic branches, state mutations, API changes — with zero corresponding test file additions or modifications in the diff), explain what makes it distinct from check #1 (which looks at untested branches *within* code that has tests, while this flags when no tests exist at all), and note that non-behavioral changes (config, formatting, comments, type-only changes) are excluded
@@ -190,13 +190,13 @@ ce:work has thorough testing instructions but two narrow gaps let untested behav
 - Modify: `tests/review-skill-contract.test.ts`
 
 **Approach:**
-- In `pipeline-review-contract.test.ts`, extend the existing `ce:work review contract` describe block with new tests:
-  - ce:work includes testing deliberation in execution loop
-  - ce:work Quality Checklist contains "Testing addressed" and does not contain "Tests pass (run project's test command)"
-  - ce:work Final Validation contains "Testing addressed" and does not contain "All tests pass"
-  - ce:work-beta mirrors all testing deliberation and checklist changes
-- In `pipeline-review-contract.test.ts`, extend or add a `ce:plan review contract` test:
-  - ce:plan Phase 5.1 review addresses blank test scenarios on feature-bearing units
+- In `pipeline-review-contract.test.ts`, extend the existing `rg:work review contract` describe block with new tests:
+  - rg:work includes testing deliberation in execution loop
+  - rg:work Quality Checklist contains "Testing addressed" and does not contain "Tests pass (run project's test command)"
+  - rg:work Final Validation contains "Testing addressed" and does not contain "All tests pass"
+  - rg:work-beta mirrors all testing deliberation and checklist changes
+- In `pipeline-review-contract.test.ts`, extend or add a `rg:plan review contract` test:
+  - rg:plan Phase 5.1 review addresses blank test scenarios on feature-bearing units
 - In `review-skill-contract.test.ts`, add a new describe block for testing-reviewer:
   - testing-reviewer includes the behavioral-changes-with-no-test-additions check
 
@@ -204,7 +204,7 @@ Use negative assertions (`not.toContain`) for the old checklist language to prev
 
 **Patterns to follow:**
 - `readRepoFile()` helper + `expect(content).toContain(...)` / `expect(content).not.toContain(...)` in existing contract tests
-- ce:work-beta mirror test pattern at pipeline-review-contract.test.ts lines 39-50
+- rg:work-beta mirror test pattern at pipeline-review-contract.test.ts lines 39-50
 - `describe`/`test` block naming convention in both files
 
 **Test scenarios:**
@@ -217,9 +217,9 @@ Use negative assertions (`not.toContain`) for the old checklist language to prev
 
 ## System-Wide Impact
 
-- **Interaction graph:** These are prompt-level skill edits. No callbacks, middleware, or runtime dependencies. The testing-reviewer is invoked by ce:review which is invoked by ce:work — the chain is: ce:work -> ce:review -> testing-reviewer. Changes to the reviewer's check list affect what ce:review surfaces but not how it surfaces it.
+- **Interaction graph:** These are prompt-level skill edits. No callbacks, middleware, or runtime dependencies. The testing-reviewer is invoked by rg:review which is invoked by rg:work — the chain is: rg:work -> rg:review -> testing-reviewer. Changes to the reviewer's check list affect what rg:review surfaces but not how it surfaces it.
 - **Error propagation:** Not applicable — no runtime error paths. If the testing deliberation prompt is poorly worded, the worst case is the agent ignores it (same as today).
-- **API surface parity:** ce:work and ce:work-beta must remain in sync per AGENTS.md. Contract tests enforce this.
+- **API surface parity:** rg:work and rg:work-beta must remain in sync per AGENTS.md. Contract tests enforce this.
 - **Unchanged invariants:** The testing-reviewer's output format (JSON with `findings`, `residual_risks`, `testing_gaps`) is unchanged. The plan template's structure is unchanged — only the comment and Phase 5.1 checklist are modified.
 
 ## Risks & Dependencies
@@ -228,7 +228,7 @@ Use negative assertions (`not.toContain`) for the old checklist language to prev
 |------|------------|
 | Testing deliberation prompt is too verbose and gets ignored by the agent | Keep it concise — 2-3 questions, not a paragraph. Match the existing loop bullet style. |
 | Old "Tests pass" language persists in one location, creating contradiction | Negative contract test assertions (`not.toContain`) catch any leftover old language |
-| ce:work-beta drifts from ce:work | Contract tests explicitly assert both files contain identical testing changes |
+| rg:work-beta drifts from rg:work | Contract tests explicitly assert both files contain identical testing changes |
 
 ## Sources & References
 

@@ -11,7 +11,7 @@ import { describe, expect, test } from "bun:test"
  *
  * Past incidents:
  *   - PR #699 introduced a `case "$common" in /*) ... ;; *) ... ;; esac` block
- *     into ce-compound and ce-sessions to derive a worktree-stable repo name.
+ *     into rg-compound and rg-sessions to derive a worktree-stable repo name.
  *     The cleaner replacement is
  *     `basename "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)")"`.
  *   - PR #701 replaced the `case` blocks with `[A] && B || C` chains, which
@@ -22,10 +22,10 @@ import { describe, expect, test } from "bun:test"
  *     containing `$()` containing another double-quoted string) trips
  *     "Unhandled node type: string". Issue #709. Fix: replace nested `$()`
  *     with parameter expansion, pipe to sed, or extract to a script.
- *   - ce-compound and ce-sessions used `git rev-parse ... | sed -E '...'` which
+ *   - rg-compound and rg-sessions used `git rev-parse ... | sed -E '...'` which
  *     trips the permission checker as "multiple operations". Fix: replace the
  *     pipe with bash parameter expansion (e.g. strip suffix, strip prefix).
- *   - ce-compound and ce-sessions used `git rev-parse --abbrev-ref HEAD 2>/dev/null`
+ *   - rg-compound and rg-sessions used `git rev-parse --abbrev-ref HEAD 2>/dev/null`
  *     with no fallback. Outside a git repo, `git rev-parse` exits 128;
  *     `2>/dev/null` suppresses stderr but the non-zero exit propagates and
  *     Claude Code reports "Shell command failed for pattern" (issue #730). Fix:

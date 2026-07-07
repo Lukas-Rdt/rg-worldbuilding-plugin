@@ -6,7 +6,7 @@ import path from "node:path"
 
 const SCRIPT = path.join(
   __dirname,
-  "../skills/ce-sweep/scripts/sweep-state.py",
+  "../skills/rg-sweep/scripts/sweep-state.py",
 )
 
 function run(

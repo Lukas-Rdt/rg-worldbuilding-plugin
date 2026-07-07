@@ -86,7 +86,7 @@ export type MetadataSyncResult = {
   errors: string[]
 }
 
-export type CompoundEngineeringCounts = {
+export type RGEngineeringCounts = {
   agents: number
   skills: number
   mcpServers: number
@@ -158,7 +158,7 @@ export async function countMcpServers(pluginRoot: string): Promise<number> {
   }
 }
 
-export async function getCompoundEngineeringCounts(root: string): Promise<CompoundEngineeringCounts> {
+export async function getCompoundEngineeringCounts(root: string): Promise<RGEngineeringCounts> {
   const pluginRoot = root
   const [agents, skills, mcpServers] = await Promise.all([
     countMarkdownFiles(path.join(pluginRoot, "agents")),
@@ -479,5 +479,5 @@ export async function syncReleaseMetadata(options: SyncOptions = {}): Promise<Me
     }
   }
 
-  return { updates, errors }
+  return { updates, errors: errors.map((err) => err.replace(/\\/g, "/")) }
 }

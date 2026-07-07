@@ -28,11 +28,11 @@ Use release-please manifest mode with one standing release PR and explicit compo
 
 Current components:
 
-- `compound-engineering` package/plugin at root package path `.`
+- `rg-engineering` package/plugin at root package path `.`
 - `marketplace` for `.claude-plugin/marketplace.json`
 - `cursor-marketplace` for `.cursor-plugin/marketplace.json`
 
-The root `compound-engineering` package is now the plugin package. It owns the CLI/tooling code, root plugin manifests, native harness metadata, and `skills/`.
+The root `rg-engineering` package is now the plugin package. It owns the CLI/tooling code, root plugin manifests, native harness metadata, and `skills/`.
 
 Key decisions:
 
@@ -59,7 +59,7 @@ The practical fix:
 3. Additional releasable merges accumulate into that release PR.
 4. Maintainers can inspect the standing release PR or run the manual preview flow.
 5. The actual release happens only when the generated release PR is merged.
-6. Component-specific release notes are published via GitHub Releases such as `compound-engineering-vX.Y.Z`, `marketplace-vX.Y.Z`, and `cursor-marketplace-vX.Y.Z`.
+6. Component-specific release notes are published via GitHub Releases such as `rg-engineering-vX.Y.Z`, `marketplace-vX.Y.Z`, and `cursor-marketplace-vX.Y.Z`.
 
 ## Component rules
 
@@ -74,7 +74,7 @@ File paths determine component ownership:
 
 | Component | Paths |
 |---|---|
-| `compound-engineering` | `skills/`, `src/`, `tests/`, `package.json`, root plugin manifests, `.opencode/`, `.pi/`, `.agy/plugin.json`, `README.md`, instruction shims |
+| `rg-engineering` | `skills/`, `src/`, `tests/`, `package.json`, root plugin manifests, `.opencode/`, `.pi/`, `.agy/plugin.json`, `README.md`, instruction shims |
 | `marketplace` | `.claude-plugin/marketplace.json` |
 | `cursor-marketplace` | `.cursor-plugin/marketplace.json` |
 
@@ -84,14 +84,14 @@ Docs-only, CI-only, and build-only changes are non-releasable unless their conve
 
 ### Plugin-only release
 
-- A `fix:` PR changes `skills/ce-plan/SKILL.md`
-- `compound-engineering` bumps
+- A `fix:` PR changes `skills/rg-plan/SKILL.md`
+- `rg-engineering` bumps
 - marketplace versions remain untouched
 
 ### Root packaging release
 
 - A `fix:` PR changes `.codex-plugin/plugin.json` or `.agy/plugin.json`
-- `compound-engineering` bumps because those files are root package/plugin extra-files
+- `rg-engineering` bumps because those files are root package/plugin extra-files
 - `bun run release:validate` must pass so all root package/plugin versions remain aligned
 
 ### Marketplace-only release

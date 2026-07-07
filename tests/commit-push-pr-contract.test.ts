@@ -6,9 +6,9 @@ async function readRepoFile(relativePath: string): Promise<string> {
   return readFile(path.join(process.cwd(), relativePath), "utf8")
 }
 
-describe("ce-commit-push-pr contract", () => {
+describe("rg-commit-push-pr contract", () => {
   test("existing PR rewrites carry the old body into composition", async () => {
-    const content = await readRepoFile("skills/ce-commit-push-pr/SKILL.md")
+    const content = await readRepoFile("skills/rg-commit-push-pr/SKILL.md")
 
     expect(content).toContain("gh pr view --json url,title,body,state")
     expect(content).toContain("Note the existing PR URL and body from the PR check")
@@ -19,7 +19,7 @@ describe("ce-commit-push-pr contract", () => {
 
   test("requires related work references to use tracker-specific closing semantics", async () => {
     const content = await readRepoFile(
-      "skills/ce-commit-push-pr/references/pr-description-writing.md",
+      "skills/rg-commit-push-pr/references/pr-description-writing.md",
     )
 
     expect(content).toContain("## Step B1: Resolve related work references")

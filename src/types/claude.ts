@@ -50,7 +50,7 @@ export type ClaudeSkill = {
   argumentHint?: string
   disableModelInvocation?: boolean
   userInvocable?: boolean
-  ce_platforms?: string[]
+  rg_platforms?: string[]
   sourceDir: string
   skillPath: string
 }
@@ -60,7 +60,7 @@ export type ClaudeSkill = {
  * Skills without a `platforms` field are available everywhere.
  */
 export function filterSkillsByPlatform(skills: ClaudeSkill[], platform: string): ClaudeSkill[] {
-  return skills.filter((skill) => !skill.ce_platforms || skill.ce_platforms.includes(platform))
+  return skills.filter((skill) => !skill.rg_platforms || skill.rg_platforms.includes(platform))
 }
 
 export type ClaudePlugin = {

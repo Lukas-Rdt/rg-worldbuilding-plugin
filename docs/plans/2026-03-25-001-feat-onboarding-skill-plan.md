@@ -10,7 +10,7 @@ origin: docs/brainstorms/2026-03-25-vonboarding-skill-requirements.md
 
 ## Overview
 
-Add an `/onboarding` skill to the compound-engineering plugin that crawls a repository and generates `ONBOARDING.md` at the repo root. The skill uses a bundled inventory script for deterministic data gathering and model judgment for narrative synthesis, producing a document that helps new contributors understand the codebase without requiring the creator to explain it.
+Add an `/onboarding` skill to the rg-engineering plugin that crawls a repository and generates `ONBOARDING.md` at the repo root. The skill uses a bundled inventory script for deterministic data gathering and model judgment for narrative synthesis, producing a document that helps new contributors understand the codebase without requiring the creator to explain it.
 
 ## Problem Frame
 
@@ -35,14 +35,14 @@ The primary audience is human developers. A document that works for human compre
 - Does not assess fragility or risk areas
 - Does not generate README.md, CLAUDE.md, AGENTS.md, or any other document
 - Does not preserve hand-edits from a previous version
-- No `ce:` prefix -- standalone utility skill
+- No `rg:` prefix -- standalone utility skill
 - No new agents -- the skill uses a bundled script plus the model's own file-reading and writing capabilities
 
 ## Context & Research
 
 ### Relevant Code and Patterns
 
-- Skills live in `plugins/compound-engineering/skills/<name>/SKILL.md` with optional `scripts/`, `references/`, `assets/` directories
+- Skills live in `plugins/rg-engineering/skills/<name>/SKILL.md` with optional `scripts/`, `references/`, `assets/` directories
 - Skills are auto-discovered from directory structure -- no registration in `plugin.json`
 - SKILL.md requires YAML frontmatter with `name` and `description` fields
 - Arguments received via `#$ARGUMENTS` interpolation in an XML tag
@@ -53,7 +53,7 @@ The primary audience is human developers. A document that works for human compre
 
 - **Script-first skill architecture** (`docs/solutions/skill-design/script-first-skill-architecture.md`): Move deterministic processing into bundled scripts; model does judgment work only. 60-75% token reduction. Applies here as a hybrid -- script gathers structural inventory, model reads key files and writes prose.
 - **Compound-refresh skill improvements** (`docs/solutions/skill-design/compound-refresh-skill-improvements.md`): Triage before asking (don't ask users what to document); platform-agnostic tool references; subagents should use file tools not shell; no contradictory rules across phases.
-- Skill compliance checklist in `plugins/compound-engineering/AGENTS.md`: imperative voice, no second person, cross-platform question tool patterns, markdown-linked references.
+- Skill compliance checklist in `plugins/rg-engineering/AGENTS.md`: imperative voice, no second person, cross-platform question tool patterns, markdown-linked references.
 
 ## Key Technical Decisions
 
@@ -93,7 +93,7 @@ The primary audience is human developers. A document that works for human compre
   **Dependencies:** None
 
   **Files:**
-  - Create: `plugins/compound-engineering/skills/onboarding/scripts/inventory.mjs`
+  - Create: `plugins/rg-engineering/skills/onboarding/scripts/inventory.mjs`
   - Test: `tests/onboarding-inventory.test.ts`
 
   **Approach:**
@@ -150,7 +150,7 @@ The primary audience is human developers. A document that works for human compre
   - Script discovers docs in standard locations
 
   **Verification:**
-  - Running the script against the compound-engineering repo produces sensible output
+  - Running the script against the rg-engineering repo produces sensible output
   - JSON output parses without error
   - Script completes in under 5 seconds on a typical repo
 
@@ -163,7 +163,7 @@ The primary audience is human developers. A document that works for human compre
   **Dependencies:** Unit 1
 
   **Files:**
-  - Create: `plugins/compound-engineering/skills/onboarding/SKILL.md`
+  - Create: `plugins/rg-engineering/skills/onboarding/SKILL.md`
 
   **Approach:**
 
@@ -209,9 +209,9 @@ The primary audience is human developers. A document that works for human compre
      - Done
 
   **Patterns to follow:**
-  - `skills/ce-plan/SKILL.md` -- research-then-write orchestration, platform-agnostic tool references
+  - `skills/rg-plan/SKILL.md` -- research-then-write orchestration, platform-agnostic tool references
   - `skills/claude-permissions-optimizer/SKILL.md` -- script-first execution pattern
-  - Skill compliance checklist in `plugins/compound-engineering/AGENTS.md`
+  - Skill compliance checklist in `plugins/rg-engineering/AGENTS.md`
 
   **Test scenarios:**
   - The skill description triggers on "generate onboarding", "onboard new contributor", "create ONBOARDING.md", "document this codebase for new developers"
@@ -235,7 +235,7 @@ The primary audience is human developers. A document that works for human compre
   **Dependencies:** Unit 2
 
   **Files:**
-  - Modify: `plugins/compound-engineering/README.md`
+  - Modify: `plugins/rg-engineering/README.md`
 
   **Approach:**
 
@@ -277,5 +277,5 @@ The primary audience is human developers. A document that works for human compre
 - **Origin document:** [docs/brainstorms/2026-03-25-vonboarding-skill-requirements.md](../brainstorms/2026-03-25-vonboarding-skill-requirements.md)
 - Script-first architecture: [docs/solutions/skill-design/script-first-skill-architecture.md](../solutions/skill-design/script-first-skill-architecture.md)
 - Compound-refresh learnings: [docs/solutions/skill-design/compound-refresh-skill-improvements.md](../solutions/skill-design/compound-refresh-skill-improvements.md)
-- Repo-research-analyst agent: `plugins/compound-engineering/agents/research/ce-repo-research-analyst.agent.md`
-- Skill compliance checklist: `plugins/compound-engineering/AGENTS.md`
+- Repo-research-analyst agent: `plugins/rg-engineering/agents/research/rg-repo-research-analyst.agent.md`
+- Skill compliance checklist: `plugins/rg-engineering/AGENTS.md`

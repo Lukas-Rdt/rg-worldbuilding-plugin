@@ -45,10 +45,10 @@ The insight: individual comments don't say "this whole approach is wrong," but w
 
 ### Relevant Code and Patterns
 
-- `plugins/compound-engineering/skills/resolve-pr-feedback/SKILL.md` — the orchestrator skill, 285 lines
-- `plugins/compound-engineering/agents/workflow/ce-pr-comment-resolver.agent.md` — the worker agent, 134 lines
+- `plugins/rg-engineering/skills/resolve-pr-feedback/SKILL.md` — the orchestrator skill, 285 lines
+- `plugins/rg-engineering/agents/workflow/rg-pr-comment-resolver.agent.md` — the worker agent, 134 lines
 - Current same-file grouping at SKILL.md lines 107-113 — conflict avoidance pattern to extend
-- The ce:review skill's confidence-gated merge/dedup pipeline — precedent for pre-dispatch analysis
+- The rg:review skill's confidence-gated merge/dedup pipeline — precedent for pre-dispatch analysis
 - The todo-resolve skill uses the same pr-comment-resolver agent and batching pattern
 
 ### Institutional Learnings
@@ -176,7 +176,7 @@ No separate concern-category matching for cross-cycle detection. The re-entry it
 **Dependencies:** None
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/resolve-pr-feedback/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/resolve-pr-feedback/SKILL.md`
 
 **Approach:**
 - Add new "Step 2.5: Cluster Analysis (Gated)" after the triage step
@@ -189,7 +189,7 @@ No separate concern-category matching for cross-cycle detection. The re-entry it
 
 **Patterns to follow:**
 - The existing same-file grouping at SKILL.md lines 107-113 — extend this concept semantically
-- The ce:review skill's merge/dedup pipeline across personas — precedent for cross-item analysis before dispatch
+- The rg:review skill's merge/dedup pipeline across personas — precedent for cross-item analysis before dispatch
 
 **Test scenarios:**
 - Happy path: 5 items across different files, 3 share a validation theme in same directory -> gate fires (volume >= 4), cluster detected for the 3 validation items, other 2 dispatched individually
@@ -219,7 +219,7 @@ No separate concern-category matching for cross-cycle detection. The re-entry it
 **Dependencies:** Unit 1
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/resolve-pr-feedback/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/resolve-pr-feedback/SKILL.md`
 
 **Approach:**
 - In the Plan step, task items now include both clusters (with their briefs) and isolated items
@@ -257,10 +257,10 @@ No separate concern-category matching for cross-cycle detection. The re-entry it
 **Dependencies:** Unit 2
 
 **Files:**
-- Modify: `plugins/compound-engineering/agents/workflow/ce-pr-comment-resolver.agent.md`
+- Modify: `plugins/rg-engineering/agents/workflow/rg-pr-comment-resolver.agent.md`
 
 **Approach:**
-- Add a "Cluster Mode" section to the agent, structured as a mode detection table (following ce:review's pattern): if a `<cluster-brief>` XML block is present in the prompt, activate cluster mode; otherwise, standard single-thread mode
+- Add a "Cluster Mode" section to the agent, structured as a mode detection table (following rg:review's pattern): if a `<cluster-brief>` XML block is present in the prompt, activate cluster mode; otherwise, standard single-thread mode
 - Cluster mode workflow: (1) Parse the `<cluster-brief>` block for theme, area, file paths, thread IDs, and hypothesis. (2) Read the broader area — not just the referenced lines, but the full file(s) and closely related code in the same directory. (3) Assess whether the individual comments are symptoms of a deeper structural issue. (4) If yes: make a holistic fix that addresses the root cause, then verify each thread is resolved by the broader fix. (5) If no: fix each thread individually as in standard mode.
 - The agent returns the standard per-thread verdict summaries plus a `cluster_assessment` field: a brief description of what broader investigation revealed and whether a holistic or individual approach was taken. This field is consumed by the orchestrator's Summary step to present cluster investigation results to the user
 - Add 1-2 examples showing cluster-aware evaluation (e.g., 3 error handling comments -> agent reads broader area, identifies missing error boundary pattern, adds it, resolves all 3 threads)
@@ -296,19 +296,19 @@ No separate concern-category matching for cross-cycle detection. The re-entry it
 **Dependencies:** Unit 1
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/resolve-pr-feedback/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/resolve-pr-feedback/SKILL.md`
 
 **Approach:**
 - In the Verify step, after re-fetching feedback, if new threads remain: record the files and themes just fixed in this cycle, then loop back to Triage (Step 2). The cluster analysis gate in Step 2.5 fires automatically because "verify-loop re-entry" is one of its gate signals. No separate comparison or concern-category matching needed — the cluster analysis step itself handles thematic grouping with the just-fixed context
 - On re-entry, pass the list of files modified in the previous cycle to the cluster analysis step so it can assess whether new feedback relates to just-fixed areas
-- Add an iteration cap: after 2 fix-verify cycles, surface remaining issues to the user with context about the recurring pattern rather than continuing to loop. Frame it as: "Multiple rounds of feedback on [area/theme] suggest a deeper issue. Here's what we've fixed so far and what keeps appearing." (Consistent with ce:review's `max_rounds: 2` bounded re-review loop)
+- Add an iteration cap: after 2 fix-verify cycles, surface remaining issues to the user with context about the recurring pattern rather than continuing to loop. Frame it as: "Multiple rounds of feedback on [area/theme] suggest a deeper issue. Here's what we've fixed so far and what keeps appearing." (Consistent with rg:review's `max_rounds: 2` bounded re-review loop)
 - The iteration cap applies per-run, not per-cluster
 
 **Patterns to follow:**
 - The existing verify-and-repeat logic at SKILL.md lines 186-189
 - The whack-a-mole state machine pattern from `docs/solutions/skill-design/git-workflow-skills-need-explicit-state-machines.md`
 - The `needs-human` escalation pattern already in the skill — iteration cap uses the same "surface to user with structured context" approach
-- The ce:review `max_rounds: 2` bounded loop precedent
+- The rg:review `max_rounds: 2` bounded loop precedent
 
 **Test scenarios:**
 - Happy path: fix 3 issues, verify re-fetch finds 2 new issues -> re-entry triggers gate, cluster analysis runs with just-fixed context, new items may form a cluster with the just-fixed area context
@@ -346,8 +346,8 @@ No separate concern-category matching for cross-cycle detection. The re-entry it
 
 ## Sources & References
 
-- Related code: `plugins/compound-engineering/skills/resolve-pr-feedback/SKILL.md`
-- Related code: `plugins/compound-engineering/agents/workflow/ce-pr-comment-resolver.agent.md`
+- Related code: `plugins/rg-engineering/skills/resolve-pr-feedback/SKILL.md`
+- Related code: `plugins/rg-engineering/agents/workflow/rg-pr-comment-resolver.agent.md`
 - Institutional learning: `docs/solutions/skill-design/git-workflow-skills-need-explicit-state-machines.md`
 - Institutional learning: `docs/solutions/workflow/todo-status-lifecycle.md`
 - Institutional learning: `docs/solutions/skill-design/pass-paths-not-content-to-subagents.md`

@@ -10,9 +10,9 @@ superseded_by: "2026-06-19-agentless-plugin-surface-reduction"
 
 ## Overview
 
-Add Codex-format plugin manifests (`.agents/plugins/marketplace.json` plus per-plugin `.codex-plugin/plugin.json`) to the repo alongside the existing Claude-format manifests, so Codex users can install CE's skills via the native `codex plugin marketplace add EveryInc/compound-engineering-plugin` flow.
+Add Codex-format plugin manifests (`.agents/plugins/marketplace.json` plus per-plugin `.codex-plugin/plugin.json`) to the repo alongside the existing Claude-format manifests, so Codex users can install CE's skills via the native `codex plugin marketplace add Lukas-Rdt/rg-engineering-plugin` flow.
 
-Superseded note (2026-06-19): this plan records the pre-agentless Codex migration. Compound Engineering no longer ships standalone agents, so the native Codex plugin install is self-contained through skills and skill-local prompt assets. The old converted Codex companion step is obsolete.
+Superseded note (2026-06-19): this plan records the pre-agentless Codex migration. RG Engineering no longer ships standalone agents, so the native Codex plugin install is self-contained through skills and skill-local prompt assets. The old converted Codex companion step is obsolete.
 
 ## Problem Frame
 
@@ -30,7 +30,7 @@ Shipping the Codex manifests:
 
 * R1. `codex plugin marketplace add <local-clone>` must succeed and register the CE plugin
 
-* R2. `codex plugin install compound-engineering` must install CE's skills into the expected Codex skill location
+* R2. `codex plugin install rg-engineering` must install CE's skills into the expected Codex skill location
 
 * R3. Plugin version in `.codex-plugin/plugin.json` must stay in sync with `.claude-plugin/plugin.json` automatically on release
 
@@ -52,7 +52,7 @@ Shipping the Codex manifests:
 
 * No Codex-specific skill frontmatter fields (`metadata.priority`, `metadata.pathPatterns`, `metadata.bashPatterns`) — these are trigger-tuning extensions, not required for registration, and can be added per-skill in followups
 
-* No empirical test of remote-repo install in this plan. The remote `codex plugin marketplace add EveryInc/compound-engineering-plugin` flow documented in the README cannot be tested from a feature branch — Codex fetches the default branch of the remote. Remote-install verification is a separate manual step immediately post-merge, before the release tag: clone the merged `main`, run the remote install command against it, confirm skills register. If the remote path fails, ship a fix-forward PR rather than rolling back. `source: { source: "local", path: "./plugins/<name>" }` has been empirically verified as the correct schema for both bundled AND remote-cloned marketplaces (see Resolved Open Questions), so the most likely remote-vs-local divergence — the schema — is already de-risked
+* No empirical test of remote-repo install in this plan. The remote `codex plugin marketplace add Lukas-Rdt/rg-engineering-plugin` flow documented in the README cannot be tested from a feature branch — Codex fetches the default branch of the remote. Remote-install verification is a separate manual step immediately post-merge, before the release tag: clone the merged `main`, run the remote install command against it, confirm skills register. If the remote path fails, ship a fix-forward PR rather than rolling back. `source: { source: "local", path: "./plugins/<name>" }` has been empirically verified as the correct schema for both bundled AND remote-cloned marketplaces (see Resolved Open Questions), so the most likely remote-vs-local divergence — the schema — is already de-risked
 
 ### Deferred to Separate Tasks
 
@@ -70,9 +70,9 @@ Shipping the Codex manifests:
 
 * `.claude-plugin/marketplace.json`, `.cursor-plugin/marketplace.json` — existing dual-format marketplace manifests (Cursor mirrors Claude's schema; Codex will diverge)
 
-* `plugins/compound-engineering/.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json` — existing dual plugin manifests (source of truth for name/description/version/author/homepage/keywords)
+* `plugins/rg-engineering/.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json` — existing dual plugin manifests (source of truth for name/description/version/author/homepage/keywords)
 
-* `.github/release-please-config.json` — `plugins/compound-engineering` and `plugins/coding-tutor` packages already list `extra-files` for `.claude-plugin/plugin.json` and `.cursor-plugin/plugin.json`; Codex adds a third entry in each
+* `.github/release-please-config.json` — `plugins/rg-engineering` and `plugins/coding-tutor` packages already list `extra-files` for `.claude-plugin/plugin.json` and `.cursor-plugin/plugin.json`; Codex adds a third entry in each
 
 * `.github/.release-please-manifest.json` — tracks versions per release-please package; Cursor marketplace (`.cursor-plugin`) is a separate tracked package, Codex likely does not need its own tracked package since the Codex marketplace spec has no `version` field (see Key Technical Decisions)
 
@@ -104,12 +104,12 @@ Shipping the Codex manifests:
 
 ```json
 {
-  "name": "compound-engineering-plugin",
-  "interface": { "displayName": "Compound Engineering" },
+  "name": "rg-engineering-plugin",
+  "interface": { "displayName": "RG Engineering" },
   "plugins": [
     {
-      "name": "compound-engineering",
-      "source": { "source": "local", "path": "./plugins/compound-engineering" },
+      "name": "rg-engineering",
+      "source": { "source": "local", "path": "./plugins/rg-engineering" },
       "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
       "category": "Coding"
     }
@@ -176,11 +176,11 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 * **Does** **`coding-tutor`** **get a Codex manifest?** Yes — marketplace parity with Claude. Native install will register its skills but not its commands; README notes the gap.
 
-* **Are file paths for the** **`skills:`** **declaration plugin-relative or marketplace-relative?** Plugin-relative. `"skills": "./skills/"` in `plugins/compound-engineering/.codex-plugin/plugin.json` means `plugins/compound-engineering/skills/`. Confirmed via vercel and github plugin examples.
+* **Are file paths for the** **`skills:`** **declaration plugin-relative or marketplace-relative?** Plugin-relative. `"skills": "./skills/"` in `plugins/rg-engineering/.codex-plugin/plugin.json` means `plugins/rg-engineering/skills/`. Confirmed via vercel and github plugin examples.
 
 * **Does the `source: "local"` marketplace schema work for remote-cloned marketplaces, not just bundled ones?** Yes. The `openai-curated` marketplace (a real-world remote-fetched marketplace Codex clones and caches at `~/.codex/.tmp/plugins/.agents/plugins/marketplace.json`) uses the identical `source: { source: "local", path: "./plugins/<name>" }` schema. "local" refers to the plugin's co-location within the marketplace repo, not "bundled with Codex." Same schema for both.
 
-* **Does Codex's default skill discovery find flat `skills/<name>/SKILL.md` layouts at CE's depth?** Yes. Vercel's reference plugin at `~/.codex/.tmp/plugins/plugins/vercel/skills/` uses the exact layout CE ships — flat subdirectories each containing `SKILL.md`. CE has 43 skill directories at that depth under `plugins/compound-engineering/skills/`. Unit 7 includes a count-based assertion to catch partial-discovery regressions.
+* **Does Codex's default skill discovery find flat `skills/<name>/SKILL.md` layouts at CE's depth?** Yes. Vercel's reference plugin at `~/.codex/.tmp/plugins/plugins/vercel/skills/` uses the exact layout CE ships — flat subdirectories each containing `SKILL.md`. CE has 43 skill directories at that depth under `plugins/rg-engineering/skills/`. Unit 7 includes a count-based assertion to catch partial-discovery regressions.
 
 ### Deferred to Implementation
 
@@ -192,7 +192,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 ## Implementation Units
 
-* [ ] **Unit 1: Author** **`plugins/compound-engineering/.codex-plugin/plugin.json`**
+* [ ] **Unit 1: Author** **`plugins/rg-engineering/.codex-plugin/plugin.json`**
 
 **Goal:** Codex plugin manifest for the primary CE plugin, with skills declared and interface metadata populated.
 
@@ -202,11 +202,11 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 **Files:**
 
-* Create: `plugins/compound-engineering/.codex-plugin/plugin.json`
+* Create: `plugins/rg-engineering/.codex-plugin/plugin.json`
 
 **Approach:**
 
-* Read the Claude manifest at `plugins/compound-engineering/.claude-plugin/plugin.json` for source-of-truth fields (name, version, description, author, homepage, license, keywords).
+* Read the Claude manifest at `plugins/rg-engineering/.claude-plugin/plugin.json` for source-of-truth fields (name, version, description, author, homepage, license, keywords).
 
 * Add Codex-specific fields: `skills: "./skills/"`, and an `interface{}` block with `displayName`, `shortDescription` (reuse `description`), `longDescription` (1-2 sentence pitch, can draw from README lead paragraph), `developerName` (derive from author), `category: "Coding"`, `capabilities: ["Interactive", "Read", "Write"]`, `websiteURL: homepage`, `privacyPolicyURL` / `termsOfServiceURL` (reuse Every's existing policy URLs if available; omit otherwise — optional per docs), `defaultPrompt: []` (can leave empty or add 2-3 starter prompts).
 
@@ -216,7 +216,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 **Patterns to follow:**
 
-* `plugins/compound-engineering/.claude-plugin/plugin.json` — source of truth for shared fields
+* `plugins/rg-engineering/.claude-plugin/plugin.json` — source of truth for shared fields
 
 * `~/.codex/.tmp/plugins/plugins/vercel/.codex-plugin/plugin.json` (locally cached) — real-world reference for `interface{}` field shape and `skills:` declaration
 
@@ -230,7 +230,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 * File exists and parses as valid JSON
 
-* `jq` queries return expected values: `.name == "compound-engineering"`, `.skills == "./skills/"`, `.interface.displayName` non-empty
+* `jq` queries return expected values: `.name == "rg-engineering"`, `.skills == "./skills/"`, `.interface.displayName` non-empty
 
 ***
 
@@ -286,9 +286,9 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 * Schema per the Codex docs and bundled OpenAI example:
 
-  * `name: "compound-engineering-plugin"` (matches Claude marketplace's `name`)
+  * `name: "rg-engineering-plugin"` (matches Claude marketplace's `name`)
 
-  * `interface.displayName: "Compound Engineering"`
+  * `interface.displayName: "RG Engineering"`
 
   * `plugins[]` with two entries, one per plugin, each using the nested `source: { source: "local", path: "./plugins/<name>" }` shape
 
@@ -332,7 +332,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 **Approach:**
 
-* For the `plugins/compound-engineering` package entry, add a third entry to `extra-files`:
+* For the `plugins/rg-engineering` package entry, add a third entry to `extra-files`:
 
   ```
   { "type": "json", "path": ".codex-plugin/plugin.json", "jsonpath": "$.version" }
@@ -384,7 +384,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 * **`src/release/metadata.ts`:** extend `syncReleaseMetadata` to additionally:
 
-  * Read `plugins/compound-engineering/.codex-plugin/plugin.json` and `plugins/coding-tutor/.codex-plugin/plugin.json`
+  * Read `plugins/rg-engineering/.codex-plugin/plugin.json` and `plugins/coding-tutor/.codex-plugin/plugin.json`
 
   * Read `.agents/plugins/marketplace.json`
 
@@ -452,7 +452,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 * Add a new `### Codex` section with:
 
-  * The native install command: `codex plugin marketplace add EveryInc/compound-engineering-plugin` + `codex plugin install compound-engineering`
+  * The native install command: `codex plugin marketplace add Lukas-Rdt/rg-engineering-plugin` + `codex plugin install rg-engineering`
 
   * A brief note that native install is self-contained for CE skills and skill-local prompt assets
 
@@ -480,7 +480,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 * [ ] **Unit 7: Empirical verification via local install**
 
-**Goal:** Confirm `codex plugin marketplace add <local-repo-path>` + `codex plugin install compound-engineering` works end to end on the working tree before the branch is merged.
+**Goal:** Confirm `codex plugin marketplace add <local-repo-path>` + `codex plugin install rg-engineering` works end to end on the working tree before the branch is merged.
 
 **Requirements:** R1, R2, R6
 
@@ -492,15 +492,15 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 **Approach:**
 
-* On a clean Codex test environment (or with backups of existing `~/.codex/plugins/compound-engineering` and `~/.agents/skills/` state if present):
+* On a clean Codex test environment (or with backups of existing `~/.codex/plugins/rg-engineering` and `~/.agents/skills/` state if present):
 
   1. `codex plugin marketplace add <local-repo-path>` — should succeed without the "marketplace file does not exist" error
-  2. `codex plugin install compound-engineering` — should register the plugin and copy skills to the expected install location
-  3. Inspect `~/.codex/plugins/compound-engineering/` (or wherever the install landed) — confirm CE skills are present. **Count assertion:** the installed skill count must match the source — CE ships 43 skill directories under `plugins/compound-engineering/skills/`; if fewer appear post-install, diagnose before proceeding (indicates Codex discovery isn't walking the layout CE uses, despite Vercel's reference plugin using the same pattern)
+  2. `codex plugin install rg-engineering` — should register the plugin and copy skills to the expected install location
+  3. Inspect `~/.codex/plugins/rg-engineering/` (or wherever the install landed) — confirm CE skills are present. **Count assertion:** the installed skill count must match the source — CE ships 43 skill directories under `plugins/rg-engineering/skills/`; if fewer appear post-install, diagnose before proceeding (indicates Codex discovery isn't walking the layout CE uses, despite Vercel's reference plugin using the same pattern)
   4. Inspect `~/.agents/skills/` — confirm skills are discoverable by default trigger behavior
-  5. Launch Codex and invoke a CE skill (e.g., `$ce-plan`) — should resolve and load
-  6. `codex plugin uninstall compound-engineering` — confirm clean removal
-  7. Smoke check for `coding-tutor`: `codex plugin install coding-tutor` succeeds and skills appear; do not run the full install/uninstall cycle — R2 targets `compound-engineering` only; `coding-tutor` is present for marketplace parity
+  5. Launch Codex and invoke a CE skill (e.g., `$rg-plan`) — should resolve and load
+  6. `codex plugin uninstall rg-engineering` — confirm clean removal
+  7. Smoke check for `coding-tutor`: `codex plugin install coding-tutor` succeeds and skills appear; do not run the full install/uninstall cycle — R2 targets `rg-engineering` only; `coding-tutor` is present for marketplace parity
 
 * If any step fails, diagnose via the error message and revise the relevant plugin.json or marketplace.json. Likely failure modes:
 
@@ -524,7 +524,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 **Verification:**
 
-* Successful install + uninstall cycle for `compound-engineering`; smoke-level install for `coding-tutor`
+* Successful install + uninstall cycle for `rg-engineering`; smoke-level install for `coding-tutor`
 
 * Skills invocable in Codex via default discovery; installed skill count matches the source
 
@@ -536,7 +536,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
   * [ ] **Unit 8: Update plugin AGENTS.md with Codex manifest contributor rules**
 
-  **Goal:** Extend `plugins/compound-engineering/AGENTS.md` so contributors know the Codex manifests are release-owned (do not hand-bump) and know what to do when adding a new plugin (three-marketplace parity).
+  **Goal:** Extend `plugins/rg-engineering/AGENTS.md` so contributors know the Codex manifests are release-owned (do not hand-bump) and know what to do when adding a new plugin (three-marketplace parity).
 
   **Requirements:** R3, R6
 
@@ -544,7 +544,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
   **Files:**
 
-  * Modify: `plugins/compound-engineering/AGENTS.md`
+  * Modify: `plugins/rg-engineering/AGENTS.md`
 
   **Approach:**
 
@@ -564,7 +564,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
   **Patterns to follow:**
 
-  * Existing "Versioning Requirements" and "Pre-Commit Checklist" sections in `plugins/compound-engineering/AGENTS.md`
+  * Existing "Versioning Requirements" and "Pre-Commit Checklist" sections in `plugins/rg-engineering/AGENTS.md`
 
   * Existing "Adding Components" section (currently covers skills + agents; extend or supplement with plugin-addition workflow)
 
@@ -617,7 +617,7 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 - Happy path (`--include-skills`): existing tests continue to pass (full bundle emitted)
 - Edge case: plugin with 0 agents produces an empty bundle in default mode (no orphan state, no possibility of conflict)
 - Integration: agent body containing `Task x(...)` still gets rewritten in default mode (reference targets still populated from full plugin)
-- CLI: `install --to codex` default writes agent files but NO `skills/ce-plan/SKILL.md` (assertion on file absence)
+- CLI: `install --to codex` default writes agent files but NO `skills/rg-plan/SKILL.md` (assertion on file absence)
 - CLI: `install --to codex --include-skills` writes the full tree (existing behavior preserved)
 - Legacy path: `sync --target codex` still emits full bundle (codexIncludeSkills pinned true on that path)
 
@@ -643,9 +643,9 @@ Required fields per docs: `name`, `version`, `description`. All others optional.
 
 * **Unchanged invariants:**
 
-  * Bun converter (`bunx ... --to codex`) continues to work unchanged — still writes agents to `~/.codex/agents/compound-engineering/` per existing logic
+  * Bun converter (`bunx ... --to codex`) continues to work unchanged — still writes agents to `~/.codex/agents/rg-engineering/` per existing logic
 
-  * `cleanup --target codex` continues to work unchanged — managed-install manifest at `~/.codex/compound-engineering/install-manifest.json` still governs agent cleanup
+  * `cleanup --target codex` continues to work unchanged — managed-install manifest at `~/.codex/rg-engineering/install-manifest.json` still governs agent cleanup
 
   * Claude, Cursor, Copilot, Droid, Qwen install paths unchanged
 

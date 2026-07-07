@@ -7,39 +7,39 @@ function readRepoFile(relativePath: string): string {
 }
 
 const planSections = readRepoFile(
-  "skills/ce-plan/references/plan-sections.md",
+  "skills/rg-plan/references/plan-sections.md",
 )
 const brainstormSections = readRepoFile(
-  "skills/ce-brainstorm/references/brainstorm-sections.md",
+  "skills/rg-brainstorm/references/brainstorm-sections.md",
 )
-const planSkill = readRepoFile("skills/ce-plan/SKILL.md")
-const brainstormSkill = readRepoFile("skills/ce-brainstorm/SKILL.md")
+const planSkill = readRepoFile("skills/rg-plan/SKILL.md")
+const brainstormSkill = readRepoFile("skills/rg-brainstorm/SKILL.md")
 const brainstormHandoff = readRepoFile(
-  "skills/ce-brainstorm/references/handoff.md",
+  "skills/rg-brainstorm/references/handoff.md",
 )
 const universalBrainstorming = readRepoFile(
-  "skills/ce-brainstorm/references/universal-brainstorming.md",
+  "skills/rg-brainstorm/references/universal-brainstorming.md",
 )
-const ceWork = readRepoFile("skills/ce-work/SKILL.md")
+const ceWork = readRepoFile("skills/rg-work/SKILL.md")
 const ceWorkEngines = readRepoFile(
-  "skills/ce-work/references/execution-engines.md",
+  "skills/rg-work/references/execution-engines.md",
 )
 const planMarkdownRendering = readRepoFile(
-  "skills/ce-plan/references/markdown-rendering.md",
+  "skills/rg-plan/references/markdown-rendering.md",
 )
 const lfg = readRepoFile("skills/lfg/SKILL.md")
-const docReview = readRepoFile("skills/ce-doc-review/SKILL.md")
+const docReview = readRepoFile("skills/rg-doc-review/SKILL.md")
 const docReviewTemplate = readRepoFile(
-  "skills/ce-doc-review/references/subagent-template.md",
+  "skills/rg-doc-review/references/subagent-template.md",
 )
-const codeReview = readRepoFile("skills/ce-code-review/SKILL.md")
-const proof = readRepoFile("skills/ce-proof/SKILL.md")
-const ideate = readRepoFile("skills/ce-ideate/references/post-ideation-workflow.md")
+const codeReview = readRepoFile("skills/rg-code-review/SKILL.md")
+const proof = readRepoFile("skills/rg-proof/SKILL.md")
+const ideate = readRepoFile("skills/rg-ideate/references/post-ideation-workflow.md")
 const agents = readRepoFile("AGENTS.md")
 
 describe("unified plan artifact contract", () => {
   test("plan section contract defines unified metadata, readiness, and section ids", () => {
-    expect(planSections).toContain("artifact_contract: ce-unified-plan/v1")
+    expect(planSections).toContain("artifact_contract: rg-unified-plan/v1")
     expect(planSections).toContain("artifact_readiness")
     expect(planSections).toContain("product_contract_source")
     expect(planSections).toContain("requirements-only")
@@ -68,7 +68,7 @@ describe("unified plan artifact contract", () => {
   test("brainstorm writes requirements-only unified plan skeletons under docs/plans", () => {
     expect(brainstormSections).toContain("docs/plans/YYYY-MM-DD-NNN-<type>-<topic>-plan")
     expect(brainstormSections).toContain("artifact_readiness: requirements-only")
-    expect(brainstormSections).toContain("product_contract_source: ce-brainstorm")
+    expect(brainstormSections).toContain("product_contract_source: rg-brainstorm")
     // Requirements-only is slimmed for standalone readability: no Goal Launch
     // Block and no Reader Index (the launch prompt is skill-emitted at handoff).
     expect(brainstormSections).toMatch(/light and standalone-readable/i)
@@ -77,19 +77,19 @@ describe("unified plan artifact contract", () => {
 
     expect(brainstormSkill).toContain("docs/plans/YYYY-MM-DD-NNN-<type>-<topic>-plan")
     expect(brainstormSkill).toContain("artifact_readiness: requirements-only")
-    expect(brainstormSkill).toContain("product_contract_source: ce-brainstorm")
+    expect(brainstormSkill).toContain("product_contract_source: rg-brainstorm")
     expect(brainstormSkill).toContain("Do **not** emit a Goal Launch Block or Reader Index")
-    expect(brainstormSkill).toContain("new `ce-brainstorm` outputs do not write there")
-    expect(brainstormSkill).toContain("non-software route does **not** write `artifact_contract: ce-unified-plan/v1`")
+    expect(brainstormSkill).toContain("new `rg-brainstorm` outputs do not write there")
+    expect(brainstormSkill).toContain("non-software route does **not** write `artifact_contract: rg-unified-plan/v1`")
 
     expect(universalBrainstorming).toContain("outside the software unified-plan artifact contract")
-    expect(universalBrainstorming).toContain("Do not write `artifact_contract: ce-unified-plan/v1`")
-    expect(universalBrainstorming).toContain("let `ce-plan` choose the universal/knowledge-work artifact shape")
+    expect(universalBrainstorming).toContain("Do not write `artifact_contract: rg-unified-plan/v1`")
+    expect(universalBrainstorming).toContain("let `rg-plan` choose the universal/knowledge-work artifact shape")
   })
 
-  test("brainstorm handoff passes the unified plan path to ce-plan", () => {
+  test("brainstorm handoff passes the unified plan path to rg-plan", () => {
     expect(brainstormHandoff).toContain("Pass the unified")
-    expect(brainstormHandoff).toContain("Recommended next step: `ce-plan <plan artifact path>`")
+    expect(brainstormHandoff).toContain("Recommended next step: `rg-plan <plan artifact path>`")
     // Recommended path is interactive planning; the autonomous slot is lfg
     // (plan-first full ship), not a skip-planning /goal.
     expect(brainstormHandoff).toContain("Create the implementation plan")
@@ -98,38 +98,38 @@ describe("unified plan artifact contract", () => {
     // The skip-planning /goal slot was removed in favor of plan-first lfg.
     expect(brainstormHandoff).not.toContain("skip-planning slot")
     // The lfg option must be gated on an artifact existing: a brief-alignment
-    // brainstorm can skip doc creation, and lfg's pipeline ce-plan step needs the
+    // brainstorm can skip doc creation, and lfg's pipeline rg-plan step needs the
     // artifact path (it cannot prompt) — without one there is nothing to enrich.
     expect(brainstormHandoff).toMatch(/a unified plan artifact was created/i)
     expect(brainstormHandoff).toMatch(/with no artifact.*nothing to enrich/i)
   })
 
-  test("ce-doc-review personas map unified-* document types to their base review lens", () => {
+  test("rg-doc-review personas map unified-* document types to their base review lens", () => {
     // Another-agent P2 (PR #972): persona prompts branch on `Document type:
     // requirements` / `plan`, but the orchestrator may pass `unified-requirements`
     // / `unified-plan` — so the persona's adaptation block silently never fires on
     // a unified artifact. The shared subagent-template must map unified-* to base.
     const subagentTemplate = readRepoFile(
-      "skills/ce-doc-review/references/subagent-template.md",
+      "skills/rg-doc-review/references/subagent-template.md",
     )
     expect(subagentTemplate).toMatch(/apply the `requirements` branch for `unified-requirements`/i)
     expect(subagentTemplate).toMatch(/the `plan` branch for `unified-plan`/i)
   })
 
-  test("ce-plan enriches unified plans in place and preserves legacy inputs", () => {
+  test("rg-plan enriches unified plans in place and preserves legacy inputs", () => {
     expect(planSkill).toContain("requirements-only unified plan")
     expect(planSkill).toContain("enriches that same artifact")
     expect(planSkill).toContain("this run enriches that same file in place")
     expect(planSkill).toContain("Search `docs/brainstorms/`")
     expect(planSkill).toContain("create a new unified plan in `docs/plans/`")
-    expect(planSkill).toContain("product_contract_source: ce-plan-bootstrap")
+    expect(planSkill).toContain("product_contract_source: rg-plan-bootstrap")
     expect(planSkill).toContain("artifact_readiness: implementation-ready")
     expect(planSkill).toContain("Definition of Done")
     // The launch prompt is generated at handoff, never written into the doc.
     expect(planSkill).toContain("Do not write a launch prompt into the doc")
   })
 
-  test("ce-work is readiness-aware before execution", () => {
+  test("rg-work is readiness-aware before execution", () => {
     expect(ceWork).toContain("classify `artifact_readiness` before reading the body")
     expect(ceWork).toContain("requirements-only` -> stop")
     expect(ceWork).toContain("Any other readiness value")
@@ -140,7 +140,7 @@ describe("unified plan artifact contract", () => {
     expect(ceWork).not.toContain("artifact_readiness: approach-plan")
   })
 
-  test("lfg delegates implementation to ce-work return-to-caller mode", () => {
+  test("lfg delegates implementation to rg-work return-to-caller mode", () => {
     expect(lfg).toContain("artifact_readiness: implementation-ready")
     expect(lfg).toContain("execution: code")
     expect(lfg).toContain("any unrecognized readiness value")
@@ -149,9 +149,9 @@ describe("unified plan artifact contract", () => {
     expect(lfg).toContain("standalone_shipping_skipped: true")
     expect(lfg).toContain("verification_evidence")
     expect(lfg).toContain("Do NOT decide the test strategy inside LFG")
-    expect(lfg).toContain("invoke `ce-work` one more time with the same `mode:return-to-caller <plan-path-from-step-1>` argument")
+    expect(lfg).toContain("invoke `rg-work` one more time with the same `mode:return-to-caller <plan-path-from-step-1>` argument")
     expect(lfg).toContain("stop as blocked and report the missing fields")
-    expect(lfg).toContain("ce-code-review` skill with `mode:agent plan:<plan-path-from-step-1>`")
+    expect(lfg).toContain("rg-code-review` skill with `mode:agent plan:<plan-path-from-step-1>`")
     expect(lfg).not.toContain("artifact_readiness: approach-plan")
   })
 
@@ -161,10 +161,10 @@ describe("unified plan artifact contract", () => {
     expect(docReview).toContain("Product Contract only")
     expect(docReview).toContain("HTML unified artifacts")
     expect(docReview).toContain("section slice")
-    expect(docReview).toContain("product_contract_source: ce-brainstorm")
+    expect(docReview).toContain("product_contract_source: rg-brainstorm")
     expect(docReview).toContain("product_contract_source:<value>")
-    expect(docReviewTemplate).toContain("product_contract_source:ce-brainstorm")
-    expect(docReviewTemplate).toContain("product_contract_source:ce-plan-bootstrap")
+    expect(docReviewTemplate).toContain("product_contract_source:rg-brainstorm")
+    expect(docReviewTemplate).toContain("product_contract_source:rg-plan-bootstrap")
 
     expect(codeReview).toContain("docs/plans/*.{md,html}")
     expect(codeReview).toContain("Product Contract` -> `### Requirements")
@@ -177,12 +177,12 @@ describe("unified plan artifact contract", () => {
 
   test("docs and adjacent handoffs use the new convention", () => {
     expect(ideate).toContain("requirements-only unified plan under `docs/plans/`")
-    expect(agents).toContain("New `ce-brainstorm` outputs are requirements-only unified plans")
+    expect(agents).toContain("New `rg-brainstorm` outputs are requirements-only unified plans")
     expect(agents).toContain("Historical `docs/brainstorms/*-requirements.*` files remain readable legacy inputs")
   })
 
   test("launch prompt is skill-emitted at handoff, not a baked doc section", () => {
-    const planHandoff = readRepoFile("skills/ce-plan/references/plan-handoff.md")
+    const planHandoff = readRepoFile("skills/rg-plan/references/plan-handoff.md")
     // No Goal Launch Block in the artifact contract (anchor or section bullet).
     expect(planSections).not.toContain("goal-launch-block")
     expect(planSections).not.toContain("**Goal Launch Block**")
@@ -201,7 +201,7 @@ describe("unified plan artifact contract", () => {
     expect(planSections).toMatch(/do \*\*not\*\* load the entire artifact/i)
     // Size-aware: a short plan can be read in full.
     expect(planSections).toMatch(/can just be read in full/i)
-    // ce-work carries the same discipline, markdown + HTML, size-aware.
+    // rg-work carries the same discipline, markdown + HTML, size-aware.
     expect(ceWork).toContain("do **not** read the whole document first")
     expect(ceWork).toMatch(/can be read in full/i)
     expect(ceWork).toMatch(/in \*\*HTML\*\* scan the/i)
@@ -220,7 +220,7 @@ describe("unified plan artifact contract", () => {
     // abandoned-attempt code before declaring done.
     expect(planSections).toMatch(/optimization-shaped/i)
     expect(planSections).toMatch(/measurable threshold|metric target/i)
-    expect(planSections).toContain("ce-optimize")
+    expect(planSections).toContain("rg-optimize")
     expect(planSections).toMatch(/abandoned-attempt code is removed|dead-end and experimental code/i)
     expect(ceWorkEngines).toMatch(/dead-end or experimental code .* has been removed|experimental code from approaches that did not pan out/i)
   })
@@ -232,8 +232,8 @@ describe("unified plan artifact contract", () => {
     expect(planSkill).toContain("the local plan file stays canonical")
   })
 
-  test("ce-work Phase 0 parses the return-to-caller mode token before triage", () => {
-    // Codex #972 P1: lfg passes `mode:return-to-caller <plan-path>`; ce-work
+  test("rg-work Phase 0 parses the return-to-caller mode token before triage", () => {
+    // Codex #972 P1: lfg passes `mode:return-to-caller <plan-path>`; rg-work
     // must strip the mode token, not treat the whole string as a bare prompt.
     expect(ceWork).toMatch(/begins with `mode:return-to-caller`/i)
     // legacy alias still recognized so an old reference doesn't break.
@@ -242,7 +242,7 @@ describe("unified plan artifact contract", () => {
     expect(ceWork).toContain("after any mode token is stripped")
   })
 
-  test("ce-code-review discovery/extraction covers HTML and Product Contract requirements", () => {
+  test("rg-code-review discovery/extraction covers HTML and Product Contract requirements", () => {
     // Codex #972 P2: discovery must scan .html and extraction must read
     // Product Contract > Requirements, matching the completeness contract.
     expect(codeReview).toContain("docs/plans/*.{md,html}")
@@ -250,8 +250,8 @@ describe("unified plan artifact contract", () => {
     expect(codeReview).toMatch(/requirements-only artifact[\s\S]{0,80}product intent only/i)
   })
 
-  test("ce-plan 5.1.5 synthesis gate fires for unified-plan sources, not only legacy docs", () => {
-    // Codex #972 P2: new ce-brainstorm -> ce-plan <unified-plan> enrichment
+  test("rg-plan 5.1.5 synthesis gate fires for unified-plan sources, not only legacy docs", () => {
+    // Codex #972 P2: new rg-brainstorm -> rg-plan <unified-plan> enrichment
     // must still get the plan-time scoping-synthesis checkpoint.
     expect(planSkill).toMatch(/whenever Phase 0\.2 resolved an upstream Product Contract source/i)
     expect(planSkill).toMatch(/enrichment flow is brainstorm-sourced and MUST fire this gate/i)
@@ -260,7 +260,7 @@ describe("unified plan artifact contract", () => {
 
   test("evaluator-complete launch prompt lives in the engine template, not the doc", () => {
     // The goal prompt is also the completion criteria, so it must be
-    // self-contained — but it lives in the emitted template (ce-work's
+    // self-contained — but it lives in the emitted template (rg-work's
     // execution-engines.md), not as a baked plan-sections doc section.
     expect(ceWorkEngines).toMatch(/Done when the transcript shows/i)
     // The standalone /goal prompt is plan-agnostic and hardcodes no PR directive;
@@ -281,7 +281,7 @@ describe("unified plan artifact contract", () => {
   })
 
   test("a requirements-only path is an enrichment input, not a Phase 0.1 resume target", () => {
-    // Codex P1 (PR #972): lfg hands ce-plan a requirements-only docs/plans/ path
+    // Codex P1 (PR #972): lfg hands rg-plan a requirements-only docs/plans/ path
     // in disable-model-invocation pipeline mode; Phase 0.1's "confirm update-or-
     // create" fires on any referenced docs/plans/ file BEFORE Phase 0.2's
     // enrich-in-place rule, with no user to answer -> the hands-off flow strands.
@@ -300,7 +300,7 @@ describe("unified plan artifact contract", () => {
     // Codex P2 (PR #972): a format conversion writes a new canonical .md and
     // leaves the old .html with stale requirements-only metadata. Both discovery
     // sites glob .md AND .html, so they could rediscover the stale sibling and
-    // re-enrich (ce-plan) or stop (ce-work) even though the sibling is ready.
+    // re-enrich (rg-plan) or stop (rg-work) even though the sibling is ready.
     // Both must skip a requirements-only artifact that has an implementation-ready
     // same-basename sibling.
     expect(planSkill).toMatch(/Skip a superseded sibling/i)
@@ -320,7 +320,7 @@ describe("unified plan artifact contract", () => {
     expect(planSections).toMatch(/Omit it below ~?10 units/i)
   })
 
-  test("ce-plan records a Product Contract preservation note on in-place enrichment", () => {
+  test("rg-plan records a Product Contract preservation note on in-place enrichment", () => {
     expect(planSkill).toContain("Product Contract preservation")
     expect(planSkill).toMatch(/Product Contract unchanged|changed: .*R-IDs/)
   })
@@ -342,11 +342,11 @@ describe("unified plan artifact contract", () => {
   })
 
   test("post-plan menu offers /goal prompt as a mutually-exclusive executor", () => {
-    const planHandoff = readRepoFile("skills/ce-plan/references/plan-handoff.md")
+    const planHandoff = readRepoFile("skills/rg-plan/references/plan-handoff.md")
     for (const doc of [planSkill, planHandoff]) {
       expect(doc).toContain("Run it as a `/goal`")
-      // The /goal option must not also run ce-work (tail-ownership guard).
-      expect(doc).toMatch(/`ce-work` does \*{0,2}not\*{0,2} also run/i)
+      // The /goal option must not also run rg-work (tail-ownership guard).
+      expect(doc).toMatch(/`rg-work` does \*{0,2}not\*{0,2} also run/i)
       // On a callable-goal-tool host the skill starts it directly and never calls update_goal.
       expect(doc).toContain("create_goal")
       expect(doc).toMatch(/do not call `update_goal`|the goal session marks its own completion/i)
@@ -356,7 +356,7 @@ describe("unified plan artifact contract", () => {
     expect(planSkill).not.toContain("per the AGENTS.md narrow exception")
   })
 
-  test("ce-work defines the execution-engine selection lane", () => {
+  test("rg-work defines the execution-engine selection lane", () => {
     expect(ceWork).toContain("Choose Execution Engine")
     expect(ceWork).toContain("references/execution-engines.md")
     expect(ceWork).toContain("dynamic-workflow")

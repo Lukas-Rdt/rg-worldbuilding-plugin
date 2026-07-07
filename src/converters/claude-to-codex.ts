@@ -82,7 +82,7 @@ export function convertClaudeToCodex(
     // treats them as "current" and `cleanupLegacyAgentSkillDirs` doesn't
     // move still-active skills under `.codex/skills/<plugin>/<name>/` into
     // legacy-backup. Without this, re-running `install --to codex` after a
-    // native plugin install would sweep allow-listed names like `ce-plan`
+    // native plugin install would sweep allow-listed names like `rg-plan`
     // into backup because `currentSkills` (derived from skillDirs and
     // generatedSkills) would be empty while the legacy allow-list still
     // lists them.
@@ -194,12 +194,12 @@ function isDeprecatedCodexWorkflowAlias(name: string): boolean {
 }
 
 const WORKFLOW_ALIAS_OVERRIDES: Record<string, string> = {
-  "workflows:review": "ce-code-review",
+  "workflows:review": "rg-code-review",
 }
 
 function toCanonicalWorkflowSkillName(name: string): string | null {
   if (!isDeprecatedCodexWorkflowAlias(name)) return null
-  return WORKFLOW_ALIAS_OVERRIDES[name] ?? `ce-${name.slice("workflows:".length)}`
+  return WORKFLOW_ALIAS_OVERRIDES[name] ?? `rg-${name.slice("workflows:".length)}`
 }
 
 function shouldApplyCompoundWorkflowModel(plugin: ClaudePlugin): boolean {
@@ -215,11 +215,11 @@ function buildAgentTargets(plugin: ClaudePlugin, agents: CodexAgent[]): Record<s
     const aliases = [
       agent.name,
       normalizeCodexName(agent.name),
-      agent.name.startsWith("ce-") ? agent.name.slice("ce-".length) : "",
+      agent.name.startsWith("rg-") ? agent.name.slice("rg-".length) : "",
       category ? `${category}:${agent.name}` : "",
-      category && agent.name.startsWith("ce-") ? `${category}:${agent.name.slice("ce-".length)}` : "",
+      category && agent.name.startsWith("rg-") ? `${category}:${agent.name.slice("rg-".length)}` : "",
       category ? `${plugin.manifest.name}:${category}:${agent.name}` : "",
-      category && agent.name.startsWith("ce-") ? `${plugin.manifest.name}:${category}:${agent.name.slice("ce-".length)}` : "",
+      category && agent.name.startsWith("rg-") ? `${plugin.manifest.name}:${category}:${agent.name.slice("rg-".length)}` : "",
     ].filter(Boolean)
 
     for (const alias of aliases) {
@@ -236,7 +236,8 @@ function buildCodexAgentName(agent: ClaudeAgent): string {
 }
 
 function getAgentCategory(agent: ClaudeAgent): string | null {
-  const parts = agent.sourcePath.split(path.sep)
+  const normalizedPath = agent.sourcePath.replace(/\\/g, "/")
+  const parts = normalizedPath.split("/")
   const agentsIndex = parts.lastIndexOf("agents")
   if (agentsIndex === -1) return null
   const next = parts[agentsIndex + 1]

@@ -11,9 +11,9 @@ import { STALE_SKILL_DIRS } from "../src/utils/legacy-cleanup"
 //
 // The sibling registry `EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN["rg-engineering"].skills`
 // is NOT covered by this invariant: it can legitimately contain names of
-// current skills whose FLAT install path is stale (e.g. `ce-update`, which
-// now installs at `~/.codex/skills/rg-engineering/ce-update` but had a
-// pre-namespaced flat install at `~/.codex/skills/ce-update`). Sweeping the
+// current skills whose FLAT install path is stale (e.g. `rg-update`, which
+// now installs at `~/.codex/skills/rg-engineering/rg-update` but had a
+// pre-namespaced flat install at `~/.codex/skills/rg-update`). Sweeping the
 // flat path is correct even while the skill is current.
 
 const PLUGIN_ROOT = path.join(import.meta.dir, "..")

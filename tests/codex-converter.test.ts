@@ -165,11 +165,11 @@ describe("convertClaudeToCodex", () => {
       agents: [],
       skills: [
         {
-          name: "ce-plan",
+          name: "rg-plan",
           description: "Planning workflow",
           argumentHint: "[feature]",
-          sourceDir: "/tmp/plugin/skills/ce-plan",
-          skillPath: "/tmp/plugin/skills/ce-plan/SKILL.md",
+          sourceDir: "/tmp/plugin/skills/rg-plan",
+          skillPath: "/tmp/plugin/skills/rg-plan/SKILL.md",
         },
         {
           name: "workflows:plan",
@@ -191,8 +191,8 @@ describe("convertClaudeToCodex", () => {
     // No prompt wrappers for workflow skills — they're directly invocable as skills
     expect(bundle.prompts).toHaveLength(0)
 
-    // ce-plan is copied as a regular skill, workflows:plan is omitted
-    expect(bundle.skillDirs.map((skill) => skill.name)).toEqual(["ce-plan"])
+    // rg-plan is copied as a regular skill, workflows:plan is omitted
+    expect(bundle.skillDirs.map((skill) => skill.name)).toEqual(["rg-plan"])
   })
 
   test("does not apply compound workflow canonicalization to other plugins", () => {
@@ -203,11 +203,11 @@ describe("convertClaudeToCodex", () => {
       agents: [],
       skills: [
         {
-          name: "ce-plan",
+          name: "rg-plan",
           description: "Custom CE-namespaced skill",
           argumentHint: "[feature]",
-          sourceDir: "/tmp/plugin/skills/ce-plan",
-          skillPath: "/tmp/plugin/skills/ce-plan/SKILL.md",
+          sourceDir: "/tmp/plugin/skills/rg-plan",
+          skillPath: "/tmp/plugin/skills/rg-plan/SKILL.md",
         },
         {
           name: "workflows:plan",
@@ -227,7 +227,7 @@ describe("convertClaudeToCodex", () => {
     })
 
     expect(bundle.prompts).toHaveLength(0)
-    expect(bundle.skillDirs.map((skill) => skill.name)).toEqual(["ce-plan", "workflows:plan"])
+    expect(bundle.skillDirs.map((skill) => skill.name)).toEqual(["rg-plan", "workflows:plan"])
   })
 
   test("passes through MCP servers", () => {
@@ -312,33 +312,33 @@ Task best-practices-researcher(topic)`,
           description: "Planning with namespaced agents",
           body: `Run these agents in parallel:
 
-- Task rg-engineering:research:ce-repo-research-analyst(feature_description)
-- Task rg-engineering:research:ce-learnings-researcher(feature_description)
+- Task rg-engineering:research:rg-repo-research-analyst(feature_description)
+- Task rg-engineering:research:rg-learnings-researcher(feature_description)
 
 Then consolidate findings.
 
-Task rg-engineering:review:ce-security-reviewer(code_diff)`,
+Task rg-engineering:review:rg-security-reviewer(code_diff)`,
           sourcePath: "/tmp/plugin/commands/plan.md",
         },
       ],
       agents: [
         {
-          name: "ce-repo-research-analyst",
+          name: "rg-repo-research-analyst",
           description: "Repo research",
           body: "Research repositories.",
-          sourcePath: "/tmp/plugin/agents/ce-repo-research-analyst.agent.md",
+          sourcePath: "/tmp/plugin/agents/rg-repo-research-analyst.agent.md",
         },
         {
-          name: "ce-learnings-researcher",
+          name: "rg-learnings-researcher",
           description: "Learning research",
           body: "Search learnings.",
-          sourcePath: "/tmp/plugin/agents/ce-learnings-researcher.agent.md",
+          sourcePath: "/tmp/plugin/agents/rg-learnings-researcher.agent.md",
         },
         {
-          name: "ce-security-reviewer",
+          name: "rg-security-reviewer",
           description: "Security review",
           body: "Review security.",
-          sourcePath: "/tmp/plugin/agents/ce-security-reviewer.agent.md",
+          sourcePath: "/tmp/plugin/agents/rg-security-reviewer.agent.md",
         },
       ],
       skills: [],
@@ -355,9 +355,9 @@ Task rg-engineering:review:ce-security-reviewer(code_diff)`,
     expect(commandSkill).toBeDefined()
     const parsed = parseFrontmatter(commandSkill!.content)
 
-    expect(parsed.body).toContain("Spawn the custom agent `ce-repo-research-analyst` with task: feature_description")
-    expect(parsed.body).toContain("Spawn the custom agent `ce-learnings-researcher` with task: feature_description")
-    expect(parsed.body).toContain("Spawn the custom agent `ce-security-reviewer` with task: code_diff")
+    expect(parsed.body).toContain("Spawn the custom agent `rg-repo-research-analyst` with task: feature_description")
+    expect(parsed.body).toContain("Spawn the custom agent `rg-learnings-researcher` with task: feature_description")
+    expect(parsed.body).toContain("Spawn the custom agent `rg-security-reviewer` with task: code_diff")
 
     // Original namespaced Task syntax should not remain
     expect(parsed.body).not.toContain("Task rg-engineering:")
@@ -374,16 +374,16 @@ Task rg-engineering:review:ce-security-reviewer(code_diff)`,
         {
           name: "plan",
           description: "Planning with agents from a nested-layout plugin",
-          body: `- Task rg-engineering:review:ce-security-reviewer(code_diff)`,
+          body: `- Task rg-engineering:review:rg-security-reviewer(code_diff)`,
           sourcePath: "/tmp/plugin/commands/plan.md",
         },
       ],
       agents: [
         {
-          name: "ce-security-reviewer",
+          name: "rg-security-reviewer",
           description: "Security review",
           body: "Review security.",
-          sourcePath: "/tmp/plugin/agents/review/ce-security-reviewer.agent.md",
+          sourcePath: "/tmp/plugin/agents/review/rg-security-reviewer.agent.md",
         },
       ],
       skills: [],
@@ -400,7 +400,7 @@ Task rg-engineering:review:ce-security-reviewer(code_diff)`,
     expect(commandSkill).toBeDefined()
     const parsed = parseFrontmatter(commandSkill!.content)
 
-    expect(parsed.body).toContain("Spawn the custom agent `review-ce-security-reviewer` with task: code_diff")
+    expect(parsed.body).toContain("Spawn the custom agent `review-rg-security-reviewer` with task: code_diff")
   })
 
   test("transforms zero-argument Task calls", () => {
@@ -416,10 +416,10 @@ Task rg-engineering:review:ce-security-reviewer(code_diff)`,
       ],
       agents: [
         {
-          name: "ce-code-simplicity-reviewer",
+          name: "rg-code-simplicity-reviewer",
           description: "Simplicity review",
           body: "Review simplicity.",
-          sourcePath: "/tmp/plugin/agents/ce-code-simplicity-reviewer.agent.md",
+          sourcePath: "/tmp/plugin/agents/rg-code-simplicity-reviewer.agent.md",
         },
       ],
       skills: [],
@@ -435,7 +435,7 @@ Task rg-engineering:review:ce-security-reviewer(code_diff)`,
     const commandSkill = bundle.generatedSkills.find((s) => s.name === "review")
     expect(commandSkill).toBeDefined()
     const parsed = parseFrontmatter(commandSkill!.content)
-    expect(parsed.body).toContain("Spawn the custom agent `ce-code-simplicity-reviewer`")
+    expect(parsed.body).toContain("Spawn the custom agent `rg-code-simplicity-reviewer`")
     expect(parsed.body).not.toContain("rg-engineering:")
     expect(parsed.body).not.toContain("skill to:")
   })
@@ -530,27 +530,27 @@ Don't confuse with file paths like /tmp/output.md or /dev/null.`,
         {
           name: "review",
           description: "Review command",
-          body: `After the brainstorm, run /ce-plan.
+          body: `After the brainstorm, run /rg-plan.
 
-If planning is complete, continue with /ce-work.`,
+If planning is complete, continue with /rg-work.`,
           sourcePath: "/tmp/plugin/commands/review.md",
         },
       ],
       agents: [],
       skills: [
         {
-          name: "ce-plan",
+          name: "rg-plan",
           description: "Planning workflow",
           argumentHint: "[feature]",
-          sourceDir: "/tmp/plugin/skills/ce-plan",
-          skillPath: "/tmp/plugin/skills/ce-plan/SKILL.md",
+          sourceDir: "/tmp/plugin/skills/rg-plan",
+          skillPath: "/tmp/plugin/skills/rg-plan/SKILL.md",
         },
         {
-          name: "ce-work",
+          name: "rg-work",
           description: "Implementation workflow",
           argumentHint: "[feature]",
-          sourceDir: "/tmp/plugin/skills/ce-work",
-          skillPath: "/tmp/plugin/skills/ce-work/SKILL.md",
+          sourceDir: "/tmp/plugin/skills/rg-work",
+          skillPath: "/tmp/plugin/skills/rg-work/SKILL.md",
         },
         {
           name: "workflows:work",
@@ -574,8 +574,8 @@ If planning is complete, continue with /ce-work.`,
     const parsed = parseFrontmatter(commandSkill!.content)
 
     // Workflow skills are now regular skills, so references use skill syntax
-    expect(parsed.body).toContain("the ce-plan skill")
-    expect(parsed.body).toContain("the ce-work skill")
+    expect(parsed.body).toContain("the rg-plan skill")
+    expect(parsed.body).toContain("the rg-work skill")
   })
 
   test("excludes commands with disable-model-invocation from prompts and skills", () => {

@@ -18,7 +18,7 @@ When adding support for a new AI platform, the converter CLI architecture requir
 
 ## Solution
 
-The compound-engineering-plugin uses a proven **6-phase target provider pattern** that has been applied across converter targets this repo maintains. Some older converter modules remain in tests or cleanup paths for compatibility, but new user-facing installs should prefer native package/plugin mechanisms when the harness supports them.
+The rg-engineering-plugin uses a proven **6-phase target provider pattern** that has been applied across converter targets this repo maintains. Some older converter modules remain in tests or cleanup paths for compatibility, but new user-facing installs should prefer native package/plugin mechanisms when the harness supports them.
 
 1. **OpenCode** (primary target, reference implementation)
 2. **Codex** (second target, established pattern)

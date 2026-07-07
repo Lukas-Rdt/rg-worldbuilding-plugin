@@ -3,14 +3,14 @@ import path from "path"
 import { describe, expect, test } from "bun:test"
 
 // html-rendering.md is the format-rendering reference for HTML output. It is
-// byte-duplicated between ce-plan and ce-brainstorm (enforced by
+// byte-duplicated between rg-plan and rg-brainstorm (enforced by
 // tests/compound-support-files.test.ts), so we test one copy and trust the
 // drift check to cover the other. The assertions below pin failure-mode
 // defenses observed across iterative dogfood — each rule prevents a named
 // bad outcome.
 const REFERENCE_PATH = path.join(
   process.cwd(),
-  "skills/ce-plan/references/html-rendering.md",
+  "skills/rg-plan/references/html-rendering.md",
 )
 const REFERENCE = readFileSync(REFERENCE_PATH, "utf8")
 
@@ -358,8 +358,8 @@ describe("html-rendering.md reference content invariants", () => {
     ).toBe(true)
     // Another-agent P2 (PR #972): brainstorm requirements output is now a
     // requirements-only unified plan under docs/plans/, so "not plan artifacts"
-    // must mean implementation-ready plans (ce-plan output), NOT exclude the
-    // requirements-only unified plan that ce-brainstorm writes — otherwise HTML
+    // must mean implementation-ready plans (rg-plan output), NOT exclude the
+    // requirements-only unified plan that rg-brainstorm writes — otherwise HTML
     // brainstorms for UI changes would suppress the intended wireframe.
     expect(
       /requirements-only unified plan/i.test(REFERENCE) &&
@@ -375,7 +375,7 @@ describe("html-rendering.md reference content invariants", () => {
   })
 
   test("section heading vocabulary matches section contract names", () => {
-    // ce-work and ce-doc-review grep for section names (Implementation
+    // rg-work and rg-doc-review grep for section names (Implementation
     // Units, Requirements, etc.). If HTML re-titles them for editorial
     // narrative ("What the route guarantees" instead of "Requirements"),
     // downstream agents lose them. This rule defends against that.

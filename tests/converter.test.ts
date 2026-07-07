@@ -7,11 +7,11 @@ import { parseFrontmatter } from "../src/utils/frontmatter"
 import type { ClaudePlugin } from "../src/types/claude"
 
 const fixtureRoot = path.join(import.meta.dir, "fixtures", "sample-plugin")
-const compoundEngineeringRoot = path.join(import.meta.dir, "..")
+const rgEngineeringRoot = path.join(import.meta.dir, "..")
 
 describe("convertClaudeToOpenCode", () => {
   test("current rg-engineering output is skills only, no standalone agents, with one command stub per skill", async () => {
-    const plugin = await loadClaudePlugin(compoundEngineeringRoot)
+    const plugin = await loadClaudePlugin(rgEngineeringRoot)
     const bundle = convertClaudeToOpenCode(plugin, {
       agentMode: "subagent",
       inferTemperature: true,
@@ -608,16 +608,16 @@ describe("transformSkillContentForOpenCode", () => {
     expect(transformSkillContentForOpenCode(input)).toBe(input)
   })
 
-  test("rewrites 2-segment category:ce-agent refs to flat names", () => {
-    const input = "Dispatch `review:ce-correctness-reviewer` for logic checks."
+  test("rewrites 2-segment category:rg-agent refs to flat names", () => {
+    const input = "Dispatch `review:rg-correctness-reviewer` for logic checks."
     expect(transformSkillContentForOpenCode(input)).toBe(
-      "Dispatch `ce-correctness-reviewer` for logic checks.",
+      "Dispatch `rg-correctness-reviewer` for logic checks.",
     )
   })
 
-  test("preserves 2-segment refs without ce- prefix", () => {
+  test("preserves 2-segment refs without rg- prefix", () => {
     const input = "Spawn `rg-engineering:coherence-reviewer` as subagent."
-    // 2-segment names without ce- prefix could be skill refs — not rewritten
+    // 2-segment names without rg- prefix could be skill refs — not rewritten
     expect(transformSkillContentForOpenCode(input)).toBe(input)
   })
 

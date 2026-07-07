@@ -162,12 +162,12 @@ AutoResearch is single-threaded. AIDE and AI Scientist run parallel experiments.
 
 The optimization loop should compose with existing CE capabilities:
 
-- **`/ce:ideate`** or **`/ce:brainstorm`** to generate initial hypothesis space
+- **`/rg:ideate`** or **`/rg:brainstorm`** to generate initial hypothesis space
 - **Learnings researcher** to check if similar optimization was done before
-- **`/ce:compound`** to capture the winning strategy as institutional knowledge after the loop completes
-- **`/ce:review`** optionally on the final winning diff before it's merged
+- **`/rg:compound`** to capture the winning strategy as institutional knowledge after the loop completes
+- **`/rg:review`** optionally on the final winning diff before it's merged
 
-## Proposed Skill: `/ce-optimize`
+## Proposed Skill: `/rg-optimize`
 
 ### Workflow Phases
 
@@ -200,7 +200,7 @@ Phase 1: Measurement Scaffolding (HARD GATE - user must approve before Phase 2)
 
 Phase 2: Hypothesis Generation + Dependency Approval
   |-- Analyze the problem space (read code, understand current approach)
-  |-- Generate initial hypothesis list (agent + optionally /ce:ideate)
+  |-- Generate initial hypothesis list (agent + optionally /rg:ideate)
   |-- Prioritize by expected impact and feasibility
   |-- Identify new dependencies across ALL planned hypotheses
   |-- Present dependency list for bulk approval
@@ -235,8 +235,8 @@ Phase 4: Wrap-Up
   |-- Present deferred hypotheses needing dep approval (if any)
   |-- Summarize results: baseline -> final metrics, total iterations, kept improvements
   |-- Preserve ALL experiment branches for reference
-  |-- Optionally run /ce:review on cumulative diff
-  |-- Optionally run /ce:compound to capture winning strategy as learning
+  |-- Optionally run /rg:review on cumulative diff
+  |-- Optionally run /rg:compound to capture winning strategy as learning
   '-- Report to user
 ```
 
@@ -247,7 +247,7 @@ See "Updated Spec File Format" in the Resolved Design Decisions section below fo
 ### Experiment Log Format
 
 ```yaml
-# .context/compound-engineering/optimize/experiment-log.yaml
+# .context/rg-engineering/optimize/experiment-log.yaml
 spec: "improve-issue-clustering"
 
 baseline:
@@ -516,14 +516,14 @@ judge:
 
 ### D5: Codex Support -> DECIDED: Include from v1
 
-Based on patterns from PRs #364/#365 in the compound-engineering plugin:
+Based on patterns from PRs #364/#365 in the rg-engineering plugin:
 
 **Dispatch pattern**: Write experiment prompt to a temp file, pipe to `codex exec` via stdin:
 ```bash
 cat /tmp/optimize-exp-XXXXX.txt | codex exec --skip-git-repo-check - 2>&1
 ```
 
-**Security posture**: User selects once per session (same as ce-work-beta):
+**Security posture**: User selects once per session (same as rg-work-beta):
 - Workspace write (`--full-auto`)
 - Full access (`--dangerously-bypass-approvals-and-sandbox`)
 
@@ -707,7 +707,7 @@ parallel:
 ### Example A: Hard-Metric Primary (build performance, test pass rate)
 
 ```yaml
-# .context/compound-engineering/optimize/spec.yaml
+# .context/rg-engineering/optimize/spec.yaml
 name: "reduce-build-time"
 description: "Reduce CI build time while maintaining test pass rate"
 
@@ -741,7 +741,7 @@ measurement:
 ### Example B: LLM-Judge Primary (clustering quality, search relevance)
 
 ```yaml
-# .context/compound-engineering/optimize/spec.yaml
+# .context/rg-engineering/optimize/spec.yaml
 name: "improve-issue-clustering"
 description: "Improve coherence and coverage of issue/PR clusters"
 
@@ -894,9 +894,9 @@ stopping:
 
 4. **Relationship to `/lfg` and `/slfg`?**
    - `/lfg` is autonomous execution of a single task
-   - `/ce-optimize` is autonomous execution of an iterative search
-   - `/ce-optimize` can delegate each experiment to Codex (decided D5)
-   - Local experiments use subagent dispatch similar to `/ce:review`
+   - `/rg-optimize` is autonomous execution of an iterative search
+   - `/rg-optimize` can delegate each experiment to Codex (decided D5)
+   - Local experiments use subagent dispatch similar to `/rg:review`
 
 5. **Branch strategy details?**
    - Main optimization branch: `optimize/<spec-name>`

@@ -1,22 +1,22 @@
 ---
-title: "feat(ce-demo-reel): Add local save as alternative to catbox upload"
+title: "feat(rg-demo-reel): Add local save as alternative to catbox upload"
 type: feat
 status: active
 date: 2026-04-22
 origin: docs/brainstorms/2026-04-22-demo-reel-local-save-requirements.md
 ---
 
-# feat(ce-demo-reel): Add local save as alternative to catbox upload
+# feat(rg-demo-reel): Add local save as alternative to catbox upload
 
 ## Overview
 
-Add a destination choice to the ce-demo-reel upload flow: after capture, the user picks either "upload to catbox" (existing behavior) or "save locally" (new). Local save copies the final artifact to a stable OS-temp path with a descriptive filename. The catbox upload path is unchanged.
+Add a destination choice to the rg-demo-reel upload flow: after capture, the user picks either "upload to catbox" (existing behavior) or "save locally" (new). Local save copies the final artifact to a stable OS-temp path with a descriptive filename. The catbox upload path is unchanged.
 
 ---
 
 ## Problem Frame
 
-When ce-demo-reel captures evidence, local artifacts are deleted after uploading to catbox.moe. Users who want to keep evidence locally have no way to do so. (See origin: `docs/brainstorms/2026-04-22-demo-reel-local-save-requirements.md`)
+When rg-demo-reel captures evidence, local artifacts are deleted after uploading to catbox.moe. Users who want to keep evidence locally have no way to do so. (See origin: `docs/brainstorms/2026-04-22-demo-reel-local-save-requirements.md`)
 
 ---
 
@@ -24,7 +24,7 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 
 - R1. After capture completes, ask the user whether to upload to catbox or save locally
 - R2. The question must present the captured artifact(s) and clearly describe both options
-- R3. When the user chooses local save, copy artifacts to `$TMPDIR/compound-engineering/ce-demo-reel/`; do not upload to catbox
+- R3. When the user chooses local save, copy artifacts to `$TMPDIR/rg-engineering/rg-demo-reel/`; do not upload to catbox
 - R4. Create the destination directory if it does not exist
 - R5. Use a descriptive filename with branch name and timestamp to avoid collisions
 - R6. After saving, display the local file path(s) to the user
@@ -35,7 +35,7 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 
 - Catbox upload logic itself is unchanged — only the routing is new
 - No automatic git-add or commit of saved artifacts
-- No configurable save path — `$TMPDIR/compound-engineering/ce-demo-reel/` is the fixed default
+- No configurable save path — `$TMPDIR/rg-engineering/rg-demo-reel/` is the fixed default
 - No retroactive save of previously captured evidence
 
 ---
@@ -44,9 +44,9 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 
 ### Relevant Code and Patterns
 
-- `plugins/compound-engineering/skills/ce-demo-reel/references/upload-and-approval.md` — the 5-step upload flow where the destination choice will be inserted
-- `plugins/compound-engineering/skills/ce-demo-reel/scripts/capture-demo.py` — pipeline script with `preview` and `upload` subcommands; will get a new `save-local` subcommand
-- `plugins/compound-engineering/skills/ce-demo-reel/SKILL.md` — Step 8 delegates to `upload-and-approval.md`; Output section defines the return format
+- `plugins/rg-engineering/skills/rg-demo-reel/references/upload-and-approval.md` — the 5-step upload flow where the destination choice will be inserted
+- `plugins/rg-engineering/skills/rg-demo-reel/scripts/capture-demo.py` — pipeline script with `preview` and `upload` subcommands; will get a new `save-local` subcommand
+- `plugins/rg-engineering/skills/rg-demo-reel/SKILL.md` — Step 8 delegates to `upload-and-approval.md`; Output section defines the return format
 
 ### Institutional Learnings
 
@@ -87,10 +87,10 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 **Dependencies:** None
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-demo-reel/scripts/capture-demo.py`
+- Modify: `plugins/rg-engineering/skills/rg-demo-reel/scripts/capture-demo.py`
 
 **Approach:**
-- Add `save-local` subcommand accepting `--file` (artifact path), `--branch` (branch name), and `--output-dir` (target directory, defaults to `$TMPDIR/compound-engineering/ce-demo-reel/`)
+- Add `save-local` subcommand accepting `--file` (artifact path), `--branch` (branch name), and `--output-dir` (target directory, defaults to `$TMPDIR/rg-engineering/rg-demo-reel/`)
 - Create output directory with `os.makedirs(exist_ok=True)`
 - Sanitize branch name: replace `/` with `-`, strip non-alphanumeric chars except `-`, truncate to 60 chars
 - Generate filename: `<sanitized-branch>-<YYYYMMDD-HHMMSS>.<ext>` where ext comes from the source file
@@ -103,8 +103,8 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 - Argparse registration pattern at bottom of file
 
 **Test scenarios:**
-- Happy path: `save-local --file /tmp/demo.gif --branch feat/add-login` creates `$TMPDIR/compound-engineering/ce-demo-reel/feat-add-login-<timestamp>.gif` and prints the path
-- Happy path: `save-local --file /tmp/screenshot.png --branch main` creates `$TMPDIR/compound-engineering/ce-demo-reel/main-<timestamp>.png`
+- Happy path: `save-local --file /tmp/demo.gif --branch feat/add-login` creates `$TMPDIR/rg-engineering/rg-demo-reel/feat-add-login-<timestamp>.gif` and prints the path
+- Happy path: `save-local --file /tmp/screenshot.png --branch main` creates `$TMPDIR/rg-engineering/rg-demo-reel/main-<timestamp>.png`
 - Edge case: branch with deep nesting `feat/team/subsystem/thing` sanitizes to `feat-team-subsystem-thing`
 - Edge case: branch name exceeding 60 chars is truncated
 - Edge case: output directory does not exist — created automatically
@@ -124,7 +124,7 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 **Dependencies:** U1
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-demo-reel/references/upload-and-approval.md`
+- Modify: `plugins/rg-engineering/skills/rg-demo-reel/references/upload-and-approval.md`
 
 **Approach:**
 - Step 1 (preview upload) stays unchanged — user still sees a preview
@@ -164,7 +164,7 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 **Dependencies:** U2
 
 **Files:**
-- Modify: `plugins/compound-engineering/skills/ce-demo-reel/SKILL.md`
+- Modify: `plugins/rg-engineering/skills/rg-demo-reel/SKILL.md`
 
 **Approach:**
 - In the Output section, add `Path` as an alternative to `URL`:
@@ -182,13 +182,13 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 
 **Verification:**
 - Output contract is clear about when `Path` vs `URL` is present
-- Callers (e.g., ce-commit-push-pr) can distinguish local from remote evidence
+- Callers (e.g., rg-commit-push-pr) can distinguish local from remote evidence
 
 ---
 
 ## System-Wide Impact
 
-- **Interaction graph:** ce-commit-push-pr is the primary caller of ce-demo-reel. It currently expects a `URL` in the output to embed in PR descriptions. With local saves, it will receive `Path` instead — it should handle this gracefully (e.g., skip embedding or note that evidence is local-only).
+- **Interaction graph:** rg-commit-push-pr is the primary caller of rg-demo-reel. It currently expects a `URL` in the output to embed in PR descriptions. With local saves, it will receive `Path` instead — it should handle this gracefully (e.g., skip embedding or note that evidence is local-only).
 - **Error propagation:** If `save-local` fails (disk full, permission denied), the artifact still exists in `[RUN_DIR]`. The skill should report the error and offer to retry or fall back to catbox upload.
 - **Unchanged invariants:** The catbox preview/upload pipeline, tier selection, and capture logic are entirely untouched.
 
@@ -198,7 +198,7 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 
 | Risk | Mitigation |
 |------|------------|
-| ce-commit-push-pr doesn't handle `Path` output | Check how ce-commit-push-pr consumes demo-reel output; update if needed (but scoped out of this plan per scope boundaries) |
+| rg-commit-push-pr doesn't handle `Path` output | Check how rg-commit-push-pr consumes demo-reel output; update if needed (but scoped out of this plan per scope boundaries) |
 | OS-temp files cleaned by system reboot | Acceptable — demo reel artifacts are transient; users can `mv` to repo if they want to commit |
 
 ---
@@ -206,5 +206,5 @@ When ce-demo-reel captures evidence, local artifacts are deleted after uploading
 ## Sources & References
 
 - **Origin document:** [docs/brainstorms/2026-04-22-demo-reel-local-save-requirements.md](docs/brainstorms/2026-04-22-demo-reel-local-save-requirements.md)
-- Related code: `plugins/compound-engineering/skills/ce-demo-reel/`
+- Related code: `plugins/rg-engineering/skills/rg-demo-reel/`
 - Learnings: `docs/solutions/skill-design/script-first-skill-architecture.md`, `docs/solutions/best-practices/prefer-python-over-bash-for-pipeline-scripts.md`

@@ -29,20 +29,20 @@ async function runGit(args: string[], cwd: string, env?: NodeJS.ProcessEnv): Pro
 const HISTORICAL_AGENT_DESCRIPTIONS: Record<string, string> = {
   "bug-reproduction-validator":
     "Systematically reproduces and validates bug reports to confirm whether reported behavior is an actual bug. Use when you receive a bug report or issue that needs verification.",
-  "ce-adversarial-reviewer":
+  "rg-adversarial-reviewer":
     "Conditional code-review persona, selected when the diff is large (>=50 changed lines) or touches high-risk domains like auth, payments, data mutations, or external APIs. Actively constructs failure scenarios to break the implementation rather than checking against known patterns.",
-  "ce-repo-research-analyst":
+  "rg-repo-research-analyst":
     "Conducts thorough research on repository structure, documentation, conventions, and implementation patterns. Use when onboarding to a new codebase or understanding project conventions.",
 }
 
 const HISTORICAL_SKILL_DESCRIPTIONS: Record<string, string> = {
-  "ce-plan":
-    "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer ce-brainstorm first.",
-  "ce:plan":
-    "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer ce-brainstorm first.",
-  "ce:review-beta":
+  "rg-plan":
+    "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
+  "rg:plan":
+    "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
+  "rg:review-beta":
     "[BETA] Structured code review using tiered persona agents, confidence-gated findings, and a merge/dedup pipeline. Use when reviewing code changes before creating a PR.",
-  "ce-update":
+  "rg-update":
     "Check if the rg-engineering plugin is up to date and recommend the\nupdate command if not. Use when the user says \"update compound engineering\",\n\"check compound engineering version\", \"ce update\", \"is compound engineering\nup to date\", \"update ce plugin\", or reports issues that might stem from a\nstale rg-engineering plugin version. This skill only works in Claude\nCode — it relies on the plugin harness cache layout.\n",
   "git-commit-push-pr":
     "Commit, push, and open a PR with an adaptive, value-first description that scales in depth with the change. Use when the user says \"commit and PR\", \"ship this\", \"create a PR\", or \"open a pull request\". Also handles description-only flows (\"write a PR description\", \"rewrite the PR body\", \"describe this PR\") without committing or pushing.",
@@ -199,18 +199,18 @@ describe("CLI", () => {
     const agentsRoot = path.join(tempRoot, ".agents")
     const repoRoot = path.join(import.meta.dir, "..")
 
-    await fs.mkdir(path.join(codexRoot, "skills", "ce:plan"), { recursive: true })
-    await fs.writeFile(path.join(codexRoot, "skills", "ce:plan", "SKILL.md"), skillContent("ce:plan", historicalSkillDescription("ce:plan")))
-    await fs.mkdir(path.join(codexRoot, "skills", "ce:review-beta"), { recursive: true })
-    await fs.writeFile(path.join(codexRoot, "skills", "ce:review-beta", "SKILL.md"), skillContent("ce:review-beta", historicalSkillDescription("ce:review-beta")))
-    await fs.mkdir(path.join(codexRoot, "skills", "ce-update"), { recursive: true })
-    await fs.writeFile(path.join(codexRoot, "skills", "ce-update", "SKILL.md"), skillContent("ce-update", historicalSkillDescription("ce-update")))
+    await fs.mkdir(path.join(codexRoot, "skills", "rg:plan"), { recursive: true })
+    await fs.writeFile(path.join(codexRoot, "skills", "rg:plan", "SKILL.md"), skillContent("rg:plan", historicalSkillDescription("rg:plan")))
+    await fs.mkdir(path.join(codexRoot, "skills", "rg:review-beta"), { recursive: true })
+    await fs.writeFile(path.join(codexRoot, "skills", "rg:review-beta", "SKILL.md"), skillContent("rg:review-beta", historicalSkillDescription("rg:review-beta")))
+    await fs.mkdir(path.join(codexRoot, "skills", "rg-update"), { recursive: true })
+    await fs.writeFile(path.join(codexRoot, "skills", "rg-update", "SKILL.md"), skillContent("rg-update", historicalSkillDescription("rg-update")))
     // A user-authored skill at a flat path whose name happens to collide with
-    // a current CE skill name (ce-debug is a current CE skill that has never
+    // a current CE skill name (rg-debug is a current CE skill that has never
     // been on the historical flat-path allow-list). The cleanup MUST NOT move
     // it -- otherwise we silently destroy unrelated user content. This guards
     // against the regression flagged in PR #609.
-    const userOwnedSkillDir = path.join(codexRoot, "skills", "ce-debug")
+    const userOwnedSkillDir = path.join(codexRoot, "skills", "rg-debug")
     await fs.mkdir(userOwnedSkillDir, { recursive: true })
     const userOwnedSkillContent = "# user-authored skill, not from CE"
     await fs.writeFile(path.join(userOwnedSkillDir, "SKILL.md"), userOwnedSkillContent)
@@ -225,29 +225,29 @@ describe("CLI", () => {
       codexRoot,
       "skills",
       "rg-engineering",
-      "ce-plan",
+      "rg-plan",
     )
     await fs.mkdir(sharedAgentSymlinkTarget, { recursive: true })
     await fs.writeFile(path.join(sharedAgentSymlinkTarget, "SKILL.md"), "legacy shared skill")
     await fs.mkdir(path.join(agentsRoot, "skills"), { recursive: true })
-    await fs.symlink(sharedAgentSymlinkTarget, path.join(agentsRoot, "skills", "ce-plan"))
+    await fs.symlink(sharedAgentSymlinkTarget, path.join(agentsRoot, "skills", "rg-plan"))
     await fs.mkdir(path.join(codexRoot, "skills", "rg-engineering", "repo-research-analyst"), { recursive: true })
     await fs.writeFile(
       path.join(codexRoot, "skills", "rg-engineering", "repo-research-analyst", "SKILL.md"),
-      skillContent("repo-research-analyst", historicalAgentDescription("ce-repo-research-analyst")),
+      skillContent("repo-research-analyst", historicalAgentDescription("rg-repo-research-analyst")),
     )
-    await fs.mkdir(path.join(codexRoot, "skills", "rg-engineering", "ce-plan"), { recursive: true })
+    await fs.mkdir(path.join(codexRoot, "skills", "rg-engineering", "rg-plan"), { recursive: true })
     await fs.writeFile(
-      path.join(codexRoot, "skills", "rg-engineering", "ce-plan", "SKILL.md"),
+      path.join(codexRoot, "skills", "rg-engineering", "rg-plan", "SKILL.md"),
       "current namespaced skill",
     )
     await fs.mkdir(path.join(codexRoot, "agents", "rg-engineering"), { recursive: true })
     await fs.writeFile(
-      path.join(codexRoot, "agents", "rg-engineering", "ce-learnings-researcher.toml"),
+      path.join(codexRoot, "agents", "rg-engineering", "rg-learnings-researcher.toml"),
       "legacy namespaced agent toml",
     )
     await fs.writeFile(
-      path.join(codexRoot, "agents", "ce-repo-research-analyst.toml"),
+      path.join(codexRoot, "agents", "rg-repo-research-analyst.toml"),
       "legacy flat agent toml",
     )
 
@@ -277,24 +277,24 @@ describe("CLI", () => {
     }
 
     expect(stdout).toContain("Cleaned codex")
-    // 7 historical artifacts get backed up: ce:plan, ce:review-beta, ce-update
-    // (pre-namespaced flat path; ce-update is a current skill but its managed
-    // install is at ~/.codex/skills/rg-engineering/ce-update, so the
-    // flat path is legacy), report-bug.md, the .agents/skills/ce-plan
+    // 7 historical artifacts get backed up: rg:plan, rg:review-beta, rg-update
+    // (pre-namespaced flat path; rg-update is a current skill but its managed
+    // install is at ~/.codex/skills/rg-engineering/rg-update, so the
+    // flat path is legacy), report-bug.md, the .agents/skills/rg-plan
     // symlink-equivalent, and the namespaced
     // rg-engineering/repo-research-analyst directory, plus the old
     // namespaced Codex TOML agent. The unowned flat Codex TOML collision and
-    // user-authored ce-debug skill are preserved.
+    // user-authored rg-debug skill are preserved.
     expect(stdout).toContain("backed up 7 artifact")
-    expect(await exists(path.join(codexRoot, "skills", "ce:plan"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "skills", "ce:review-beta"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "skills", "ce-update"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg:plan"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg:review-beta"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg-update"))).toBe(false)
     expect(await exists(path.join(codexRoot, "prompts", "report-bug.md"))).toBe(false)
-    expect(await exists(path.join(agentsRoot, "skills", "ce-plan"))).toBe(false)
+    expect(await exists(path.join(agentsRoot, "skills", "rg-plan"))).toBe(false)
     expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "repo-research-analyst"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "agents", "rg-engineering", "ce-learnings-researcher.toml"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "agents", "ce-repo-research-analyst.toml"))).toBe(true)
-    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "ce-plan"))).toBe(true)
+    expect(await exists(path.join(codexRoot, "agents", "rg-engineering", "rg-learnings-researcher.toml"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "agents", "rg-repo-research-analyst.toml"))).toBe(true)
+    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "rg-plan"))).toBe(true)
     expect(await exists(path.join(codexRoot, "rg-engineering", "legacy-backup"))).toBe(true)
     expect(await exists(path.join(agentsRoot, "rg-engineering", "legacy-backup"))).toBe(true)
 
@@ -323,14 +323,14 @@ describe("CLI", () => {
     )
     const userAgentBody = [
       "---",
-      "name: ce-repo-research-analyst",
+      "name: rg-repo-research-analyst",
       "description: Personal Pi agent for local research",
       "---",
       "",
       "User-authored agent body",
       "",
     ].join("\n")
-    await fs.writeFile(path.join(agentsRoot, "ce-repo-research-analyst.md"), userAgentBody)
+    await fs.writeFile(path.join(agentsRoot, "rg-repo-research-analyst.md"), userAgentBody)
 
     const proc = Bun.spawn([
       "bun",
@@ -358,8 +358,8 @@ describe("CLI", () => {
     expect(stdout).toContain("Cleaned pi")
     expect(stdout).toContain("backed up 1 artifact")
     expect(await exists(path.join(agentsRoot, "repo-research-analyst.md"))).toBe(false)
-    expect(await exists(path.join(agentsRoot, "ce-repo-research-analyst.md"))).toBe(true)
-    expect(await fs.readFile(path.join(agentsRoot, "ce-repo-research-analyst.md"), "utf8")).toBe(userAgentBody)
+    expect(await exists(path.join(agentsRoot, "rg-repo-research-analyst.md"))).toBe(true)
+    expect(await fs.readFile(path.join(agentsRoot, "rg-repo-research-analyst.md"), "utf8")).toBe(userAgentBody)
     expect(await exists(path.join(piRoot, "rg-engineering", "legacy-backup"))).toBe(true)
   })
 
@@ -378,25 +378,25 @@ describe("CLI", () => {
     const agentsRoot = path.join(tempRoot, ".agents")
     const repoRoot = path.join(import.meta.dir, "..")
 
-    // (1) CE-owned symlink: points inside `<codex>/skills/<plugin>/ce-plan`.
-    const ceOwnedTarget = path.join(codexRoot, "skills", "rg-engineering", "ce-plan")
+    // (1) CE-owned symlink: points inside `<codex>/skills/<plugin>/rg-plan`.
+    const ceOwnedTarget = path.join(codexRoot, "skills", "rg-engineering", "rg-plan")
     await fs.mkdir(ceOwnedTarget, { recursive: true })
-    await fs.writeFile(path.join(ceOwnedTarget, "SKILL.md"), "ce-owned skill")
+    await fs.writeFile(path.join(ceOwnedTarget, "SKILL.md"), "rg-owned skill")
     await fs.mkdir(path.join(agentsRoot, "skills"), { recursive: true })
-    await fs.symlink(ceOwnedTarget, path.join(agentsRoot, "skills", "ce-plan"))
+    await fs.symlink(ceOwnedTarget, path.join(agentsRoot, "skills", "rg-plan"))
 
     // (2) User-authored symlink at a colliding legacy name -- points to a
     // directory the user controls, outside CE's managed roots.
-    const userOwnedTarget = path.join(tempRoot, "user-skills", "ce-update")
+    const userOwnedTarget = path.join(tempRoot, "user-skills", "rg-update")
     await fs.mkdir(userOwnedTarget, { recursive: true })
     const userSymlinkContent = "# user-authored skill reachable via symlink"
     await fs.writeFile(path.join(userOwnedTarget, "SKILL.md"), userSymlinkContent)
-    await fs.symlink(userOwnedTarget, path.join(agentsRoot, "skills", "ce-update"))
+    await fs.symlink(userOwnedTarget, path.join(agentsRoot, "skills", "rg-update"))
 
     // (3) User-authored plain directory at a colliding legacy name. CE only
     // ever emitted symlinks into `~/.agents/skills/`, so a real directory
     // here is user-owned by definition and must not be touched.
-    const userPlainDir = path.join(agentsRoot, "skills", "ce-debug")
+    const userPlainDir = path.join(agentsRoot, "skills", "rg-debug")
     await fs.mkdir(userPlainDir, { recursive: true })
     const userPlainContent = "# user-authored skill, plain directory"
     await fs.writeFile(path.join(userPlainDir, "SKILL.md"), userPlainContent)
@@ -427,14 +427,14 @@ describe("CLI", () => {
     }
 
     // (1) CE-owned symlink was moved out of `.agents/skills/`.
-    expect(await exists(path.join(agentsRoot, "skills", "ce-plan"))).toBe(false)
+    expect(await exists(path.join(agentsRoot, "skills", "rg-plan"))).toBe(false)
     // Its target directory is preserved (cleanupCodex leaves current
     // namespaced skills alone; the shared symlink cleanup only touches the
     // link, not its target).
     expect(await exists(ceOwnedTarget)).toBe(true)
 
     // (2) User-authored symlink and its target both survive intact.
-    expect(await exists(path.join(agentsRoot, "skills", "ce-update"))).toBe(true)
+    expect(await exists(path.join(agentsRoot, "skills", "rg-update"))).toBe(true)
     expect(await exists(path.join(userOwnedTarget, "SKILL.md"))).toBe(true)
     expect(await fs.readFile(path.join(userOwnedTarget, "SKILL.md"), "utf8")).toBe(userSymlinkContent)
 
@@ -459,9 +459,9 @@ describe("CLI", () => {
     // Namespaced managed skills dir with stale agent-as-skill entries and one
     // current-named skill that must survive.
     const staleAgentSkills = [
-      "ce-correctness-reviewer",  // current agent name, old generated-skill emission
-      "ce-feasibility-reviewer",  // same
-      "ce-adversarial-reviewer",  // same
+      "rg-correctness-reviewer",  // current agent name, old generated-skill emission
+      "rg-feasibility-reviewer",  // same
+      "rg-adversarial-reviewer",  // same
     ]
     for (const skillName of staleAgentSkills) {
       const dir = path.join(codexRoot, "skills", "rg-engineering", skillName)
@@ -469,14 +469,14 @@ describe("CLI", () => {
       await fs.writeFile(path.join(dir, "SKILL.md"), `stale agent-as-skill ${skillName}`)
     }
     // A current-named skill the prior install also tracked.
-    await fs.mkdir(path.join(codexRoot, "skills", "rg-engineering", "ce-plan"), { recursive: true })
+    await fs.mkdir(path.join(codexRoot, "skills", "rg-engineering", "rg-plan"), { recursive: true })
     await fs.writeFile(
-      path.join(codexRoot, "skills", "rg-engineering", "ce-plan", "SKILL.md"),
+      path.join(codexRoot, "skills", "rg-engineering", "rg-plan", "SKILL.md"),
       "current namespaced skill",
     )
     // Stale prompt from the prior install.
     await fs.mkdir(path.join(codexRoot, "prompts"), { recursive: true })
-    await fs.writeFile(path.join(codexRoot, "prompts", "ce-plan.md"), "stale prompt from prior CE version")
+    await fs.writeFile(path.join(codexRoot, "prompts", "rg-plan.md"), "stale prompt from prior CE version")
 
     // Install manifest listing all the prior-install artifacts.
     const managedDir = path.join(codexRoot, "rg-engineering")
@@ -487,8 +487,8 @@ describe("CLI", () => {
         {
           version: 1,
           pluginName: "rg-engineering",
-          skills: [...staleAgentSkills, "ce-plan"],
-          prompts: ["ce-plan.md"],
+          skills: [...staleAgentSkills, "rg-plan"],
+          prompts: ["rg-plan.md"],
           agents: [],
         },
         null,
@@ -526,9 +526,9 @@ describe("CLI", () => {
       expect(await exists(path.join(codexRoot, "skills", "rg-engineering", skillName))).toBe(false)
     }
     // Current-named namespaced skill survives (it's in the current bundle).
-    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "ce-plan"))).toBe(true)
-    // Stale prompt migrated (ce-plan is a skill now, not a command/prompt in current CE).
-    expect(await exists(path.join(codexRoot, "prompts", "ce-plan.md"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "rg-plan"))).toBe(true)
+    // Stale prompt migrated (rg-plan is a skill now, not a command/prompt in current CE).
+    expect(await exists(path.join(codexRoot, "prompts", "rg-plan.md"))).toBe(false)
     // Backup tree created.
     expect(await exists(path.join(codexRoot, "rg-engineering", "legacy-backup"))).toBe(true)
   })
@@ -638,18 +638,18 @@ describe("CLI", () => {
     await fs.mkdir(path.join(githubRoot, "agents"), { recursive: true })
     await fs.writeFile(
       path.join(githubRoot, "agents", "repo-research-analyst.agent.md"),
-      agentContent("repo-research-analyst", historicalAgentDescription("ce-repo-research-analyst")),
+      agentContent("repo-research-analyst", historicalAgentDescription("rg-repo-research-analyst")),
     )
 
     // User-authored artifacts whose names match current CE bundle output but
     // are NOT on the historical allow-list. The Copilot writer has been
     // removed (users now install via `copilot plugin install`), so these
     // were never installed by CE — cleanup must leave them alone.
-    await fs.mkdir(path.join(githubRoot, "skills", "ce-debug"), { recursive: true })
-    await fs.writeFile(path.join(githubRoot, "skills", "ce-debug", "SKILL.md"), "user-authored skill")
+    await fs.mkdir(path.join(githubRoot, "skills", "rg-debug"), { recursive: true })
+    await fs.writeFile(path.join(githubRoot, "skills", "rg-debug", "SKILL.md"), "user-authored skill")
     await fs.mkdir(path.join(githubRoot, "skills", "my-user-skill"), { recursive: true })
     await fs.writeFile(path.join(githubRoot, "skills", "my-user-skill", "SKILL.md"), "user-authored skill")
-    await fs.writeFile(path.join(githubRoot, "agents", "ce-adversarial-reviewer.agent.md"), "user-authored agent")
+    await fs.writeFile(path.join(githubRoot, "agents", "rg-adversarial-reviewer.agent.md"), "user-authored agent")
 
     const proc = Bun.spawn([
       "bun",
@@ -683,9 +683,9 @@ describe("CLI", () => {
     expect(await exists(path.join(githubRoot, "agents", "repo-research-analyst.agent.md"))).toBe(false)
     expect(await exists(path.join(githubRoot, "rg-engineering", "legacy-backup"))).toBe(true)
 
-    expect(await exists(path.join(githubRoot, "skills", "ce-debug"))).toBe(true)
+    expect(await exists(path.join(githubRoot, "skills", "rg-debug"))).toBe(true)
     expect(await exists(path.join(githubRoot, "skills", "my-user-skill"))).toBe(true)
-    expect(await exists(path.join(githubRoot, "agents", "ce-adversarial-reviewer.agent.md"))).toBe(true)
+    expect(await exists(path.join(githubRoot, "agents", "rg-adversarial-reviewer.agent.md"))).toBe(true)
   })
 
   test("cleanup backs up legacy Droid artifacts for native migration", async () => {
@@ -703,7 +703,7 @@ describe("CLI", () => {
     await fs.mkdir(path.join(droidRoot, "commands"), { recursive: true })
     await fs.writeFile(path.join(droidRoot, "commands", "plan.md"), "legacy flattened command")
 
-    await fs.writeFile(path.join(droidRoot, "droids", "ce-adversarial-reviewer.md"), "user-authored droid")
+    await fs.writeFile(path.join(droidRoot, "droids", "rg-adversarial-reviewer.md"), "user-authored droid")
     await fs.writeFile(path.join(droidRoot, "commands", "my-user-command.md"), "user-authored command")
     await fs.mkdir(path.join(droidRoot, "skills", "my-user-skill"), { recursive: true })
     await fs.writeFile(path.join(droidRoot, "skills", "my-user-skill", "SKILL.md"), "user-authored skill")
@@ -741,7 +741,7 @@ describe("CLI", () => {
     expect(await exists(path.join(droidRoot, "commands", "plan.md"))).toBe(false)
     expect(await exists(path.join(droidRoot, "rg-engineering", "legacy-backup"))).toBe(true)
 
-    expect(await exists(path.join(droidRoot, "droids", "ce-adversarial-reviewer.md"))).toBe(true)
+    expect(await exists(path.join(droidRoot, "droids", "rg-adversarial-reviewer.md"))).toBe(true)
     expect(await exists(path.join(droidRoot, "commands", "my-user-command.md"))).toBe(true)
     expect(await exists(path.join(droidRoot, "skills", "my-user-skill"))).toBe(true)
   })
@@ -756,7 +756,7 @@ describe("CLI", () => {
     await fs.mkdir(path.join(windsurfRoot, "skills", "repo-research-analyst"), { recursive: true })
     await fs.writeFile(
       path.join(windsurfRoot, "skills", "repo-research-analyst", "SKILL.md"),
-      skillContent("repo-research-analyst", historicalAgentDescription("ce-repo-research-analyst")),
+      skillContent("repo-research-analyst", historicalAgentDescription("rg-repo-research-analyst")),
     )
     await fs.mkdir(path.join(windsurfRoot, "global_workflows"), { recursive: true })
     await fs.writeFile(path.join(windsurfRoot, "global_workflows", "workflows-plan.md"), "legacy workflow")
@@ -765,8 +765,8 @@ describe("CLI", () => {
     // are NOT on the historical allow-list. Windsurf's writer has been
     // removed, so these were never installed by CE — cleanup must leave them
     // alone.
-    await fs.mkdir(path.join(windsurfRoot, "skills", "ce-debug"), { recursive: true })
-    await fs.writeFile(path.join(windsurfRoot, "skills", "ce-debug", "SKILL.md"), "user-authored skill")
+    await fs.mkdir(path.join(windsurfRoot, "skills", "rg-debug"), { recursive: true })
+    await fs.writeFile(path.join(windsurfRoot, "skills", "rg-debug", "SKILL.md"), "user-authored skill")
     await fs.mkdir(path.join(windsurfRoot, "skills", "my-user-skill"), { recursive: true })
     await fs.writeFile(path.join(windsurfRoot, "skills", "my-user-skill", "SKILL.md"), "user-authored skill")
     await fs.writeFile(path.join(windsurfRoot, "global_workflows", "my-user-workflow.md"), "user-authored workflow")
@@ -806,7 +806,7 @@ describe("CLI", () => {
 
     // User-authored files that only match current CE bundle names (not on
     // the historical allow-list) must be left untouched.
-    expect(await exists(path.join(windsurfRoot, "skills", "ce-debug"))).toBe(true)
+    expect(await exists(path.join(windsurfRoot, "skills", "rg-debug"))).toBe(true)
     expect(await exists(path.join(windsurfRoot, "skills", "my-user-skill"))).toBe(true)
     expect(await exists(path.join(windsurfRoot, "global_workflows", "my-user-workflow.md"))).toBe(true)
   })
@@ -826,12 +826,12 @@ describe("CLI", () => {
         _compound_managed_keys: ["name", "skills", "agents"],
       }),
     )
-    await fs.mkdir(path.join(qwenRoot, "skills", "ce-plan"), { recursive: true })
-    await fs.writeFile(path.join(qwenRoot, "skills", "ce-plan", "SKILL.md"), skillContent("ce-plan", historicalSkillDescription("ce-plan")))
+    await fs.mkdir(path.join(qwenRoot, "skills", "rg-plan"), { recursive: true })
+    await fs.writeFile(path.join(qwenRoot, "skills", "rg-plan", "SKILL.md"), skillContent("rg-plan", historicalSkillDescription("rg-plan")))
     await fs.mkdir(path.join(qwenRoot, "agents"), { recursive: true })
     await fs.writeFile(
       path.join(qwenRoot, "agents", "repo-research-analyst.yaml"),
-      qwenAgentYaml("repo-research-analyst", historicalAgentDescription("ce-repo-research-analyst")),
+      qwenAgentYaml("repo-research-analyst", historicalAgentDescription("rg-repo-research-analyst")),
     )
     await fs.mkdir(path.join(qwenRoot, "commands"), { recursive: true })
     await fs.writeFile(path.join(qwenRoot, "commands", "compound-plan.md"), "legacy command")
@@ -870,7 +870,7 @@ describe("CLI", () => {
 
     expect(stdout).toContain("Cleaned qwen")
     expect(await exists(extensionRoot)).toBe(false)
-    expect(await exists(path.join(qwenRoot, "skills", "ce-plan"))).toBe(false)
+    expect(await exists(path.join(qwenRoot, "skills", "rg-plan"))).toBe(false)
     expect(await exists(path.join(qwenRoot, "agents", "repo-research-analyst.yaml"))).toBe(false)
     expect(await exists(path.join(qwenRoot, "commands", "compound-plan.md"))).toBe(false)
     expect(await exists(path.join(qwenRoot, "commands", "compound", "plan.md"))).toBe(false)
@@ -882,15 +882,15 @@ describe("CLI", () => {
     const qwenRoot = path.join(tempRoot, ".qwen")
     const repoRoot = path.join(import.meta.dir, "..")
 
-    // Legacy artifacts from the historical allow-list (e.g. `ce:plan` sanitizes
-    // to `ce-plan`, `compound:plan` flattens to `compound-plan.md` and nests to
+    // Legacy artifacts from the historical allow-list (e.g. `rg:plan` sanitizes
+    // to `rg-plan`, `compound:plan` flattens to `compound-plan.md` and nests to
     // `compound/plan.md`). These MUST be backed up.
-    await fs.mkdir(path.join(qwenRoot, "skills", "ce-plan"), { recursive: true })
-    await fs.writeFile(path.join(qwenRoot, "skills", "ce-plan", "SKILL.md"), skillContent("ce-plan", historicalSkillDescription("ce-plan")))
+    await fs.mkdir(path.join(qwenRoot, "skills", "rg-plan"), { recursive: true })
+    await fs.writeFile(path.join(qwenRoot, "skills", "rg-plan", "SKILL.md"), skillContent("rg-plan", historicalSkillDescription("rg-plan")))
     await fs.mkdir(path.join(qwenRoot, "agents"), { recursive: true })
     await fs.writeFile(
       path.join(qwenRoot, "agents", "repo-research-analyst.md"),
-      agentContent("repo-research-analyst", historicalAgentDescription("ce-repo-research-analyst")),
+      agentContent("repo-research-analyst", historicalAgentDescription("rg-repo-research-analyst")),
     )
     await fs.mkdir(path.join(qwenRoot, "commands", "compound"), { recursive: true })
     await fs.writeFile(path.join(qwenRoot, "commands", "compound-plan.md"), "legacy flat command")
@@ -900,11 +900,11 @@ describe("CLI", () => {
     // are NOT on the historical allow-list. The Qwen writer is native
     // (`qwen extensions install`), so these were never installed by this
     // plugin — cleanup must leave them alone.
-    await fs.mkdir(path.join(qwenRoot, "skills", "ce-debug"), { recursive: true })
-    await fs.writeFile(path.join(qwenRoot, "skills", "ce-debug", "SKILL.md"), "user-authored skill")
+    await fs.mkdir(path.join(qwenRoot, "skills", "rg-debug"), { recursive: true })
+    await fs.writeFile(path.join(qwenRoot, "skills", "rg-debug", "SKILL.md"), "user-authored skill")
     await fs.mkdir(path.join(qwenRoot, "skills", "my-user-skill"), { recursive: true })
     await fs.writeFile(path.join(qwenRoot, "skills", "my-user-skill", "SKILL.md"), "user-authored skill")
-    await fs.writeFile(path.join(qwenRoot, "agents", "ce-correctness-reviewer.md"), "user-authored agent")
+    await fs.writeFile(path.join(qwenRoot, "agents", "rg-correctness-reviewer.md"), "user-authored agent")
     await fs.writeFile(path.join(qwenRoot, "commands", "my-user-command.md"), "user-authored command")
 
     const proc = Bun.spawn([
@@ -938,14 +938,14 @@ describe("CLI", () => {
 
     // Historical allow-list entries (including the nested colon-command form
     // preserved by the PRRT_kwDOP_gZVc58GrCI fix) are backed up.
-    expect(await exists(path.join(qwenRoot, "skills", "ce-plan"))).toBe(false)
+    expect(await exists(path.join(qwenRoot, "skills", "rg-plan"))).toBe(false)
     expect(await exists(path.join(qwenRoot, "agents", "repo-research-analyst.md"))).toBe(false)
     expect(await exists(path.join(qwenRoot, "commands", "compound-plan.md"))).toBe(false)
     expect(await exists(path.join(qwenRoot, "commands", "compound", "plan.md"))).toBe(false)
 
-    expect(await exists(path.join(qwenRoot, "skills", "ce-debug"))).toBe(true)
+    expect(await exists(path.join(qwenRoot, "skills", "rg-debug"))).toBe(true)
     expect(await exists(path.join(qwenRoot, "skills", "my-user-skill"))).toBe(true)
-    expect(await exists(path.join(qwenRoot, "agents", "ce-correctness-reviewer.md"))).toBe(true)
+    expect(await exists(path.join(qwenRoot, "agents", "rg-correctness-reviewer.md"))).toBe(true)
     expect(await exists(path.join(qwenRoot, "commands", "my-user-command.md"))).toBe(true)
   })
 
@@ -954,16 +954,16 @@ describe("CLI", () => {
     const kiroRoot = path.join(tempRoot, ".kiro")
     const repoRoot = path.join(import.meta.dir, "..")
 
-    await fs.mkdir(path.join(kiroRoot, "skills", "ce-plan"), { recursive: true })
-    await fs.writeFile(path.join(kiroRoot, "skills", "ce-plan", "SKILL.md"), skillContent("ce-plan", historicalSkillDescription("ce-plan")))
+    await fs.mkdir(path.join(kiroRoot, "skills", "rg-plan"), { recursive: true })
+    await fs.writeFile(path.join(kiroRoot, "skills", "rg-plan", "SKILL.md"), skillContent("rg-plan", historicalSkillDescription("rg-plan")))
     await fs.mkdir(path.join(kiroRoot, "skills", "compound-plan"), { recursive: true })
     await fs.writeFile(path.join(kiroRoot, "skills", "compound-plan", "SKILL.md"), "user-authored command-like skill")
     await fs.mkdir(path.join(kiroRoot, "agents", "prompts"), { recursive: true })
     await fs.writeFile(
-      path.join(kiroRoot, "agents", "ce-repo-research-analyst.json"),
-      kiroAgentConfigContent("ce-repo-research-analyst", historicalAgentDescription("ce-repo-research-analyst")),
+      path.join(kiroRoot, "agents", "rg-repo-research-analyst.json"),
+      kiroAgentConfigContent("rg-repo-research-analyst", historicalAgentDescription("rg-repo-research-analyst")),
     )
-    await fs.writeFile(path.join(kiroRoot, "agents", "prompts", "ce-repo-research-analyst.md"), "legacy agent prompt")
+    await fs.writeFile(path.join(kiroRoot, "agents", "prompts", "rg-repo-research-analyst.md"), "legacy agent prompt")
 
     const proc = Bun.spawn([
       "bun",
@@ -993,10 +993,10 @@ describe("CLI", () => {
     }
 
     expect(stdout).toContain("Cleaned kiro")
-    expect(await exists(path.join(kiroRoot, "skills", "ce-plan"))).toBe(false)
+    expect(await exists(path.join(kiroRoot, "skills", "rg-plan"))).toBe(false)
     expect(await exists(path.join(kiroRoot, "skills", "compound-plan"))).toBe(true)
-    expect(await exists(path.join(kiroRoot, "agents", "ce-repo-research-analyst.json"))).toBe(false)
-    expect(await exists(path.join(kiroRoot, "agents", "prompts", "ce-repo-research-analyst.md"))).toBe(false)
+    expect(await exists(path.join(kiroRoot, "agents", "rg-repo-research-analyst.json"))).toBe(false)
+    expect(await exists(path.join(kiroRoot, "agents", "prompts", "rg-repo-research-analyst.md"))).toBe(false)
     expect(await exists(path.join(kiroRoot, "rg-engineering", "legacy-backup"))).toBe(true)
   })
 
@@ -1099,7 +1099,7 @@ describe("CLI", () => {
     expect(stdout).toContain("Installed rg-engineering")
     // OpenCode global config lives at ~/.config/opencode per XDG spec
     expect(await exists(path.join(tempRoot, ".config", "opencode", "opencode.json"))).toBe(true)
-    expect(await exists(path.join(tempRoot, ".config", "opencode", "skills", "ce-plan", "SKILL.md"))).toBe(true)
+    expect(await exists(path.join(tempRoot, ".config", "opencode", "skills", "rg-plan", "SKILL.md"))).toBe(true)
   })
 
   test("install uses bundled rg-engineering plugin for codex output", async () => {
@@ -1139,8 +1139,8 @@ describe("CLI", () => {
 
     expect(stdout).toContain("Installed rg-engineering")
     expect(stdout).toContain(codexRoot)
-    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "ce-plan", "SKILL.md"))).toBe(true)
-    expect(await exists(path.join(tempRoot, ".agents", "skills", "ce-plan"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "rg-plan", "SKILL.md"))).toBe(true)
+    expect(await exists(path.join(tempRoot, ".agents", "skills", "rg-plan"))).toBe(false)
     expect(await exists(path.join(codexRoot, "AGENTS.md"))).toBe(true)
   })
 
@@ -1180,9 +1180,9 @@ describe("CLI", () => {
 
     expect(stdout).toContain("Installed rg-engineering")
     // Default omits skills; they're expected from native Codex plugin install.
-    expect(await exists(path.join(codexRoot, "skills", "ce-plan", "SKILL.md"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "ce-plan", "SKILL.md"))).toBe(false)
-    // Compound Engineering no longer ships standalone agents, so the default
+    expect(await exists(path.join(codexRoot, "skills", "rg-plan", "SKILL.md"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "rg-plan", "SKILL.md"))).toBe(false)
+    // RG Engineering no longer ships standalone agents, so the default
     // Codex converter followup has no CE payload to emit.
     expect(await exists(path.join(codexRoot, "agents", "rg-engineering"))).toBe(false)
     // AGENTS.md is emitted because --to codex always ensures a root AGENTS.md

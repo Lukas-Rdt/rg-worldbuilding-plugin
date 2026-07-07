@@ -20,7 +20,7 @@ symptoms:
   - "claude --plugin-dir only accepts a local filesystem path with no branch support"
   - "Developers had to manually checkout branches to test others' plugin changes"
 root_cause_detail: "The CLI lacked any mechanism to target a specific git branch when installing or testing plugins. Claude Code's --plugin-dir flag only accepts local paths, and the install command had no --branch option."
-solution_summary: "Added a new plugin-path subcommand that clones a specific branch to a deterministic cache path (~/.cache/compound-engineering/branches/) and outputs it for use with claude --plugin-dir. Also added a --branch flag to the install command for non-Claude targets."
+solution_summary: "Added a new plugin-path subcommand that clones a specific branch to a deterministic cache path (~/.cache/rg-engineering/branches/) and outputs it for use with claude --plugin-dir. Also added a --branch flag to the install command for non-Claude targets."
 key_insight: "Worktree-based development means multiple branches are active simultaneously and the repo root checkout can't serve as a reliable plugin source. A deterministic cache path based on the sanitized branch name enables branch-specific plugin testing without disrupting any checkout, and re-runs update in place via git fetch + reset --hard."
 files_changed:
   - src/commands/plugin-path.ts
@@ -40,20 +40,20 @@ related_docs:
 
 ## Problem
 
-The compound-engineering plugin CLI's `install` command always cloned the default branch from GitHub, and Claude Code's `--plugin-dir` flag only accepts local filesystem paths. Developers who wanted to test a plugin from a specific git branch had to manually check out that branch in their local repo, disrupting their working tree.
+The rg-engineering plugin CLI's `install` command always cloned the default branch from GitHub, and Claude Code's `--plugin-dir` flag only accepts local filesystem paths. Developers who wanted to test a plugin from a specific git branch had to manually check out that branch in their local repo, disrupting their working tree.
 
 This is especially painful in worktree-based workflows where a single local checkout root can only represent one branch at a time. Two concrete scenarios:
 
 - **Cross-repo**: You're working in a different project and want to use a CE branch as your plugin. Without this, you'd have to switch the CE repo's checkout — which is likely WIP on something else.
 - **Same-repo**: You're working on CE itself — `feat/feature-2` in your main checkout, `feat/feature-1` in a worktree. You want to test feature-1's plugin while continuing to develop feature-2. The main checkout can't serve both purposes.
 
-Note: the `--branch` flag works with pushed branches (those available on the remote). For unpushed local worktree branches, developers can point `--plugin-dir` directly at the worktree root (e.g., `claude --plugin-dir /path/to/compound-engineering-plugin-worktree`).
+Note: the `--branch` flag works with pushed branches (those available on the remote). For unpushed local worktree branches, developers can point `--plugin-dir` directly at the worktree root (e.g., `claude --plugin-dir /path/to/rg-engineering-plugin-worktree`).
 
 ---
 
 ## Symptoms
 
-- Running `bunx compound-engineering install <plugin>` always fetched the default branch regardless of what branch contained the changes under review.
+- Running `bunx rg-engineering install <plugin>` always fetched the default branch regardless of what branch contained the changes under review.
 - `claude --plugin-dir` required a local path, so there was no way to point it at a remote branch without a manual `git clone` or `git checkout`.
 - Developers testing PR branches had to stash or commit their local work, switch branches, test, then switch back -- a disruptive and error-prone workflow.
 - In worktree-based workflows, the repo root checkout always points to one branch, not every worktree branch being developed. Developers working on multiple branches simultaneously had no ergonomic way to install from a specific worktree's branch.
@@ -80,13 +80,13 @@ Two complementary features were added:
 Clones a branch to a deterministic cache directory and prints the path for use with `claude --plugin-dir`.
 
 ```bash
-bun run src/index.ts plugin-path compound-engineering --branch feat/new-agents
-# Output: claude --plugin-dir ~/.cache/compound-engineering/branches/compound-engineering-feat~new-agents
+bun run src/index.ts plugin-path rg-engineering --branch feat/new-agents
+# Output: claude --plugin-dir ~/.cache/rg-engineering/branches/rg-engineering-feat~new-agents
 ```
 
 Key implementation details in `src/commands/plugin-path.ts`:
 
-- Cache path: `~/.cache/compound-engineering/branches/<plugin>-<sanitized-branch>/`
+- Cache path: `~/.cache/rg-engineering/branches/<plugin>-<sanitized-branch>/`
 - Branch sanitization: `/` → `~`, then strip remaining non-`[a-zA-Z0-9._~-]` chars. This is injective because `~` is illegal in git branch names (`git-check-ref-format` reserves it for reflog notation), so no valid branch input contains `~` and the mapping is 1:1.
 - First run: `git clone --depth 1 --branch <name> <source> <dest>`
 - Re-run: `git fetch origin <branch>` + `git reset --hard origin/<branch>`
@@ -96,7 +96,7 @@ Key implementation details in `src/commands/plugin-path.ts`:
 Threads a branch name through the full resolution chain so `install` clones from the specified branch instead of the default.
 
 ```bash
-bun run src/index.ts install compound-engineering --to opencode --branch feat/new-agents
+bun run src/index.ts install rg-engineering --to opencode --branch feat/new-agents
 ```
 
 Changes in `src/commands/install.ts`:
@@ -125,6 +125,6 @@ The root issue was a missing indirection layer: the CLI assumed "install" always
 ## Prevention
 
 - **Test coverage**: `tests/plugin-path.test.ts` (6 tests: clone-to-cache, slash sanitization, update-on-rerun, slash-placement collision resistance, nonexistent branch error, nonexistent plugin error) and `tests/cli.test.ts` (1 test: install --branch clones specific branch). All tests use local git repos via `COMPOUND_PLUGIN_GITHUB_SOURCE`.
-- **Cache directory convention**: Any future features that need ephemeral or semi-persistent clones should use `~/.cache/compound-engineering/<purpose>/` with deterministic, sanitized subdirectory names. Avoid `/tmp/` for anything that benefits from surviving a reboot.
+- **Cache directory convention**: Any future features that need ephemeral or semi-persistent clones should use `~/.cache/rg-engineering/<purpose>/` with deterministic, sanitized subdirectory names. Avoid `/tmp/` for anything that benefits from surviving a reboot.
 - **Branch sanitization**: Always sanitize branch names before using them in filesystem paths. Using `~` as the slash replacement is injective because `~` is illegal in git branch names (`git-check-ref-format`). A naive `replace(/[^a-zA-Z0-9._-]/g, "-")` is insufficient because it collapses branches like `feat/foo-bar` and `feat-foo/bar` into the same path.
 - **Resolution chain threading**: When adding new resolution strategies to the CLI, thread optional parameters through the full `resolvePluginPath -> resolveGitHubPluginPath -> cloneGitHubRepo` chain rather than branching at the top level. This keeps the resolution logic composable.

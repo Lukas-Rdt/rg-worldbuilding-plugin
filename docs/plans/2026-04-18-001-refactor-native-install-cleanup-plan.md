@@ -12,7 +12,7 @@ superseded_by: "2026-06-19-agentless-plugin-surface-reduction"
 
 Rework the install strategy around current agent-harness behavior:
 
-- Use native package/plugin installers where they can install the full Compound Engineering payload.
+- Use native package/plugin installers where they can install the full RG Engineering payload.
 - Avoid `~/.agents` for CE-owned installs because shared skills there can shadow native plugin installs such as Copilot.
 - Keep agents target-native unless the harness's package format explicitly supports bundled agents.
 - Add a first-class cleanup path for old CE-owned flat installs, renamed skills, removed skills, converted-agent skills, prompts, commands, and target-specific artifacts.
@@ -33,7 +33,7 @@ The current CLI grew when most targets did not have native package/plugin suppor
 - OpenCode also reads `~/.agents/skills`, but CE should avoid that root by default because it can shadow Copilot plugin skills.
 - Windsurf no longer needs active support and should be deprecated from user-facing conversion/install flows while preserving cleanup for old CE artifacts.
 
-At the same time, our legacy installs leave stale flat artifacts behind. Examples include removed skills such as `reproduce-bug`, renamed workflows such as `workflows:*` -> `ce:*`, old prompt files, and agents that older converters flattened into skills. We cannot delete all of `~/.agents/skills` or `~/.codex/skills` because users may have non-CE skills there.
+At the same time, our legacy installs leave stale flat artifacts behind. Examples include removed skills such as `reproduce-bug`, renamed workflows such as `workflows:*` -> `rg:*`, old prompt files, and agents that older converters flattened into skills. We cannot delete all of `~/.agents/skills` or `~/.codex/skills` because users may have non-CE skills there.
 
 ## Requirements Trace
 
@@ -93,7 +93,7 @@ Native targets should have target-native packaging:
 - Copilot: reuse existing `.claude-plugin` marketplace/plugin metadata. Do not add a parallel `.github/plugin` surface unless a future Copilot-only manifest field becomes necessary.
 - Gemini: custom Bun install to `~/.gemini/{skills,agents,commands}` for now; future `gemini-extension.json` distribution remains possible.
 - Pi: npm/git/local package with `package.json` `pi` manifest.
-- Codex: `~/.codex/skills/compound-engineering`, `~/.codex/agents`, and optional future `.codex-plugin/plugin.json`, but do not retire custom install until remote install UX is verified.
+- Codex: `~/.codex/skills/rg-engineering`, `~/.codex/agents`, and optional future `.codex-plugin/plugin.json`, but do not retire custom install until remote install UX is verified.
 
 ### 3. Agents are not portable via `~/.agents`
 
@@ -118,9 +118,9 @@ Custom writers should still invoke cleanup automatically. Native installers cann
 
 The hand-maintained legacy list should be backed by a script that scans historical plugin inventories from git history:
 
-- `plugins/compound-engineering/skills/*`
-- `plugins/compound-engineering/agents/*`
-- `plugins/compound-engineering/commands/*`
+- `plugins/rg-engineering/skills/*`
+- `plugins/rg-engineering/agents/*`
+- `plugins/rg-engineering/commands/*`
 - historical `prompts/*` or converted command outputs
 - renamed colon/underscore/hyphen variants per target
 
@@ -166,7 +166,7 @@ The result should be committed as data, and tests should fail when the current o
 - Add targeted cleanup tests under `tests/`
 
 **Approach:**
-- Add a command such as `compound cleanup compound-engineering --targets codex,copilot,gemini,pi,opencode,droid --apply`.
+- Add a command such as `compound cleanup rg-engineering --targets codex,copilot,gemini,pi,opencode,droid --apply`.
 - Default to dry-run unless the existing CLI convention strongly favors direct action.
 - Move matched legacy artifacts to a timestamped backup rather than hard-deleting.
 - Only touch known CE-owned artifacts, existing install-manifest entries, and symlinks whose targets are CE-managed.
@@ -201,7 +201,7 @@ The result should be committed as data, and tests should fail when the current o
 
 **Test scenarios:**
 - Removed `reproduce-bug` remains in cleanup data.
-- If `document-review` is renamed to `ce-doc-review`, both old and new cleanup-relevant names are tracked.
+- If `document-review` is renamed to `rg-doc-review`, both old and new cleanup-relevant names are tracked.
 - Historical `prompts` outputs remain cleanup candidates.
 - Colon, underscore, and hyphen variants normalize correctly for Codex, Gemini, Pi, and OpenCode.
 
@@ -223,20 +223,20 @@ The result should be committed as data, and tests should fail when the current o
 - Use the existing root `.claude-plugin/marketplace.json`; Copilot CLI explicitly looks there for marketplace metadata.
 - Use the existing plugin-local `.claude-plugin/plugin.json`; Copilot CLI can discover plugin manifests from `.claude-plugin/plugin.json`.
 - Document Copilot native install instructions:
-  - `copilot plugin marketplace add EveryInc/compound-engineering-plugin`
-  - `copilot plugin install compound-engineering@compound-engineering-plugin`
+  - `copilot plugin marketplace add Lukas-Rdt/rg-engineering-plugin`
+  - `copilot plugin install rg-engineering@rg-engineering-plugin`
 - Keep plugin agents as agents, not generated skills.
 - Do not create parallel `.github/plugin` metadata or `agents-copilot/` output unless a real compatibility failure is proven.
-- Run or recommend `compound cleanup compound-engineering --targets copilot,codex --apply` before switching old installs.
+- Run or recommend `compound cleanup rg-engineering --targets copilot,codex --apply` before switching old installs.
 - Treat stale Copilot skills as a shadowing risk, not only a duplicate-display risk. Copilot deduplicates skills by `SKILL.md` `name` with first-found-wins precedence, and personal/project skill roots such as `~/.agents/skills` load before plugin skills.
 
 **Test scenarios:**
-- Existing `.claude-plugin/marketplace.json` parses and has a `compound-engineering` entry whose `source` points at `plugins/compound-engineering`.
-- Existing `plugins/compound-engineering/.claude-plugin/plugin.json` parses and is valid enough for both Claude and Copilot.
+- Existing `.claude-plugin/marketplace.json` parses and has a `rg-engineering` entry whose `source` points at `plugins/rg-engineering`.
+- Existing `plugins/rg-engineering/.claude-plugin/plugin.json` parses and is valid enough for both Claude and Copilot.
 - Copilot docs/spec record the native install commands and the `.claude-plugin` compatibility.
 - README does not advertise old direct Copilot Bun install as the primary path.
 - If possible, a local-path Copilot plugin install in a temporary config directory succeeds without modifying the user's real Copilot home.
-- A seeded stale `~/.agents/skills/ce-plan/SKILL.md` shadows a plugin-provided `ce-plan` in docs/tests or manual verification, proving cleanup is required even when Copilot does not show duplicate skills.
+- A seeded stale `~/.agents/skills/rg-plan/SKILL.md` shadows a plugin-provided `rg-plan` in docs/tests or manual verification, proving cleanup is required even when Copilot does not show duplicate skills.
 
 ---
 
@@ -256,7 +256,7 @@ The result should be committed as data, and tests should fail when the current o
 - Write pass-through skills to `~/.gemini/skills`.
 - Write normalized flat Gemini subagents to `~/.gemini/agents`.
 - Write command TOML files to `~/.gemini/commands` if CE ships commands again.
-- Write a managed manifest to `~/.gemini/compound-engineering/install-manifest.json`.
+- Write a managed manifest to `~/.gemini/rg-engineering/install-manifest.json`.
 - Do not write CE-owned Gemini artifacts to `~/.agents/skills`.
 - Do not assume `gemini extensions install` supports `--path` for a monorepo subdirectory. Current docs and local help list GitHub repository URL or local path sources, while `--path` is documented for `gemini skills install`.
 - Defer native extension distribution until we choose a shape where the installed source root contains `gemini-extension.json`: dedicated Gemini extension repo, generated distribution branch/package, or release asset.
@@ -290,7 +290,7 @@ The result should be committed as data, and tests should fail when the current o
 
 **Test scenarios:**
 - Pi package manifest includes skills/prompts/extensions.
-- Existing `compound-engineering-compat.ts` does not conflict with popular subagent packages or is made conditional.
+- Existing `rg-engineering-compat.ts` does not conflict with popular subagent packages or is made conditional.
 - Cleanup removes old direct writer artifacts under `~/.pi/agent`.
 
 ---
@@ -316,8 +316,8 @@ The result should be committed as data, and tests should fail when the current o
 - Preserve Windsurf cleanup support so old CE artifacts can be removed from `~/.codeium/windsurf/` even after active support is gone.
 - For Codex, use native plugin install for current CE. Keep the custom install and cleanup code only for converter-backed/generic plugin support and for backing up legacy CE artifacts.
 - For Codex legacy cleanup, remove old CE-owned flat skills, generated agent skills, and generated TOML custom agents from previous converted installs.
-- The Codex skill-plus-agent split was smoke-tested on 2026-04-18: a skill in `~/.agents/skills/ce-codex-agent-smoke` successfully spawned a TOML custom agent from `~/.codex/agents/ce-codex-agent-smoke.toml` and returned `CODEX_TOML_AGENT_SMOKE_OK`.
-- Codex duplicate discovery was also smoke-tested on 2026-04-18: the same skill name installed under both `~/.agents/skills` and legacy `~/.codex/skills` appeared twice in the skill picker. Codex cleanup must remove old CE-owned skills from both roots before writing the namespaced `~/.codex/skills/compound-engineering` install.
+- The Codex skill-plus-agent split was smoke-tested on 2026-04-18: a skill in `~/.agents/skills/rg-codex-agent-smoke` successfully spawned a TOML custom agent from `~/.codex/agents/rg-codex-agent-smoke.toml` and returned `CODEX_TOML_AGENT_SMOKE_OK`.
+- Codex duplicate discovery was also smoke-tested on 2026-04-18: the same skill name installed under both `~/.agents/skills` and legacy `~/.codex/skills` appeared twice in the skill picker. Codex cleanup must remove old CE-owned skills from both roots before writing the namespaced `~/.codex/skills/rg-engineering` install.
 - Shared skill nesting was smoke-tested on 2026-04-18: Codex discovered flat, nested, and Superpowers-style symlink-pack skills under `~/.agents/skills`, but Copilot and Gemini only discovered the flat direct `~/.agents/skills/<skill>/SKILL.md` shape. CE should avoid this root anyway because of Copilot shadowing.
 - For OpenCode, do not share pass-through skills via `~/.agents/skills` unless the user explicitly opts into cross-harness shared skills and understands Copilot shadowing.
 
@@ -349,8 +349,8 @@ The result should be committed as data, and tests should fail when the current o
 - `bun test` after implementation units touching CLI, writers, or conversion.
 - `bun run release:validate` after native package manifests or plugin inventory changes.
 - Manual smoke tests for native installers:
-  - Claude: `/plugin install compound-engineering`
-  - Copilot: `copilot plugin marketplace add EveryInc/compound-engineering-plugin` then install
+  - Claude: `/plugin install rg-engineering`
+  - Copilot: `copilot plugin marketplace add Lukas-Rdt/rg-engineering-plugin` then install
   - Gemini: `gemini extensions install <repo-url-or-local-path>`
   - Pi: `pi install npm:<package>` or local package path
 - Cleanup smoke test with seeded temp homes for `~/.agents`, `~/.codex`, `~/.copilot`, `~/.gemini`, `~/.pi`, `~/.config/opencode`, and `~/.factory`.

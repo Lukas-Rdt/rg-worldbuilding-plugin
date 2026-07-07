@@ -174,12 +174,12 @@ function convertCommands(commands: ClaudeCommand[]): OpenCodeCommandFile[] {
 }
 
 // Generate a slash-command stub for each skill so OpenCode users can invoke
-// /ce-work, /ce-plan, etc. just like Claude Code users do.
+// /rg-work, /rg-plan, etc. just like Claude Code users do.
 // The stub body delegates to the skill tool so the full skill content is loaded.
 //
 // Only `user-invocable: false` suppresses a stub. `disable-model-invocation`
-// does NOT: that flag means the skill is user-invocation-only (e.g. ce-polish,
-// whose description says "type /ce-polish to run it"), so a slash command is the
+// does NOT: that flag means the skill is user-invocation-only (e.g. rg-polish,
+// whose description says "type /rg-polish to run it"), so a slash command is the
 // only entry point it has -- exactly the skill that most needs a stub.
 function convertSkillsToCommands(skills: ClaudeSkill[]): OpenCodeCommandFile[] {
   const files: OpenCodeCommandFile[] = []
@@ -274,7 +274,7 @@ function renderHookHandlers(
 
   // Wrap tool.execute.before handlers in try-catch to prevent a failing hook
   // from crashing parallel tool call batches (causes API 400 errors).
-  // See: https://github.com/EveryInc/rg-engineering-plugin/issues/85
+  // See: https://github.com/Lukas-Rdt/rg-engineering-plugin/issues/85
   const isPreToolUse = event === "tool.execute.before"
   const note = options.note ? `    // ${options.note}\n` : ""
   if (isPreToolUse) {
@@ -335,10 +335,10 @@ function rewriteClaudePaths(body: string): string {
  *
  * OpenCode resolves agents by flat filename, so fully-qualified agent
  * references must be flattened. Both 3-segment legacy refs
- * (`rg-engineering:document-review:coherence-reviewer` -> `coherence-reviewer`)
- * and 2-segment category-qualified refs (`review:ce-correctness-reviewer` ->
- * `ce-correctness-reviewer`) are handled. 2-segment skill references without
- * `ce-` prefix (e.g. `rg-engineering:document-review`) are left unchanged.
+ * (`rg-engineering:document-review:coherenrg-reviewer` -> `coherenrg-reviewer`)
+ * and 2-segment category-qualified refs (`review:rg-correctness-reviewer` ->
+ * `rg-correctness-reviewer`) are handled. 2-segment skill references without
+ * `rg-` prefix (e.g. `rg-engineering:document-review`) are left unchanged.
  * See #477.
  */
 export function transformSkillContentForOpenCode(body: string): string {
@@ -352,11 +352,11 @@ export function transformSkillContentForOpenCode(body: string): string {
     /(?<![a-z0-9:/-])[a-z][a-z0-9-]*:[a-z][a-z0-9-]*:([a-z][a-z0-9-]*)(?![a-z0-9:-])/g,
     "$1",
   )
-  // Rewrite 2-segment category-qualified agent refs: category:ce-agent -> ce-agent.
-  // Only matches when the agent segment starts with `ce-` to avoid false positives
+  // Rewrite 2-segment category-qualified agent refs: category:rg-agent -> rg-agent.
+  // Only matches when the agent segment starts with `rg-` to avoid false positives
   // on slash commands or other colon-separated patterns.
   result = result.replace(
-    /(?<![a-z0-9:/-])[a-z][a-z0-9-]*:(ce-[a-z][a-z0-9-]*)(?![a-z0-9:-])/g,
+    /(?<![a-z0-9:/-])[a-z][a-z0-9-]*:(rg-[a-z][a-z0-9-]*)(?![a-z0-9:-])/g,
     "$1",
   )
   return result

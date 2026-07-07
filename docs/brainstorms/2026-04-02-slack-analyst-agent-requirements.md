@@ -1,21 +1,21 @@
 ---
 date: 2026-04-02
-topic: ce-slack-researcher-agent
+topic: rg-slack-researcher-agent
 ---
 
 # Slack Analyst Agent
 
 ## Problem Frame
 
-Coding agents operating within compound-engineering workflows (ideate, plan, brainstorm) have no visibility into organizational knowledge that lives in Slack. Decisions, constraints, ongoing discussions, and context about projects are often undocumented anywhere except Slack conversations. When a developer is about to make a change, relevant Slack context -- a discussion about why something was designed a certain way, a decision to deprecate a feature, constraints mentioned by another team -- is invisible to the agent assisting them.
+Coding agents operating within rg-engineering workflows (ideate, plan, brainstorm) have no visibility into organizational knowledge that lives in Slack. Decisions, constraints, ongoing discussions, and context about projects are often undocumented anywhere except Slack conversations. When a developer is about to make a change, relevant Slack context -- a discussion about why something was designed a certain way, a decision to deprecate a feature, constraints mentioned by another team -- is invisible to the agent assisting them.
 
-The official Slack plugin provides user-facing commands (`/slack:find-discussions`, `/slack:summarize-channel`), but these are standalone and manual. There is no research agent that compound-engineering workflows can dispatch programmatically to surface Slack context as part of their normal research phase.
+The official Slack plugin provides user-facing commands (`/slack:find-discussions`, `/slack:summarize-channel`), but these are standalone and manual. There is no research agent that rg-engineering workflows can dispatch programmatically to surface Slack context as part of their normal research phase.
 
 ## Requirements
 
 **Agent Identity and Placement**
 
-- R1. Create a research-category agent at `agents/research/ce-slack-researcher.md` following the established research agent pattern (frontmatter with name, description, model:inherit; examples block; phased execution).
+- R1. Create a research-category agent at `agents/research/rg-slack-researcher.md` following the established research agent pattern (frontmatter with name, description, model:inherit; examples block; phased execution).
 - R2. The agent's role is analytical: it searches Slack for context relevant to the task at hand and returns a concise, structured digest. It does not send messages, create canvases, or take any write actions in Slack.
 
 ---
@@ -53,9 +53,9 @@ The official Slack plugin provides user-facing commands (`/slack:find-discussion
 **Workflow Integration**
 
 - R12. Integrate into three calling workflows:
-  - **ce-ideate** -- dispatch during Phase 1 (Codebase Scan), alongside learnings-researcher. Slack context enriches ideation by surfacing org discussions about the focus area.
-  - **ce-plan** -- dispatch during the research/context-gathering phase. Slack context surfaces constraints, prior decisions, and ongoing discussions relevant to the implementation.
-  - **ce-brainstorm** -- dispatch during Phase 1.1 (Existing Context Scan). Brainstorming especially benefits from knowing what the org has already discussed about the topic.
+  - **rg-ideate** -- dispatch during Phase 1 (Codebase Scan), alongside learnings-researcher. Slack context enriches ideation by surfacing org discussions about the focus area.
+  - **rg-plan** -- dispatch during the research/context-gathering phase. Slack context surfaces constraints, prior decisions, and ongoing discussions relevant to the implementation.
+  - **rg-brainstorm** -- dispatch during Phase 1.1 (Existing Context Scan). Brainstorming especially benefits from knowing what the org has already discussed about the topic.
 - R13. In all calling workflows, dispatch the Slack analyst agent in parallel with other research agents (learnings-researcher, etc.) to avoid adding latency. Callers wait for all parallel agents to return before consolidating results (this is the existing pattern for parallel research dispatch). The Slack analyst's dispatch condition is MCP availability (R3). The agent itself handles the meaningful-context check (R4) internally.
 - R14. Callers should incorporate the Slack analyst's output into their existing context summary alongside other research results, not as a separate section.
 
@@ -63,8 +63,8 @@ The official Slack plugin provides user-facing commands (`/slack:find-discussion
 
 **Dependency on External Plugin**
 
-- R15. The Slack MCP server is owned by the official Slack plugin, not compound-engineering. The agent uses MCP tools that the Slack plugin configures. This creates a soft dependency: the agent is useful only when the Slack plugin is installed and authenticated, but compound-engineering must not require it.
-- R16. Do not bundle or reference the Slack plugin's `.mcp.json` or configuration from within compound-engineering. The agent relies solely on MCP tools being available at runtime.
+- R15. The Slack MCP server is owned by the official Slack plugin, not rg-engineering. The agent uses MCP tools that the Slack plugin configures. This creates a soft dependency: the agent is useful only when the Slack plugin is installed and authenticated, but rg-engineering must not require it.
+- R16. Do not bundle or reference the Slack plugin's `.mcp.json` or configuration from within rg-engineering. The agent relies solely on MCP tools being available at runtime.
 
 ## Success Criteria
 
@@ -94,8 +94,8 @@ The official Slack plugin provides user-facing commands (`/slack:find-discussion
 
 - [Affects R3][Technical] How exactly should callers detect Slack MCP availability? Claude Code's tool list inspection, checking for any `slack_*` tool prefix, or another mechanism?
 - [Affects R5][Needs research] What is the optimal number of search queries per invocation to balance coverage vs. token cost? Start with 2-3 and tune based on real usage.
-- [Affects R12][Technical] What modifications are needed in ce-ideate, ce-plan, and ce-brainstorm skill files to add the conditional dispatch? Review each skill's research phase to find the right insertion point.
+- [Affects R12][Technical] What modifications are needed in rg-ideate, rg-plan, and rg-brainstorm skill files to add the conditional dispatch? Review each skill's research phase to find the right insertion point.
 
 ## Next Steps
 
--> `/ce:plan` for structured implementation planning
+-> `/rg:plan` for structured implementation planning

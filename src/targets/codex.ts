@@ -7,8 +7,8 @@ import { transformContentForCodex } from "../utils/codex-content"
 import { getLegacyCodexArtifacts } from "../data/plugin-legacy-artifacts"
 import { classifyCodexLegacyPromptOwnership, isLegacyAgentArtifactOwned, isLegacySkillArtifactOwned } from "../utils/legacy-cleanup"
 
-const MANAGED_START_MARKER = "# BEGIN Compound Engineering plugin MCP -- do not edit this block"
-const MANAGED_END_MARKER = "# END Compound Engineering plugin MCP"
+const MANAGED_START_MARKER = "# BEGIN RG Engineering plugin MCP -- do not edit this block"
+const MANAGED_END_MARKER = "# END RG Engineering plugin MCP"
 const PREV_START_MARKER = "# BEGIN compound-plugin Claude Code MCP"
 const PREV_END_MARKER = "# END compound-plugin Claude Code MCP"
 const LEGACY_MARKER = "# MCP servers synced from Claude Code"
@@ -62,7 +62,7 @@ export async function writeCodexBundle(
   // `--to codex`) treat skills installed via Codex's native plugin flow as
   // "current" for cleanup purposes. Without this, `cleanupLegacyAgentSkillDirs`
   // would see an empty `currentSkills` set and sweep allow-listed names such
-  // as `ce-plan` out of `.codex/skills/<plugin>/` into legacy-backup on every
+  // as `rg-plan` out of `.codex/skills/<plugin>/` into legacy-backup on every
   // re-run of `install --to codex`.
   const currentSkills = Array.from(new Set([
     ...bundle.skillDirs.map((skill) => sanitizePathName(skill.name)),
@@ -314,7 +314,7 @@ async function cleanupKnownLegacyCodexArtifacts(codexRoot: string, bundle: Codex
     // Ownership gate: `~/.codex/prompts/` is a shared directory across plugins
     // and user-authored prompts. A filename match against the legacy allow-list
     // is not a strong enough signal to move a file — a user who creates
-    // `~/.codex/prompts/ce-plan.md` for their own workflow would otherwise see
+    // `~/.codex/prompts/rg-plan.md` for their own workflow would otherwise see
     // it swept into `rg-engineering/legacy-backup/` on every install.
     // Mirror the body + frontmatter check used by the standalone
     // `cleanupStalePrompts` helper. "unknown" (no fingerprint on record, e.g.
@@ -351,16 +351,16 @@ async function cleanupLegacyAgentSkillDirs(
   for (const agent of bundle.agents ?? []) {
     legacySkillNames.add(sanitizePathName(agent.name))
     // Cross-layout cleanup for plugins with nested agent directories: if the
-    // Codex-built agent name contains an embedded `-ce-` (e.g. `review-ce-foo`
-    // for `agents/review/ce-foo.md`), the same logical agent may have
-    // previously been installed under the flat-alias name (`ce-foo`) by an
+    // Codex-built agent name contains an embedded `-rg-` (e.g. `review-rg-foo`
+    // for `agents/review/rg-foo.md`), the same logical agent may have
+    // previously been installed under the flat-alias name (`rg-foo`) by an
     // earlier plugin layout. Seeding the flat alias as a cleanup candidate
     // sweeps that orphan skill dir on upgrade. For flat-only layouts (such as
-    // rg-engineering itself) `agent.name` has no embedded `-ce-` and
-    // this produces harmless non-matching candidates like `ce-ce-<name>`.
-    if (agent.name.includes("-ce-")) {
-      const finalSegment = agent.name.split("-ce-").pop()
-      if (finalSegment) legacySkillNames.add(`ce-${sanitizePathName(finalSegment)}`)
+    // rg-engineering itself) `agent.name` has no embedded `-rg-` and
+    // this produces harmless non-matching candidates like `rg-rg-<name>`.
+    if (agent.name.includes("-rg-")) {
+      const finalSegment = agent.name.split("-rg-").pop()
+      if (finalSegment) legacySkillNames.add(`rg-${sanitizePathName(finalSegment)}`)
     }
   }
   for (const name of getLegacyCodexArtifacts({

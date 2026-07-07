@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-22
 **Status:** Design approved, pending implementation plan
-**Scope:** Rewrite `frontend-design` skill + surgical addition to `ce:work-beta`
+**Scope:** Rewrite `frontend-design` skill + surgical addition to `rg:work-beta`
 
 ## Context
 
@@ -12,7 +12,7 @@ Two external sources informed this redesign:
 - **Anthropic's official frontend-design skill** -- nearly identical to ours, same gaps
 - **OpenAI's frontend skill** (from their "Designing Delightful Frontends with GPT-5.4" article, March 2026) -- dramatically more comprehensive with composition rules, context modules, card philosophy, copy guidelines, motion specifics, and litmus checks
 
-Additionally, the beta workflow (`ce:plan-beta` -> `deepen-plan-beta` -> `ce:work-beta`) has no mechanism to invoke the frontend-design skill. The old `deepen-plan` discovered and applied it dynamically; `deepen-plan-beta` uses deterministic agent mapping and skips skill discovery entirely. The skill is effectively orphaned in the beta workflow.
+Additionally, the beta workflow (`rg:plan-beta` -> `deepen-plan-beta` -> `rg:work-beta`) has no mechanism to invoke the frontend-design skill. The old `deepen-plan` discovered and applied it dynamically; `deepen-plan-beta` uses deterministic agent mapping and skips skill discovery entirely. The skill is effectively orphaned in the beta workflow.
 
 ## Design Decisions
 
@@ -89,7 +89,7 @@ When Layer 0 needs to ask the user (ambiguous detection), use the platform's blo
 
 Visual verification is a sanity check, not a pixel-perfect review. One pass. If there's a glaring issue, fix it. If it looks solid, move on. The goal is catching "this clearly doesn't work" before the user sees it.
 
-### ce:work-beta Integration
+### rg:work-beta Integration
 
 A small addition to Phase 2 (Execute), after the existing Figma Design Sync section:
 
@@ -101,17 +101,17 @@ A small addition to Phase 2 (Execute), after the existing Figma Design Sync sect
 
 The agent uses judgment -- these are heuristics, not a rigid classifier.
 
-**What ce:work-beta adds:**
+**What rg:work-beta adds:**
 
 > For UI tasks without a Figma design, load the `frontend-design` skill before implementing. Follow its detection, guidance, and verification flow.
 
 This is intentionally minimal:
-- Doesn't duplicate skill content into ce:work-beta
+- Doesn't duplicate skill content into rg:work-beta
 - Doesn't load the skill for non-UI tasks
 - Doesn't load the skill when Figma designs exist (Figma sync covers that)
 - Doesn't change any other phase
 
-**Verification screenshot reuse:** The frontend-design skill's visual verification screenshot satisfies ce:work-beta Phase 4's screenshot requirement. The agent does not need to screenshot twice -- the skill's verification output is reused for the PR.
+**Verification screenshot reuse:** The frontend-design skill's visual verification screenshot satisfies rg:work-beta Phase 4's screenshot requirement. The agent does not need to screenshot twice -- the skill's verification output is reused for the PR.
 
 **Relationship to design-iterator agent:** The frontend-design skill's verification is a single sanity-check pass. For iterative refinement beyond that (multiple rounds of screenshot-assess-fix), see the `design-iterator` agent. The skill does not invoke design-iterator automatically.
 
@@ -119,8 +119,8 @@ This is intentionally minimal:
 
 | File | Change |
 |------|--------|
-| `plugins/compound-engineering/skills/frontend-design/SKILL.md` | Full rewrite |
-| `plugins/compound-engineering/skills/ce-work-beta/SKILL.md` | Add ~5 lines to Phase 2 |
+| `plugins/rg-engineering/skills/frontend-design/SKILL.md` | Full rewrite |
+| `plugins/rg-engineering/skills/rg-work-beta/SKILL.md` | Add ~5 lines to Phase 2 |
 
 ## Skill Description (Optimized)
 

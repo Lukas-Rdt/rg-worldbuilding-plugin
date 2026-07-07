@@ -7,7 +7,7 @@ topic: copilot-converter-target
 
 ## What We're Building
 
-A new converter target that transforms the compound-engineering Claude Code plugin into GitHub Copilot's native format. This follows the same established pattern as the existing converters (Cursor, Codex, OpenCode, Droid, Pi) and outputs files that Copilot can consume directly from `.github/` (repo-level) or `~/.copilot/` (user-wide).
+A new converter target that transforms the rg-engineering Claude Code plugin into GitHub Copilot's native format. This follows the same established pattern as the existing converters (Cursor, Codex, OpenCode, Droid, Pi) and outputs files that Copilot can consume directly from `.github/` (repo-level) or `~/.copilot/` (user-wide).
 
 Copilot's customization system (as of early 2026) supports: custom agents (`.agent.md`), agent skills (`SKILL.md`), prompt files (`.prompt.md`), custom instructions (`copilot-instructions.md`), and MCP servers (via repo settings).
 

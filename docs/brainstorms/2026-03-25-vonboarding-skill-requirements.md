@@ -39,7 +39,7 @@ The primary audience is human developers. A document that works for human compre
 - Does not assess fragility or risk areas — that requires judgment about production behavior the agent doesn't have
 - Does not generate README.md, CLAUDE.md, AGENTS.md, or any other document — only `ONBOARDING.md`
 - Does not preserve hand-edits from a previous version on regeneration — if users want durable authored context, it belongs in other docs (which the skill may discover and link to)
-- No `ce:` prefix — this is a standalone utility skill, not part of the core workflow
+- No `rg:` prefix — this is a standalone utility skill, not part of the core workflow
 
 ## Key Decisions
 
@@ -59,4 +59,4 @@ The primary audience is human developers. A document that works for human compre
 
 ## Next Steps
 
--> `/ce:plan` for structured implementation planning
+-> `/rg:plan` for structured implementation planning

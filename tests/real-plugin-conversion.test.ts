@@ -10,7 +10,7 @@ import { parseFrontmatter } from "../src/utils/frontmatter"
 // to every implemented target via the CLI, then structurally validates each
 // output tree. Expected counts are
 // re-derived from the source tree (agents/, commands/, skills/ plus
-// `ce_platforms` frontmatter) rather than from the converter code, so drift on
+// `rg_platforms` frontmatter) rather than from the converter code, so drift on
 // either side fails here. Fixture-based behavior (field mappings, deep-merge,
 // legacy cleanup) is covered elsewhere; this file owns whole-tree shape for
 // the shipping plugins.
@@ -98,7 +98,7 @@ function loadSourceInventory(pluginName: PluginName): SourceInventory {
       continue
     }
     const { data } = parseFrontmatter(raw, skillFile)
-    const cePlatforms = Array.isArray(data.ce_platforms) ? (data.ce_platforms as string[]) : undefined
+    const cePlatforms = Array.isArray(data.rg_platforms) ? (data.rg_platforms as string[]) : undefined
     const userInvocable = data["user-invocable"] === false ? false : undefined
     skills.push({ name, cePlatforms, userInvocable })
   }
@@ -109,7 +109,7 @@ function loadSourceInventory(pluginName: PluginName): SourceInventory {
 // expected skill list must come from an independent reading of the source
 // frontmatter so a regression in the converter's platform filter (or an
 // undocumented new exclusion) shows up as a set difference here. The only
-// intentional exclusion today is `ce_platforms`.
+// intentional exclusion today is `rg_platforms`.
 function skillsForPlatform(inventory: SourceInventory, target: Target): string[] {
   return inventory.skills
     .filter((skill) => !skill.cePlatforms || skill.cePlatforms.includes(target))

@@ -17,7 +17,7 @@ async function exists(filePath: string): Promise<boolean> {
 }
 
 const SESSION_HISTORIAN_DESCRIPTION =
-  "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `ce-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/ce-sessions` (or another caller that runs the full discovery + extract pipeline first)."
+  "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `rg-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/rg-sessions` (or another caller that runs the full discovery + extract pipeline first)."
 
 const REPRODUCE_BUG_DESCRIPTION =
   "Systematically reproduce and investigate a bug from a GitHub issue. Use when the user provides a GitHub issue number or URL for a bug they want reproduced or investigated."
@@ -48,14 +48,14 @@ describe("writePiBundle", () => {
     )
     const userAgentBody = [
       "---",
-      "name: ce-repo-research-analyst",
+      "name: rg-repo-research-analyst",
       "description: Personal Pi agent for local research",
       "---",
       "",
       "User-authored agent body",
       "",
     ].join("\n")
-    await fs.writeFile(path.join(agentsRoot, "ce-repo-research-analyst.md"), userAgentBody)
+    await fs.writeFile(path.join(agentsRoot, "rg-repo-research-analyst.md"), userAgentBody)
 
     const bundle: PiBundle = {
       pluginName: "rg-engineering",
@@ -69,8 +69,8 @@ describe("writePiBundle", () => {
     await writePiBundle(outputRoot, bundle)
 
     expect(await exists(path.join(agentsRoot, "repo-research-analyst.md"))).toBe(false)
-    expect(await exists(path.join(agentsRoot, "ce-repo-research-analyst.md"))).toBe(true)
-    expect(await fs.readFile(path.join(agentsRoot, "ce-repo-research-analyst.md"), "utf8")).toBe(userAgentBody)
+    expect(await exists(path.join(agentsRoot, "rg-repo-research-analyst.md"))).toBe(true)
+    expect(await fs.readFile(path.join(agentsRoot, "rg-repo-research-analyst.md"), "utf8")).toBe(userAgentBody)
 
     const backupRoot = path.join(outputRoot, "rg-engineering", "legacy-backup")
     expect(await exists(backupRoot)).toBe(true)
@@ -81,7 +81,7 @@ describe("writePiBundle", () => {
       if (!(await exists(agentsBackup))) continue
       const backedUp = await fs.readdir(agentsBackup)
       if (backedUp.includes("repo-research-analyst.md")) foundAgentBackup = true
-      expect(backedUp).not.toContain("ce-repo-research-analyst.md")
+      expect(backedUp).not.toContain("rg-repo-research-analyst.md")
     }
     expect(foundAgentBackup).toBe(true)
   })
@@ -161,7 +161,7 @@ describe("writePiBundle", () => {
     await fs.writeFile(
       path.join(sourceSkillDir, "SKILL.md"),
       `---
-name: ce-plan
+name: rg-plan
 description: Planning workflow
 ---
 
@@ -175,7 +175,7 @@ Run these research agents:
 
     const bundle: PiBundle = {
       prompts: [],
-      skillDirs: [{ name: "ce-plan", sourceDir: sourceSkillDir }],
+      skillDirs: [{ name: "rg-plan", sourceDir: sourceSkillDir }],
       generatedSkills: [],
       agents: [],
       extensions: [],
@@ -184,7 +184,7 @@ Run these research agents:
     await writePiBundle(outputRoot, bundle)
 
     const installedSkill = await fs.readFile(
-      path.join(outputRoot, "skills", "ce-plan", "SKILL.md"),
+      path.join(outputRoot, "skills", "rg-plan", "SKILL.md"),
       "utf8",
     )
 
@@ -286,16 +286,16 @@ Run these research agents:
     // Install plugin A first, with a prompt, skill, generated skill, and extension
     await writePiBundle(outputRoot, {
       pluginName: "rg-engineering",
-      prompts: [{ name: "ce-prompt", content: "CE prompt" }],
+      prompts: [{ name: "rg-prompt", content: "CE prompt" }],
       skillDirs: [
         {
-          name: "ce-skill",
+          name: "rg-skill",
           sourceDir: path.join(import.meta.dir, "fixtures", "sample-plugin", "skills", "skill-one"),
         },
       ],
-      generatedSkills: [{ name: "ce-gen-skill", content: "---\nname: ce-gen-skill\n---\n\nBody" }],
+      generatedSkills: [{ name: "rg-gen-skill", content: "---\nname: rg-gen-skill\n---\n\nBody" }],
       agents: [],
-      extensions: [{ name: "ce-ext.ts", content: "export default function () {}" }],
+      extensions: [{ name: "rg-ext.ts", content: "export default function () {}" }],
     })
 
     // Install plugin B into the same Pi root
@@ -330,10 +330,10 @@ Run these research agents:
       extensions: [],
     })
 
-    expect(await exists(path.join(outputRoot, "prompts", "ce-prompt.md"))).toBe(false)
-    expect(await exists(path.join(outputRoot, "skills", "ce-skill"))).toBe(false)
-    expect(await exists(path.join(outputRoot, "skills", "ce-gen-skill"))).toBe(false)
-    expect(await exists(path.join(outputRoot, "extensions", "ce-ext.ts"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "prompts", "rg-prompt.md"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "skills", "rg-skill"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "skills", "rg-gen-skill"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "extensions", "rg-ext.ts"))).toBe(false)
     expect(await exists(path.join(outputRoot, "prompts", "tutor-prompt.md"))).toBe(true)
     expect(await exists(path.join(outputRoot, "skills", "tutor-skill"))).toBe(true)
     expect(await exists(path.join(outputRoot, "skills", "tutor-gen-skill"))).toBe(true)
@@ -412,10 +412,10 @@ Run these research agents:
     expect(await exists(path.join(outputRoot, "skills", "bug-reproduction-validator"))).toBe(false)
     expect(await exists(path.join(outputRoot, "prompts", "reproduce-bug.md"))).toBe(false)
     expect(await exists(path.join(outputRoot, "prompts", "report-bug.md"))).toBe(false)
-    expect(await exists(path.join(outputRoot, "skills", "ce-plan", "SKILL.md"))).toBe(true)
-    // Compound Engineering no longer ships standalone agents; specialist
+    expect(await exists(path.join(outputRoot, "skills", "rg-plan", "SKILL.md"))).toBe(true)
+    // RG Engineering no longer ships standalone agents; specialist
     // prompts live inside the consuming skill directories.
-    expect(await exists(path.join(outputRoot, "agents", "ce-repo-research-analyst.md"))).toBe(false)
+    expect(await exists(path.join(outputRoot, "agents", "rg-repo-research-analyst.md"))).toBe(false)
     expect(await exists(path.join(outputRoot, "rg-engineering", "legacy-backup"))).toBe(true)
   })
 })
