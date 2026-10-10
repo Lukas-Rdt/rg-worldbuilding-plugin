@@ -79,16 +79,6 @@ Invoked when a specific need arises — not part of any chain.
 
 ---
 
-## Git Workflow
-
-| Skill | Description |
-|-------|-------------|
-| [`/rg-commit`](./rg-commit.md) | Create a single, well-crafted git commit — convention-aware, sensitive-file-safe, file-level logical splitting |
-| [`/rg-commit-push-pr`](./rg-commit-push-pr.md) | Go from working changes to an open PR with adaptive descriptions, related-reference handling, and three modes (full workflow / description update / description-only generation) |
-| [`/rg-worktree`](./rg-worktree.md) | Ensure work happens in an isolated git worktree — detect existing isolation, prefer the harness's native worktree tool, fall back to plain git |
-
----
-
 ## Autonomous Pipeline
 
 | Skill | Description |
@@ -119,9 +109,6 @@ Invoked when a specific need arises — not part of any chain.
 |-------|-------------|
 | [`/rg-promote`](./rg-promote.md) | Draft user-facing announcement copy for a shipped feature (X, changelog, LinkedIn, email) — voice-matched via the optional Spiral CLI, a lite layer of editorial & social expertise without it, drafts only |
 | [`/rg-resolve-pr-feedback`](./rg-resolve-pr-feedback.md) | Evaluate, fix, and reply to PR review feedback in parallel — including nitpicks |
-| [`/rg-dogfood`](./rg-dogfood.md) | Hands-off diff-scoped browser QA of the active branch — maps flows, autonomously fixes small breakages with regression tests and commits, writes a durable report (manual invocation only) |
-| [`/rg-test-browser`](./rg-test-browser.md) | End-to-end browser tests on PR / branch-affected pages using `agent-browser` exclusively |
-| [`/rg-test-xcode`](./rg-test-xcode.md) | Build and test iOS apps on simulator using XcodeBuildMCP — screenshots, logs, human verification |
 | [`/rg-setup`](./rg-setup.md) | Diagnose optional tool capabilities and bootstrap safe project-local config |
 
 ---

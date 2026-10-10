@@ -113,6 +113,14 @@ export const STALE_SKILL_DIRS = [
   "ce-update",
   "ce-work-beta",
 
+  // Removed engineering / git skills (no replacement)
+  "rg-commit",
+  "rg-commit-push-pr",
+  "rg-dogfood",
+  "rg-test-browser",
+  "rg-test-xcode",
+  "rg-worktree",
+
   // rg-session-inventory and rg-session-extract were script-host skills called
   // only from rg-session-historian via the Skill tool. That dispatch path
   // deadlocked on Claude Code (subagents cannot invoke Skill — issue #794), so
@@ -553,6 +561,18 @@ const LEGACY_ONLY_SKILL_DESCRIPTIONS: Record<string, string> = {
     "Search Slack for interpreted organizational context -- decisions, constraints, and discussion arcs -- and produce a synthesized research digest with cross-cutting analysis. Use when the user says 'search slack for', 'what did we discuss about', 'slack context for', or 'what does the team think about'. Differs from slack:find-discussions, which returns raw message results without synthesis.",
   "ce-update":
     "Check if the rg-engineering plugin is up to date and recommend the\nupdate command if not. Use when the user says \"update compound engineering\",\n\"check compound engineering version\", \"ce update\", \"is compound engineering\nup to date\", \"update ce plugin\", or reports issues that might stem from a\nstale rg-engineering plugin version. This skill only works in Claude\nCode — it relies on the plugin harness cache layout.\n",
+  "rg-commit":
+    "Create a git commit with a clear, value-communication message. Use when the user asks to commit/save staged or unstaged changes with a repo-appropriate, value-communicating message.",
+  "rg-commit-push-pr":
+    "Commit, push, and open a PR. Use when asked to ship/open a PR, or for PR-description-only flows like writing, rewriting, or describing a PR body.",
+  "rg-dogfood":
+    "Hands-off, diff-scoped browser QA of the active branch: maps user flows, drives a real browser, autonomously fixes small breakages with regression tests and commits, judges experience against product personas, and writes a durable dogfood report. Manual invocation only.",
+  "rg-test-browser":
+    "Run browser tests for pages affected by the current branch or PR.",
+  "rg-test-xcode":
+    "Build and test iOS apps on simulator with XcodeBuildMCP.",
+  "rg-worktree":
+    "Set up isolated git worktrees — create a new branch for fresh work, or attach a worktree to an existing branch/PR/commit to work on it in isolation. Use when starting isolated work or isolating an existing ref; detects existing isolation first.",
 }
 
 /**

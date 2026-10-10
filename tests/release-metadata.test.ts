@@ -142,12 +142,12 @@ async function makeFixtureRoot(): Promise<string> {
 }
 
 describe("release metadata", () => {
-  test("reports current rg-engineering counts from the repo", async () => {
+  test("reports current rg-worldbuilding counts from the repo", async () => {
     const counts = await getCompoundEngineeringCounts(process.cwd())
 
     expect(counts).toEqual({
       agents: 0,
-      skills: 30,
+      skills: 24,
       mcpServers: 0,
     })
   })

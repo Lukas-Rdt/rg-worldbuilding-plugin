@@ -45,7 +45,7 @@ export default defineCommand({
     plugin: {
       type: "positional",
       required: false,
-      description: "Plugin name or local plugin path (default: rg-engineering)",
+      description: "Plugin name or local plugin path (default: rg-worldbuilding)",
     },
     target: {
       type: "string",
@@ -104,10 +104,10 @@ export default defineCommand({
     },
   },
   async run({ args }) {
-    const pluginPath = await resolveCleanupPluginPath(args.plugin ? String(args.plugin) : "rg-engineering")
+    const pluginPath = await resolveCleanupPluginPath(args.plugin ? String(args.plugin) : "rg-worldbuilding")
     const plugin = await loadClaudePlugin(pluginPath)
-    if (plugin.manifest.name !== "rg-engineering") {
-      throw new Error("Cleanup currently supports only the rg-engineering plugin.")
+    if (plugin.manifest.name !== "rg-engineering" && plugin.manifest.name !== "rg-worldbuilding") {
+      throw new Error("Cleanup currently supports only the rg-worldbuilding and rg-engineering plugins.")
     }
     const targetNames = resolveCleanupTargets(String(args.target))
     const outputRoot = resolveWorkspaceRoot(args.output)

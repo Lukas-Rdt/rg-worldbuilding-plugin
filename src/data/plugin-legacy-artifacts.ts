@@ -14,11 +14,10 @@ type LegacyPluginArtifacts = {
   commands?: string[]
 }
 
-const EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN: Record<string, LegacyPluginArtifacts> = {
-  "rg-engineering": {
-    // Historical CE artifacts derived from git history. Keep these explicit so
-    // cleanup can remove stale flat installs without touching unrelated skills.
-    skills: [
+const HISTORICAL_PLUGIN_ARTIFACTS: LegacyPluginArtifacts = {
+  // Historical artifacts derived from plugin history. Keep these explicit so
+  // cleanup can remove stale flat installs without touching unrelated skills.
+  skills: [
       "agent-browser",
       "agent-native-architecture",
       "agent-native-audit",
@@ -144,6 +143,12 @@ const EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN: Record<string, LegacyPluginArtifacts> = 
       "resolve_parallel",
       "resolve_pr_parallel",
       "resolve_todo_parallel",
+      "rg-commit",
+      "rg-commit-push-pr",
+      "rg-dogfood",
+      "rg-test-browser",
+      "rg-test-xcode",
+      "rg-worktree",
       "setup",
       "skill-creator",
       "slfg",
@@ -330,7 +335,11 @@ const EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN: Record<string, LegacyPluginArtifacts> = 
       "workflows:work",
       "xcode-test",
     ],
-  },
+}
+
+const EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN: Record<string, LegacyPluginArtifacts> = {
+  "rg-worldbuilding": HISTORICAL_PLUGIN_ARTIFACTS,
+  "rg-engineering": HISTORICAL_PLUGIN_ARTIFACTS,
 }
 
 export type LegacyTargetArtifacts = {

@@ -96,7 +96,7 @@ describe("cleanupStaleSkillDirs", () => {
       path.join(root, "git-commit"),
       skillContent(
         "git-commit",
-        await pluginDescription("skills/rg-commit/SKILL.md"),
+        "Create a git commit with a clear, value-communication message. Use when the user asks to commit/save staged or unstaged changes with a repo-appropriate, value-communicating message.",
       ),
     )
     await createDir(
@@ -125,14 +125,14 @@ describe("cleanupStaleSkillDirs", () => {
   test("preserves non-stale directories", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-preserve-"))
     await createDir(path.join(root, "ce-plan"))
-    await createDir(path.join(root, "rg-commit"))
+    await createDir(path.join(root, "rg-plan"))
     await createDir(path.join(root, "custom-user-skill"))
 
     const removed = await cleanupStaleSkillDirs(root)
 
     expect(removed).toBe(0)
     expect(await exists(path.join(root, "ce-plan"))).toBe(true)
-    expect(await exists(path.join(root, "rg-commit"))).toBe(true)
+    expect(await exists(path.join(root, "rg-plan"))).toBe(true)
     expect(await exists(path.join(root, "custom-user-skill"))).toBe(true)
   })
 
@@ -406,6 +406,62 @@ description: |
     expect(await exists(path.join(root, "ce-every-style-editor"))).toBe(false)
     expect(await exists(path.join(root, "ce-update"))).toBe(false)
     expect(await exists(path.join(root, "git-clean-gone-branches"))).toBe(false)
+  })
+
+  test("removes retired engineering and git skills (rg-commit, rg-commit-push-pr, rg-dogfood, etc.)", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "cleanup-retired-eng-skills-"))
+    await createDir(
+      path.join(root, "rg-commit"),
+      skillContent(
+        "rg-commit",
+        "Create a git commit with a clear, value-communication message. Use when the user asks to commit/save staged or unstaged changes with a repo-appropriate, value-communicating message.",
+      ),
+    )
+    await createDir(
+      path.join(root, "rg-commit-push-pr"),
+      skillContent(
+        "rg-commit-push-pr",
+        "Commit, push, and open a PR. Use when asked to ship/open a PR, or for PR-description-only flows like writing, rewriting, or describing a PR body.",
+      ),
+    )
+    await createDir(
+      path.join(root, "rg-dogfood"),
+      skillContent(
+        "rg-dogfood",
+        "Hands-off, diff-scoped browser QA of the active branch: maps user flows, drives a real browser, autonomously fixes small breakages with regression tests and commits, judges experience against product personas, and writes a durable dogfood report. Manual invocation only.",
+      ),
+    )
+    await createDir(
+      path.join(root, "rg-test-browser"),
+      skillContent(
+        "rg-test-browser",
+        "Run browser tests for pages affected by the current branch or PR.",
+      ),
+    )
+    await createDir(
+      path.join(root, "rg-test-xcode"),
+      skillContent(
+        "rg-test-xcode",
+        "Build and test iOS apps on simulator with XcodeBuildMCP.",
+      ),
+    )
+    await createDir(
+      path.join(root, "rg-worktree"),
+      skillContent(
+        "rg-worktree",
+        "Set up isolated git worktrees — create a new branch for fresh work, or attach a worktree to an existing branch/PR/commit to work on it in isolation. Use when starting isolated work or isolating an existing ref; detects existing isolation first.",
+      ),
+    )
+
+    const removed = await cleanupStaleSkillDirs(root)
+
+    expect(removed).toBe(6)
+    expect(await exists(path.join(root, "rg-commit"))).toBe(false)
+    expect(await exists(path.join(root, "rg-commit-push-pr"))).toBe(false)
+    expect(await exists(path.join(root, "rg-dogfood"))).toBe(false)
+    expect(await exists(path.join(root, "rg-test-browser"))).toBe(false)
+    expect(await exists(path.join(root, "rg-test-xcode"))).toBe(false)
+    expect(await exists(path.join(root, "rg-worktree"))).toBe(false)
   })
 
   test("preserves same-named user skills for legacy-only entries when content differs", async () => {
@@ -837,7 +893,7 @@ describe("idempotency", () => {
       path.join(root, "git-commit"),
       skillContent(
         "git-commit",
-        await pluginDescription("skills/rg-commit/SKILL.md"),
+        "Create a git commit with a clear, value-communication message. Use when the user asks to commit/save staged or unstaged changes with a repo-appropriate, value-communicating message.",
       ),
     )
     await createFile(

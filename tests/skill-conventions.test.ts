@@ -143,21 +143,17 @@ const DESCRIPTION_CHAR_BUDGET = 1024
 const NAME_CHAR_BUDGET = 64
 
 const EXPECTED_USER_INVOKED_SKILLS = new Set([
-  "rg-dogfood",
   "rg-polish",
   "rg-product-pulse",
   "rg-promote",
   "rg-setup",
   "rg-sweep",
-  "rg-test-xcode",
   "lfg",
 ])
 
 const REQUIRED_MODEL_INVOKED_CALLEES = new Set([
   "rg-brainstorm",
   "rg-code-review",
-  "rg-commit",
-  "rg-commit-push-pr",
   "rg-compound",
   "rg-compound-refresh",
   "rg-debug",
@@ -170,9 +166,7 @@ const REQUIRED_MODEL_INVOKED_CALLEES = new Set([
   "rg-riffrec-feedback-analysis",
   "rg-simplify-code",
   "rg-strategy",
-  "rg-test-browser",
   "rg-work",
-  "rg-worktree",
 ])
 
 // ---------------------------------------------------------------------------

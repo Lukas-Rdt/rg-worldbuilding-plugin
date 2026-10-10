@@ -74,7 +74,7 @@ When changing plugin content:
 - Run `bun run release:validate` if agents, commands, skills, MCP servers, or release-owned descriptions/counts may have changed.
 - When removing a skill, agent, or command, add its name to both cleanup registries so stale flat-install artifacts are swept on upgrade:
   - `STALE_SKILL_DIRS` / `STALE_AGENT_NAMES` / `STALE_PROMPT_FILES` in `src/utils/legacy-cleanup.ts`
-  - `EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN["rg-engineering"]` in `src/data/plugin-legacy-artifacts.ts`
+  - `EXTRA_LEGACY_ARTIFACTS_BY_PLUGIN["rg-worldbuilding"]` in `src/data/plugin-legacy-artifacts.ts`
 
 Useful validation commands:
 
