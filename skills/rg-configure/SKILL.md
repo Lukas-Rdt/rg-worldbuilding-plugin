@@ -1,86 +1,66 @@
 ---
 name: rg-configure
-description: "Configure workspace-local preferences for RG-Engineering, such as automatic commits, work delegation, and output formats."
+description: "Configure or update workspace-local preferences for RG Worldbuilding in .rg-worldbuilding/config.local.yaml (paths, ruleset, link styles, safety tools)."
 ---
 
-# RG-Engineering Interactive Configuration
+# RG Worldbuilding Interactive Configuration (`rg-configure`)
 
-Guide the user through configuring or updating their repository-local configuration file `.rg-engineering/config.local.yaml`.
+Guide the DM through configuring or updating their vault configuration file `.rg-worldbuilding/config.local.yaml`.
 
 ## Operating Principles
 
-- **No guessing:** Display current configuration values and prompt the user before changing anything.
-- **Save safely:** Preserve any existing configuration values in the YAML file when writing updates. Do not overwrite other keys (e.g. pulse or sweep settings) unless explicitly requested.
-- **Use interactive questions:** Ask each question below using the platform's blocking question tool: `AskUserQuestion` in Claude Code (call `ToolSearch` with `select:AskUserQuestion` first if its schema isn't loaded), `request_user_input` in Codex, `ask_question` in Antigravity CLI (`agy`), `ask_user` in Pi (requires the `pi-ask-user` extension). Fall back to chat selection lists only when no blocking tool is available.
-
----
+- **Non-Destructive:** Read existing values, prompt the DM before making changes, and preserve existing settings.
+- **No Git Dependency:** Operate directly in the Obsidian vault without requiring or executing git commands.
+- **Interactive:** Use the platform question tool (`AskUserQuestion` / `request_user_input` / `ask_question`) to present options.
 
 ## Workflow
 
-### Step 1: Resolve Repository Root and Config File
+### Step 1: Locate Configuration File
 
-1. Resolve the repository root:
-   ```bash
-   git rev-parse --show-toplevel
-   ```
-   If not inside a git repository, report that configuration is only available inside a git repository and stop.
-
-2. Verify if the config directory and file exist:
-   - Config directory: `<repo-root>/.rg-engineering/`
-   - Config file: `<repo-root>/.rg-engineering/config.local.yaml`
-
-3. If the config file does not exist:
-   - Ask the user if they want to initialize a configuration file for this repository.
-   - If they agree, copy `<repo-root>/.rg-engineering/config.local.example.yaml` to `<repo-root>/.rg-engineering/config.local.yaml` if the example exists.
-   - If the example file is missing, create a new file with the default template format.
-   - Ensure `.rg-engineering/*.local.yaml` is added to `.gitignore` so local settings are not accidentally committed.
+1. Check if `.rg-worldbuilding/config.local.yaml` exists in the vault root.
+2. If the file does not exist, recommend running `/rg-init` for full onboarding or offer to initialize with defaults from the template.
 
 ### Step 2: Read Current Settings
 
-Read the contents of `<repo-root>/.rg-engineering/config.local.yaml` using the native file-read tool. Parse the active keys (ignoring lines starting with `#`).
+Read `.rg-worldbuilding/config.local.yaml` and extract active configuration:
+- `campaign.name`, `campaign.system`, `campaign.edition`, `campaign.tone`, `campaign.pillars`
+- `paths.sessions`, `paths.npcs`, `paths.locations`, `paths.factions`, `paths.lore`, `paths.handouts`
+- `vault.link_style`, `vault.use_dataview`, `vault.statblock_format`
+- `safety.lines`, `safety.veils`
 
-Particularly extract:
-- `git_allow_auto_commit` (default: `true` if not set or commented)
-- `work_delegate` (default: `false` if not set or commented)
-- `plan_output` / `brainstorm_output` / `ideate_output` (default: `md` if not set or commented)
+### Step 3: Interactive Configuration Menu
 
-### Step 3: Prompt User for Configuration
+Prompt the DM with areas they wish to review or modify:
 
-Present the current settings in chat, then guide the user through the settings:
+1. **Ruleset & System:**
+   - Update TTRPG system (`dnd5e`, `dnd2024`, `pf2e`, `system-agnostic`) or edition.
+2. **Folder Mappings:**
+   - Modify paths for sessions, NPCs, locations, factions, lore, or handouts to reflect reorganization in Obsidian.
+3. **Vault & Note Formatting:**
+   - Link style: `wikilinks` (`[[Name|Alias]]`) vs markdown links.
+   - Statblock format: `obsidian-5e` code blocks, markdown tables, or JSON.
+   - Dataview property compatibility toggle.
+4. **Campaign Tone & Pillars:**
+   - Adjust theme, narrative tone, or pillar focus (e.g. 50% Social, 30% Exploration, 20% Combat).
+5. **Safety Tools (Lines & Veils):**
+   - Add or remove content boundaries for the campaign group.
 
-1. **Automatic Git Commits:**
-   Ask: "Do you want to allow RG-Engineering skills (such as rg-code-review and rg-work) to automatically commit verified changes when starting from a clean git working tree?"
-   - **Option 1:** "Yes, allow automatic commits (git_allow_auto_commit: true)"
-   - **Option 2:** "No, I want to review and commit changes manually (git_allow_auto_commit: false)"
+### Step 4: Save Configuration
 
-2. **Work Delegation (Codex):**
-   Ask: "Do you want to enable automatic work delegation to Codex?"
-   - **Option 1:** "Yes, delegate when appropriate (work_delegate: codex)"
-   - **Option 2:** "No, run everything locally (work_delegate: false)"
-
-3. **Output Formats:**
-   Ask: "Select the preferred output format for generated plans and brainstorm documents:"
-   - **Option 1:** "Markdown (.md) for both (standard/simplest)"
-   - **Option 2:** "Rich HTML (.html) for both (beautiful human-readable reports)"
-
-### Step 4: Write Configuration
-
-Update/merge the resolved values back into `<repo-root>/.rg-engineering/config.local.yaml` using the native file-write/edit tool.
-
-Ensure:
-- Values are written as active YAML keys (e.g. `git_allow_auto_commit: false`).
-- Commented examples are preserved.
-- Any other keys (such as `pulse_*` or `sweep_*`) are preserved byte-for-byte.
+Merge updated values into `.rg-worldbuilding/config.local.yaml` preserving comments and unedited keys.
 
 ### Step 5: Report Status
 
-Display a clean summary of the saved preferences:
+Display a clean summary of the active configuration:
+
 ```text
-✅ RG-Engineering configuration updated:
+✅ RG Worldbuilding configuration updated:
 
-  Automatic commits: [Allowed / Manually reviewed]
-  Work delegation:   [Enabled / Disabled]
-  Output format:     [Markdown / Rich HTML]
+  Campaign:   <Campaign Name> (<System> / <Edition>)
+  Tone:       <Tone> (<Pillars>)
+  NPCs Path:  <NPCs Path>
+  Sessions:   <Sessions Path>
+  Link Style: <WikiLinks | Markdown>
 
-Preferences saved to .rg-engineering/config.local.yaml
+Saved to .rg-worldbuilding/config.local.yaml
 ```

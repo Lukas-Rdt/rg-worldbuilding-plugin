@@ -4,14 +4,16 @@ import { mkdtempSync, writeFileSync, readFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
 
+const PYTHON_CMD = process.platform === "win32" ? "python" : "python3"
+
 const SKILL_DIRS = [
   path.join(
     __dirname,
-    "../skills/rg-compound",
+    "../skills/rg-compound-canon",
   ),
   path.join(
     __dirname,
-    "../skills/rg-compound-refresh",
+    "../skills/rg-canon-refresh",
   ),
 ] as const
 
@@ -23,7 +25,7 @@ function runValidator(
   skillDir: string,
   docPath: string,
 ): { code: number; stdout: string; stderr: string } {
-  const result = spawnSync("python3", [scriptPath(skillDir), docPath], {
+  const result = spawnSync(PYTHON_CMD, [scriptPath(skillDir), docPath], {
     encoding: "utf8",
   })
   return {
@@ -227,7 +229,7 @@ Body.
       })
 
       test("exits 2 (usage error) on missing argument", () => {
-        const result = spawnSync("python3", [scriptPath(skillDir)], {
+        const result = spawnSync(PYTHON_CMD, [scriptPath(skillDir)], {
           encoding: "utf8",
         })
         expect(result.status).toBe(2)

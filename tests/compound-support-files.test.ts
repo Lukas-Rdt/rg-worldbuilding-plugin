@@ -5,16 +5,16 @@ import { load } from "js-yaml"
 
 const PLUGIN_ROOT = path.join(process.cwd(), "skills")
 
-/** Canonical copies live in rg-compound; mirrors must stay identical. */
+/** Canonical copies live in rg-compound-canon; mirrors must stay identical. */
 const SHARED_SUPPORT_FILES = [
   "references/schema.yaml",
   "references/yaml-schema.md",
   "assets/resolution-template.md",
 ]
 
-const SKILLS_WITH_COPIES = ["rg-compound", "rg-compound-refresh"]
+const SKILLS_WITH_COPIES = ["rg-compound-canon", "rg-canon-refresh"]
 
-describe("rg-compound support file drift", () => {
+describe("rg-compound-canon support file drift", () => {
   for (const file of SHARED_SUPPORT_FILES) {
     test(`${file} is identical across ${SKILLS_WITH_COPIES.join(", ")}`, async () => {
       const contents = await Promise.all(
@@ -31,12 +31,12 @@ describe("rg-compound support file drift", () => {
 })
 
 // Format-rendering refs (markdown-rendering.md, html-rendering.md) are
-// byte-duplicated across rg-plan, rg-brainstorm, and rg-ideate. There is no
+// byte-duplicated across rg-prep-plan, rg-flesh-out, and rg-spark. There is no
 // cross-skill shared-file mechanism (see AGENTS.md
 // "Runtime vs Authoring Context"); all copies must stay identical so the
 // agent renders artifacts the same way regardless of which skill composed
 // them.
-const RENDERING_SKILLS = ["rg-plan", "rg-brainstorm", "rg-ideate"]
+const RENDERING_SKILLS = ["rg-prep-plan", "rg-flesh-out", "rg-spark"]
 const RENDERING_REFS = [
   "references/markdown-rendering.md",
   "references/html-rendering.md",
@@ -102,33 +102,20 @@ describe("rg-compound YAML safety rule presence", () => {
     })
   }
 
-  test("rg-compound/SKILL.md points at YAML Safety Rules in both frontmatter-writing spots", async () => {
+  test("rg-compound-canon/SKILL.md enforces in-place compounding and WikiLinks", async () => {
     const raw = await readFile(
-      path.join(PLUGIN_ROOT, "rg-compound", "SKILL.md"),
+      path.join(PLUGIN_ROOT, "rg-compound-canon", "SKILL.md"),
       "utf8",
     )
-    // Match the distinctive write-path pointer phrase, not generic yaml-schema.md
-    // references (which also appear in the support-files list and inputs section).
-    // Both Full-mode Phase 2 step 5 and Lightweight mode step 3 must carry the
-    // pointer so dropping either one is caught.
-    const pointer = /YAML[- ]safety\s+quoting\s+rule\s+for\s+array\s+items/gi
-    const pointerMatches = raw.match(pointer) ?? []
-    expect(pointerMatches.length).toBeGreaterThanOrEqual(2)
-
-    // Each pointer must sit in the frontmatter-write step (step 5 of Full mode,
-    // step 3 of Lightweight mode), not drift to an unrelated location. Both
-    // steps carry the "YAML frontmatter" phrase adjacent to the pointer.
-    const frontmatterAdjacent = raw.match(
-      /YAML\s+frontmatter[\s\S]{0,400}?YAML[- ]safety\s+quoting\s+rule\s+for\s+array\s+items/gi,
-    ) ?? []
-    expect(frontmatterAdjacent.length).toBeGreaterThanOrEqual(2)
+    expect(raw).toMatch(/In-Place Compounding \(No-Git\)/)
+    expect(raw).toMatch(/\[\[WikiLinks\]\]/)
   })
 
-  test("rg-compound-refresh per-action-flows reference points at YAML-safety rules in the Replace flow", async () => {
+  test("rg-canon-refresh per-action-flows reference points at YAML-safety rules in the Replace flow", async () => {
     // The Replace Flow content lives in references/per-action-flows.md after the
     // Phase 4 extraction; SKILL.md keeps a stub that delegates to it.
     const raw = await readFile(
-      path.join(PLUGIN_ROOT, "rg-compound-refresh", "references", "per-action-flows.md"),
+      path.join(PLUGIN_ROOT, "rg-canon-refresh", "references", "per-action-flows.md"),
       "utf8",
     )
     // Anchor to the Replace Flow section so a drifted or deleted pointer is

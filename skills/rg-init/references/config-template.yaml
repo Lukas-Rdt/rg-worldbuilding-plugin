@@ -1,0 +1,26 @@
+# RG Worldbuilding configuration template
+# Saved to .rg-worldbuilding/config.local.yaml in the vault root
+
+campaign:
+  name: "Campaign Name"
+  system: "dnd5e"              # dnd5e, dnd2024, pf2e, system-agnostic
+  edition: "2024"
+  tone: "Heroic Fantasy with Political Intrigue"
+  pillars: "40/30/30"          # Social / Combat / Exploration
+
+paths:
+  sessions: "Sessions"
+  npcs: "World/NPCs"
+  locations: "World/Locations"
+  factions: "World/Factions"
+  lore: "World/Lore"
+  handouts: "Handouts"
+
+vault:
+  link_style: "wikilinks"      # [[Name|Alias]]
+  use_dataview: true
+  statblock_format: "obsidian-5e" # obsidian-5e, markdown, json
+
+safety:
+  lines: []                    # Hard limits: content that will not be present
+  veils: []                    # Soft limits: content that fades to black

@@ -82,7 +82,7 @@ export async function detectInstalledTools(
   home?: string,
   cwd: string = process.cwd(),
 ): Promise<DetectedTool[]> {
-  const effectiveHome = home ?? os.homedir()
+  const effectiveHome = home ?? process.env.HOME ?? os.homedir()
   const options = { useCodexHomeEnv: home === undefined }
   const results: DetectedTool[] = []
   for (const target of detectableTools) {

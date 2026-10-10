@@ -113,7 +113,7 @@ describe("plugin legacy artifacts", () => {
     expect(artifacts.skills).toContain("reproduce-bug")
     expect(artifacts.skills).toContain("resolve_pr_parallel")
     expect(artifacts.skills).not.toContain("rg:plan")
-    expect(artifacts.skills).not.toContain("rg-plan")
+    expect(artifacts.skills).not.toContain("rg-prep-plan")
     expect(artifacts.agents).toContain("repo-research-analyst.md")
     expect(artifacts.agents).toContain("ce-repo-research-analyst.md")
 
@@ -141,7 +141,7 @@ describe("plugin legacy artifacts", () => {
     expect(artifacts.skills).toContain("compound-plan")
     expect(artifacts.skills).toContain("plan")
     expect(artifacts.skills).toContain("resolve_pr_parallel")
-    expect(artifacts.skills).not.toContain("rg-plan")
+    expect(artifacts.skills).not.toContain("rg-prep-plan")
 
     expect(artifacts.agents).toContain("repo-research-analyst")
     expect(artifacts.agents).toContain("ce-repo-research-analyst")

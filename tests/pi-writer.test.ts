@@ -412,10 +412,10 @@ Run these research agents:
     expect(await exists(path.join(outputRoot, "skills", "bug-reproduction-validator"))).toBe(false)
     expect(await exists(path.join(outputRoot, "prompts", "reproduce-bug.md"))).toBe(false)
     expect(await exists(path.join(outputRoot, "prompts", "report-bug.md"))).toBe(false)
-    expect(await exists(path.join(outputRoot, "skills", "rg-plan", "SKILL.md"))).toBe(true)
-    // RG Engineering no longer ships standalone agents; specialist
+    expect(await exists(path.join(outputRoot, "skills", "rg-prep-plan", "SKILL.md"))).toBe(true)
+    // RG Engineering / Worldbuilding no longer ships standalone agents; specialist
     // prompts live inside the consuming skill directories.
     expect(await exists(path.join(outputRoot, "agents", "rg-repo-research-analyst.md"))).toBe(false)
-    expect(await exists(path.join(outputRoot, "rg-engineering", "legacy-backup"))).toBe(true)
+    expect(await exists(path.join(outputRoot, "rg-worldbuilding", "legacy-backup"))).toBe(true)
   })
 })

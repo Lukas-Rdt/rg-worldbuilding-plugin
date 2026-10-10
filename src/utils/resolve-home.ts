@@ -1,10 +1,15 @@
 import os from "os"
 import path from "path"
 
+export function getHomeDir(): string {
+  return process.env.HOME || os.homedir()
+}
+
 export function expandHome(value: string): string {
-  if (value === "~") return os.homedir()
-  if (value.startsWith(`~${path.sep}`)) {
-    return path.join(os.homedir(), value.slice(2))
+  const home = getHomeDir()
+  if (value === "~") return home
+  if (value.startsWith("~/") || value.startsWith("~\\")) {
+    return path.join(home, value.slice(2))
   }
   return value
 }
@@ -17,6 +22,7 @@ export function resolveTargetHome(value: unknown, defaultPath: string): string {
 }
 
 export function resolveCodexHome(value: unknown): string {
-  const defaultPath = process.env.CODEX_HOME?.trim() || path.join(os.homedir(), ".codex")
+  const home = process.env.HOME || os.homedir()
+  const defaultPath = process.env.CODEX_HOME?.trim() || path.join(home, ".codex")
   return resolveTargetHome(value, path.resolve(expandHome(defaultPath)))
 }

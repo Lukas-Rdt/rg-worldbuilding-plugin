@@ -8,31 +8,31 @@ describe("release preview", () => {
   test("uses changed files to determine affected components and next versions", async () => {
     const versions = await loadCurrentVersions()
     const preview = await buildReleasePreview({
-      title: "fix: adjust rg-plan wording",
-      files: ["skills/rg-plan/SKILL.md"],
+      title: "fix: adjust rg-prep-plan wording",
+      files: ["skills/rg-prep-plan/SKILL.md"],
     })
 
     expect(preview.components).toHaveLength(1)
-    expect(preview.components[0].component).toBe("rg-engineering")
+    expect(preview.components[0].component).toBe("rg-worldbuilding")
     expect(preview.components[0].inferredBump).toBe("patch")
-    expect(preview.components[0].nextVersion).toBe(bumpVersion(versions["rg-engineering"], "patch"))
+    expect(preview.components[0].nextVersion).toBe(bumpVersion(versions["rg-worldbuilding"], "patch"))
   })
 
   test("supports per-component overrides without affecting unrelated components", async () => {
     const versions = await loadCurrentVersions()
     const preview = await buildReleasePreview({
-      title: "fix: refine rg-engineering prompts",
+      title: "fix: refine rg-worldbuilding prompts",
       files: ["README.md"],
       overrides: {
-        "rg-engineering": "minor",
+        "rg-worldbuilding": "minor",
       },
     })
 
     expect(preview.components).toHaveLength(1)
-    expect(preview.components[0].component).toBe("rg-engineering")
+    expect(preview.components[0].component).toBe("rg-worldbuilding")
     expect(preview.components[0].inferredBump).toBe("patch")
     expect(preview.components[0].effectiveBump).toBe("minor")
-    expect(preview.components[0].nextVersion).toBe(bumpVersion(versions["rg-engineering"], "minor"))
+    expect(preview.components[0].nextVersion).toBe(bumpVersion(versions["rg-worldbuilding"], "minor"))
   })
 
   test("docs-only changes remain non-releasable by default", async () => {

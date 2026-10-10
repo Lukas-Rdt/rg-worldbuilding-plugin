@@ -14,8 +14,10 @@ import path from "node:path"
 // canonical rg-pov copy here.
 const SCRIPT = path.join(
   __dirname,
-  "../skills/rg-pov/scripts/repo-profile-cache.py",
+  "../skills/rg-ruling-pov/scripts/repo-profile-cache.py",
 )
+
+const PYTHON_CMD = process.platform === "win32" ? "python" : "python3"
 
 function git(cwd: string, ...args: string[]): string {
   const r = spawnSync("git", args, { cwd, encoding: "utf8" })
@@ -29,11 +31,11 @@ function run(
   cwd: string,
   ...args: string[]
 ): { code: number; stdout: string; stderr: string } {
-  const r = spawnSync("python3", [SCRIPT, ...args], { cwd, encoding: "utf8" })
+  const r = spawnSync(PYTHON_CMD, [SCRIPT, ...args], { cwd, encoding: "utf8" })
   return {
     code: r.status ?? -1,
-    stdout: r.stdout ?? "",
-    stderr: r.stderr ?? "",
+    stdout: (r.stdout ?? "").replace(/\r\n/g, "\n"),
+    stderr: (r.stderr ?? "").replace(/\r\n/g, "\n"),
   }
 }
 
@@ -69,7 +71,8 @@ function putProfile(dir: string, profile: object = VALID_PROFILE): string {
   writeFileSync(profileFile, JSON.stringify(profile))
   const res = run(dir, "put", profileFile)
   expect(res.code).toBe(0)
-  return res.stdout.trim()
+  const raw = res.stdout.trim()
+  return process.platform === "win32" ? path.resolve(path.parse(dir).root, raw) : raw
 }
 
 function getHitProfile(stdout: string): unknown {
@@ -83,7 +86,7 @@ describe("repo-profile-cache helper", () => {
     const res = run(dir, "get")
     expect(res.code).toBe(0)
     expect(res.stdout.startsWith("MISS\n")).toBe(true)
-    const writePath = res.stdout.split("\n")[1]
+    const writePath = res.stdout.split("\n")[1].replace(/\\/g, "/")
     expect(writePath).toContain("/rg-engineering/repo-profile/")
     expect(writePath.endsWith(".json")).toBe(true)
   })
@@ -174,7 +177,7 @@ describe("repo-profile-cache helper", () => {
     git(dir, "merge", "-q", "--allow-unrelated-histories", "--no-edit", "second")
     const res = run(dir, "get")
     expect(res.code).toBe(0)
-    const writePath = res.stdout.split("\n")[1]
+    const writePath = res.stdout.split("\n")[1].replace(/\\/g, "/")
     // The <root-sha> path component must be a single 40-hex SHA, not a
     // newline-joined pair from multiple roots.
     const rootComponent = writePath.split("/repo-profile/")[1].split("/")[0]

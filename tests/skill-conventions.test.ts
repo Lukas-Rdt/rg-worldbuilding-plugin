@@ -143,30 +143,25 @@ const DESCRIPTION_CHAR_BUDGET = 1024
 const NAME_CHAR_BUDGET = 64
 
 const EXPECTED_USER_INVOKED_SKILLS = new Set([
-  "rg-polish",
-  "rg-product-pulse",
-  "rg-promote",
-  "rg-setup",
-  "rg-sweep",
+  "rg-init",
   "lfg",
 ])
 
 const REQUIRED_MODEL_INVOKED_CALLEES = new Set([
-  "rg-brainstorm",
-  "rg-code-review",
-  "rg-compound",
-  "rg-compound-refresh",
-  "rg-debug",
-  "rg-doc-review",
-  "rg-ideate",
-  "rg-optimize",
-  "rg-plan",
+  "rg-flesh-out",
+  "rg-lore-audit",
+  "rg-compound-canon",
+  "rg-canon-refresh",
+  "rg-patch-plothole",
+  "rg-arc-review",
+  "rg-spark",
+  "rg-prep-plan",
   "rg-proof",
-  "rg-resolve-pr-feedback",
-  "rg-riffrec-feedback-analysis",
-  "rg-simplify-code",
-  "rg-strategy",
-  "rg-work",
+  "rg-resolve-audit",
+  "rg-audio-debrief",
+  "rg-distill",
+  "rg-premise",
+  "rg-craft",
 ])
 
 // ---------------------------------------------------------------------------
@@ -1016,7 +1011,7 @@ describe("extractLocalReferenceCandidates", () => {
       "scripts/session-history/extract-metadata.py",
       "scripts/deleted-tool.sh",
     ])
-    const skillRoot = path.join(SKILLS_ROOT, "rg-compound")
+    const skillRoot = path.join(SKILLS_ROOT, "rg-compound-canon")
     const existing = resolveInsideSkill(skillRoot, skillRoot, "scripts/session-history/extract-metadata.py")
     const missing = resolveInsideSkill(skillRoot, skillRoot, "scripts/deleted-tool.sh")
     expect(existing).not.toBeNull()
@@ -1040,13 +1035,13 @@ describe("extractLocalReferenceCandidates", () => {
     // The documented cross-platform style: the variable prefix means
     // "skill-root-relative" (AGENTS.md "Platform-Specific Variables in
     // Skills"), so the unwrapped remainder must resolve at the skill root —
-    // demonstrated against a real bundled script (rg-compound's).
+    // demonstrated against a real bundled script (rg-compound-canon's).
     const sample =
       '```bash\nbash "${CLAUDE_SKILL_DIR:-.}/scripts/validate-frontmatter.py"\n```'
     expect(extractLocalReferenceCandidates(sample).map((c) => c.value)).toEqual([
       "scripts/validate-frontmatter.py",
     ])
-    const skillRoot = path.join(SKILLS_ROOT, "rg-compound")
+    const skillRoot = path.join(SKILLS_ROOT, "rg-compound-canon")
     const resolved = resolveInsideSkill(skillRoot, skillRoot, "scripts/validate-frontmatter.py")
     expect(resolved).not.toBeNull()
     expect(statSync(resolved!).isFile()).toBe(true)
@@ -1056,11 +1051,11 @@ describe("extractLocalReferenceCandidates", () => {
 describe("resolveInsideSkill", () => {
   const skillRoot = path.join(
     SKILLS_ROOT,
-    "rg-resolve-pr-feedback",
+    "rg-resolve-audit",
   )
 
   test("rejects ../ traversal to a sibling skill even when the target exists there", () => {
-    const sibling = "../rg-plan/references/plan-handoff.md"
+    const sibling = "../rg-prep-plan/references/plan-handoff.md"
     // The target genuinely exists in the sibling skill — existence outside
     // the skill must not satisfy Rule 2; it is the cross-skill reference.
     expect(statSync(path.resolve(skillRoot, sibling)).isFile()).toBe(true)

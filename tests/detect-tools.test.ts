@@ -174,7 +174,7 @@ describe("detectInstalledTools", () => {
 
     results = await detectInstalledTools(tempHome, tempCwd)
     expect(results.find((t) => t.name === "copilot")?.detected).toBe(true)
-    expect(results.find((t) => t.name === "copilot")?.reason).toContain(".github/skills")
+    expect(results.find((t) => t.name === "copilot")?.reason).toContain(path.join(".github", "skills"))
   })
 })
 

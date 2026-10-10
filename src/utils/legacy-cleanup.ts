@@ -61,6 +61,7 @@ export const STALE_SKILL_DIRS = [
   "andrew-kane-gem-writer",
   "changelog",
   "claude-permissions-optimizer",
+  "demo-reel",
   "deploy-docs",
   "dhh-rails-style",
   "document-review",
@@ -114,9 +115,13 @@ export const STALE_SKILL_DIRS = [
   "ce-work-beta",
 
   // Removed engineering / git skills (no replacement)
+  "rg-agent-native-architecture",
   "rg-commit",
   "rg-commit-push-pr",
+  "rg-demo-reel",
   "rg-dogfood",
+  "rg-optimize",
+  "rg-plan",
   "rg-test-browser",
   "rg-test-xcode",
   "rg-worktree",
@@ -320,6 +325,9 @@ const LEGACY_SKILL_DESCRIPTION_ALIASES: Record<string, string[]> = {
   "rg:plan": [
     "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
   ],
+  "rg-plan": [
+    "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
+  ],
   "workflows-plan": [
     "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
   ],
@@ -477,13 +485,13 @@ const LEGACY_PROMPT_DESCRIPTION_ALIASES: Record<string, string[]> = {
  * "current shipped description" leg of the two-signal check so that the alias
  * map above does not need to be touched on every routine description edit. */
 const LEGACY_PROMPT_CURRENT_SKILL_FOR_FILE: Record<string, string> = {
-  "ce-brainstorm.md": "rg-brainstorm",
-  "ce-compound.md": "rg-compound",
-  "ce-compound-refresh.md": "rg-compound-refresh",
-  "ce-ideate.md": "rg-ideate",
-  "ce-plan.md": "rg-plan",
-  "ce-review.md": "rg-code-review",
-  "ce-work.md": "rg-work",
+  "ce-brainstorm.md": "rg-flesh-out",
+  "ce-compound.md": "rg-compound-canon",
+  "ce-compound-refresh.md": "rg-canon-refresh",
+  "ce-ideate.md": "rg-spark",
+  "ce-plan.md": "rg-prep-plan",
+  "ce-review.md": "rg-lore-audit",
+  "ce-work.md": "rg-craft",
   "rg-work-beta.md": "rg-work-beta",
 }
 
@@ -529,6 +537,8 @@ const LEGACY_ONLY_SKILL_DESCRIPTIONS: Record<string, string> = {
     "Validate and prepare documentation for GitHub Pages deployment",
   "ce-demo-reel":
     "Capture a visual demo reel (GIF, terminal recording, screenshots) for PR descriptions. Use when shipping UI changes, CLI features, or any work with observable behavior that benefits from visual proof. Also use when asked to add a demo, record a GIF, screenshot a feature, show what changed visually, create a demo reel, capture evidence, add proof to a PR, or create a before/after comparison.",
+  "rg-demo-reel":
+    "Capture a visual demo reel (GIF, terminal recording, screenshots) for PR descriptions. Use when shipping UI changes, CLI features, or any work with observable behavior that benefits from visual proof. Also use when asked to add a demo, record a GIF, screenshot a feature, show what changed visually, create a demo reel, capture evidence, add proof to a PR, or create a before/after comparison.",
   "ce-dspy-ruby":
     "Build type-safe LLM applications with DSPy.rb — Ruby's programmatic prompt framework with signatures, modules, agents, and optimization. Use when implementing predictable AI features, creating LLM signatures and modules, configuring language model providers, building agent systems with tools, optimizing prompts, or testing LLM-powered functionality in Ruby applications.",
   "ce-every-style-editor":
@@ -567,10 +577,16 @@ const LEGACY_ONLY_SKILL_DESCRIPTIONS: Record<string, string> = {
     "Commit, push, and open a PR. Use when asked to ship/open a PR, or for PR-description-only flows like writing, rewriting, or describing a PR body.",
   "rg-dogfood":
     "Hands-off, diff-scoped browser QA of the active branch: maps user flows, drives a real browser, autonomously fixes small breakages with regression tests and commits, judges experience against product personas, and writes a durable dogfood report. Manual invocation only.",
+  "rg-optimize":
+    "Run metric-driven optimization loops. Use when improving measurable outcomes such as search relevance, clustering quality, build performance, prompt quality, or scored behavior through experiments.",
   "rg-test-browser":
     "Run browser tests for pages affected by the current branch or PR.",
   "rg-test-xcode":
     "Build and test iOS apps on simulator with XcodeBuildMCP.",
+  "rg-agent-native-architecture":
+    "Build applications where agents are first-class citizens. Use this skill when designing autonomous agents, creating MCP tools, implementing self-modifying systems, or building apps where features are outcomes achieved by agents operating in a loop.",
+  "rg-plan":
+    "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
   "rg-worktree":
     "Set up isolated git worktrees — create a new branch for fresh work, or attach a worktree to an existing branch/PR/commit to work on it in isolation. Use when starting isolated work or isolating an existing ref; detects existing isolation first.",
 }
@@ -657,6 +673,10 @@ const LEGACY_ONLY_AGENT_DESCRIPTIONS: Record<string, string> = {
     "Performs security audits for vulnerabilities, input validation, auth/authz, hardcoded secrets, and OWASP compliance. Use when reviewing code for security issues or before deployment.",
   "ce-session-historian":
     "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `ce-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/ce-sessions` (or another caller that runs the full discovery + extract pipeline first).",
+  "rg-session-historian":
+    "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `rg-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/rg-sessions` (or another caller that runs the full discovery + extract pipeline first).",
+  "session-historian":
+    "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `rg-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/rg-sessions` (or another caller that runs the full discovery + extract pipeline first).",
   "ce-slack-researcher":
     "Searches Slack for organizational context -- decisions, constraints, and discussions that may not be documented elsewhere. Use when the user explicitly asks to search Slack for context during ideation, planning, or brainstorming.",
   "ce-spec-flow-analyzer":
@@ -760,6 +780,95 @@ function currentSkillNameForLegacy(legacyName: string): string {
 
   // Map specific legacy names to current active skill names
   switch (name) {
+    case "setup":
+    case "rg-setup":
+    case "ce-setup":
+      return "rg-init"
+    case "plan":
+    case "rg-plan":
+    case "ce-plan":
+      return "rg-prep-plan"
+    case "document-review":
+    case "rg-document-review":
+    case "ce-document-review":
+    case "rg-doc-review":
+    case "ce-doc-review":
+      return "rg-arc-review"
+    case "rg-review":
+    case "ce-review":
+    case "review":
+    case "code-review":
+    case "rg-code-review":
+    case "ce-code-review":
+      return "rg-lore-audit"
+    case "brainstorm":
+    case "rg-brainstorm":
+    case "ce-brainstorm":
+      return "rg-flesh-out"
+    case "ideate":
+    case "rg-ideate":
+    case "ce-ideate":
+      return "rg-spark"
+    case "compound":
+    case "rg-compound":
+    case "ce-compound":
+      return "rg-compound-canon"
+    case "compound-refresh":
+    case "rg-compound-refresh":
+    case "ce-compound-refresh":
+      return "rg-canon-refresh"
+    case "rg-polish-beta":
+    case "ce-polish-beta":
+    case "polish-beta":
+    case "polish":
+    case "rg-polish":
+    case "ce-polish":
+      return "rg-flavor-polish"
+    case "work":
+    case "rg-work":
+    case "ce-work":
+      return "rg-craft"
+    case "sweep":
+    case "rg-sweep":
+    case "ce-sweep":
+      return "rg-thread-sweep"
+    case "debug":
+    case "rg-debug":
+    case "ce-debug":
+      return "rg-patch-plothole"
+    case "pov":
+    case "rg-pov":
+    case "ce-pov":
+      return "rg-ruling-pov"
+    case "product-pulse":
+    case "rg-product-pulse":
+    case "ce-product-pulse":
+      return "rg-table-pulse"
+    case "resolve-pr-feedback":
+    case "rg-resolve-pr-feedback":
+    case "ce-resolve-pr-feedback":
+      return "rg-resolve-audit"
+    case "simplify-code":
+    case "rg-simplify-code":
+    case "ce-simplify-code":
+      return "rg-statblock"
+    case "explain":
+    case "rg-explain":
+    case "ce-explain":
+      return "rg-distill"
+    case "riffrec-feedback-analysis":
+    case "ce-riffrec-feedback-analysis":
+      return "rg-rolltable"
+    case "promote":
+    case "ce-promote":
+      return "rg-teaser"
+    case "strategy":
+    case "ce-strategy":
+      return "rg-handout"
+    case "rg-dogfood-beta":
+    case "ce-dogfood-beta":
+    case "dogfood-beta":
+      return "rg-dogfood"
     case "git-commit":
     case "commit":
       return "rg-commit"
@@ -772,23 +881,6 @@ function currentSkillNameForLegacy(legacyName: string): string {
     case "report-bug-ce":
     case "report-bug":
       return "rg-report-bug"
-    case "document-review":
-    case "rg-document-review":
-    case "ce-document-review":
-      return "rg-doc-review"
-    case "rg-review":
-    case "ce-review":
-    case "review":
-    case "code-review":
-      return "rg-code-review"
-    case "rg-polish-beta":
-    case "ce-polish-beta":
-    case "polish-beta":
-      return "rg-polish"
-    case "rg-dogfood-beta":
-    case "ce-dogfood-beta":
-    case "dogfood-beta":
-      return "rg-dogfood"
     default:
       return name.startsWith("rg-") ? name : `rg-${name}`
   }
@@ -886,6 +978,18 @@ async function readTomlDescription(filePath: string): Promise<string | null> {
   }
 }
 
+async function readJsonDescription(filePath: string): Promise<string | null> {
+  try {
+    const raw = await fs.readFile(filePath, "utf8")
+    const parsed = JSON.parse(raw)
+    if (!parsed || typeof parsed !== "object") return null
+    const description = (parsed as Record<string, unknown>).description
+    return typeof description === "string" ? description : null
+  } catch {
+    return null
+  }
+}
+
 function normalizeLegacyWorkflowReferences(value: string): string {
   return value.replace(/\bce:([a-z0-9-]+)\b/g, "rg-$1").replace(/\brg:([a-z0-9-]+)\b/g, "rg-$1")
 }
@@ -944,20 +1048,30 @@ async function loadLegacyFingerprints(): Promise<LegacyFingerprints> {
         const legacyOnly = LEGACY_ONLY_SKILL_DESCRIPTIONS[legacyName]
           ?? LEGACY_ONLY_SKILL_DESCRIPTIONS[currentSkillNameForLegacy(legacyName)]
           ?? LEGACY_ONLY_SKILL_DESCRIPTIONS[ceNameForLegacy(legacyName)]
-        if (legacyOnly) skills.set(legacyName, legacyOnly)
+          ?? LEGACY_SKILL_DESCRIPTION_ALIASES[legacyName]?.[0]
+        if (legacyOnly) {
+          skills.set(legacyName, legacyOnly)
+          skills.set(currentSkillNameForLegacy(legacyName), legacyOnly)
+        }
       }
 
       for (const legacyName of STALE_AGENT_NAMES) {
         const currentPath = agentIndex.get(currentAgentNameForLegacy(legacyName))
         if (currentPath) {
           const description = await readDescription(currentPath)
-          if (description) agents.set(legacyName, description)
+          if (description) {
+            agents.set(legacyName, description)
+            agents.set(currentAgentNameForLegacy(legacyName), description)
+          }
           continue
         }
         const legacyOnly = LEGACY_ONLY_AGENT_DESCRIPTIONS[legacyName]
           ?? LEGACY_ONLY_AGENT_DESCRIPTIONS[currentAgentNameForLegacy(legacyName)]
           ?? LEGACY_ONLY_AGENT_DESCRIPTIONS[ceNameForLegacy(legacyName)]
-        if (legacyOnly) agents.set(legacyName, legacyOnly)
+        if (legacyOnly) {
+          agents.set(legacyName, legacyOnly)
+          agents.set(currentAgentNameForLegacy(legacyName), legacyOnly)
+        }
       }
 
       for (const [fileName, skillName] of Object.entries(LEGACY_PROMPT_CURRENT_SKILL_FOR_FILE)) {
@@ -1023,6 +1137,10 @@ async function isLegacyPluginOwned(
   }
   if (extension === ".toml") {
     const actualDescription = await readTomlDescription(targetPath)
+    return descriptionsMatch(actualDescription, expectedDescription)
+  }
+  if (extension === ".json") {
+    const actualDescription = await readJsonDescription(targetPath)
     return descriptionsMatch(actualDescription, expectedDescription)
   }
 
@@ -1134,10 +1252,10 @@ async function isLegacyKiroAgentConfig(
 
     return parsed.name === fileName
       && descriptionsMatch(description, expectedDescription)
-      && descriptionsMatch(
+      && (!welcomeMessage || descriptionsMatch(
         welcomeMessage,
         `Switching to the ${fileName} agent. ${expectedDescription}`,
-      )
+      ))
       && parsed.prompt === `file://./prompts/${fileName}.md`
       && parsed.includeMcpJson === true
       && tools.length === 1

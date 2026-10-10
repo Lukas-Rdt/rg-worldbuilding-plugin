@@ -21,5 +21,6 @@ export function resolveOpenCodeGlobalRoot(): string {
   if (envDir) {
     return path.resolve(expandHome(envDir))
   }
-  return path.join(os.homedir(), ".config", "opencode")
+  const home = process.env.HOME || os.homedir()
+  return path.join(home, ".config", "opencode")
 }

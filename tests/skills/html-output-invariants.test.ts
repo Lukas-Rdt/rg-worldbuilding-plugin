@@ -10,7 +10,7 @@ import { describe, expect, test } from "bun:test"
 // bad outcome.
 const REFERENCE_PATH = path.join(
   process.cwd(),
-  "skills/rg-plan/references/html-rendering.md",
+  "skills/rg-prep-plan/references/html-rendering.md",
 )
 const REFERENCE = readFileSync(REFERENCE_PATH, "utf8")
 

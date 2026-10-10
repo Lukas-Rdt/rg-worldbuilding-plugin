@@ -109,6 +109,7 @@ const HISTORICAL_PLUGIN_ARTIFACTS: LegacyPluginArtifacts = {
       "deepen-plan",
       "deepen-plan-beta",
       "demo-reel",
+      "rg-demo-reel",
       "deploy-docs",
       "dhh-rails-style",
       "dhh-ruby-style",
@@ -143,9 +144,12 @@ const HISTORICAL_PLUGIN_ARTIFACTS: LegacyPluginArtifacts = {
       "resolve_parallel",
       "resolve_pr_parallel",
       "resolve_todo_parallel",
+      "rg-agent-native-architecture",
       "rg-commit",
       "rg-commit-push-pr",
       "rg-dogfood",
+      "rg-optimize",
+      "rg-plan",
       "rg-test-browser",
       "rg-test-xcode",
       "rg-worktree",
@@ -568,6 +572,10 @@ export function getLegacyKiroArtifacts(bundle: KiroBundle): LegacyKiroArtifacts 
     const agentName = normalizeLegacyName(name)
     if (!currentAgents.has(agentName)) {
       agents.add(agentName)
+    }
+    const prefixedAgentName = normalizeLegacyName(name.startsWith("rg-") ? name : `rg-${name}`)
+    if (!currentAgents.has(prefixedAgentName)) {
+      agents.add(prefixedAgentName)
     }
   }
   for (const name of extras.commands ?? []) {

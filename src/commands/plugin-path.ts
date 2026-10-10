@@ -31,7 +31,8 @@ export default defineCommand({
       .replace(/\//g, "~")
       .replace(/[^a-zA-Z0-9._~-]/g, (ch) => `%${ch.charCodeAt(0).toString(16).padStart(2, "0")}`)
     const dirName = `${pluginName}-${sanitized}`
-    const cacheRoot = path.join(os.homedir(), ".cache", "rg-engineering", "branches")
+    const homeDir = process.env.HOME || os.homedir()
+    const cacheRoot = path.join(homeDir, ".cache", "rg-engineering", "branches")
     await fs.mkdir(cacheRoot, { recursive: true })
     const targetDir = path.join(cacheRoot, dirName)
     const source = resolveGitHubSource()

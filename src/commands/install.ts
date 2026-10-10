@@ -8,7 +8,7 @@ import { targets, validateScope } from "../targets"
 import { pathExists } from "../utils/files"
 import type { ClaudeToOpenCodeOptions, PermissionMode } from "../converters/claude-to-opencode"
 import { ensureCodexAgentsFile } from "../utils/codex-agents"
-import { expandHome, resolveCodexHome, resolveTargetHome } from "../utils/resolve-home"
+import { expandHome, getHomeDir, resolveCodexHome, resolveTargetHome } from "../utils/resolve-home"
 import { resolveOpenCodeWriteScope, resolveTargetOutputRoot } from "../utils/resolve-output"
 import { detectInstalledTools } from "../utils/detect-tools"
 
@@ -94,7 +94,7 @@ export default defineCommand({
       const plugin = await loadClaudePlugin(resolvedPlugin.path)
       const outputRoot = resolveOutputRoot(args.output)
       const codexHome = resolveCodexHome(args.codexHome)
-      const piHome = resolveTargetHome(args.piHome, path.join(os.homedir(), ".pi", "agent"))
+      const piHome = resolveTargetHome(args.piHome, path.join(getHomeDir(), ".pi", "agent"))
       const hasExplicitOutput = Boolean(args.output && String(args.output).trim())
 
       const options: ClaudeToOpenCodeOptions = {
@@ -324,7 +324,7 @@ async function resolvePluginRoot(repoRoot: string, pluginName: string): Promise<
 function resolveGitHubSource(): string {
   const override = process.env.COMPOUND_PLUGIN_GITHUB_SOURCE
   if (override && override.trim()) return override.trim()
-  return "https://github.com/Lukas-Rdt/rg-engineering-plugin"
+  return "https://github.com/Lukas-Rdt/rg-worldbuilding-plugin"
 }
 
 async function cloneGitHubRepo(source: string, destination: string, branch?: string): Promise<void> {

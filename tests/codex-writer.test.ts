@@ -42,6 +42,8 @@ function skillContent(name: string, description: string): string {
 const HISTORICAL_SKILL_DESCRIPTIONS: Record<string, string> = {
   "rg:plan-beta":
     "[BETA] Transform feature descriptions or requirements into structured implementation plans grounded in repo patterns and research. Use when the user says 'plan this', 'create a plan', 'write a tech plan', 'plan the implementation', 'how should we build', 'what's the approach for', 'break this down', or when a brainstorm/requirements document is ready for technical planning. Best when requirements are at least roughly defined; for exploratory or ambiguous requests, prefer rg:brainstorm first.",
+  "rg-plan":
+    "Create structured plans for multi-step tasks -- software features, research workflows, events, study plans, or any goal that benefits from breakdown. Also deepens existing plans with interactive sub-agent review. Use when the user says 'plan this', 'create a plan', 'how should we build', 'break this down', or when a brainstorm doc is ready for planning. Use 'deepen the plan' or 'deepening pass' for the deepening flow. For exploratory requests, prefer rg-brainstorm first.",
   "rg-agent-native-architecture":
     "Build applications where agents are first-class citizens. Use this skill when designing autonomous agents, creating MCP tools, implementing self-modifying systems, or building apps where features are outcomes achieved by agents operating in a loop.",
   "rg-demo-reel":
@@ -341,7 +343,7 @@ describe("writeCodexBundle", () => {
     expect(await exists(path.join(codexRoot, "prompts", "new-prompt.md"))).toBe(true)
   })
 
-  test("removes legacy .agents symlinks that point to managed Codex skills", async () => {
+  ;(process.platform === "win32" ? test.skip : test)("removes legacy .agents symlinks that point to managed Codex skills", async () => {
     const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "codex-flat-symlink-"))
     const codexRoot = path.join(tempRoot, ".codex")
     const previousManagedSkillsRoot = path.join(codexRoot, "rg-engineering", "skills")
@@ -391,11 +393,13 @@ describe("writeCodexBundle", () => {
     const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "codex-legacy-skill-"))
     const codexRoot = path.join(tempRoot, ".codex")
     await fs.mkdir(path.join(codexRoot, "skills", "rg-plan"), { recursive: true })
-    await fs.writeFile(path.join(codexRoot, "skills", "rg-plan", "SKILL.md"), skillContent("rg-plan", await pluginDescription("skills/rg-plan/SKILL.md")))
-    await fs.mkdir(path.join(codexRoot, "skills", "rg:plan"), { recursive: true })
-    await fs.writeFile(path.join(codexRoot, "skills", "rg:plan", "SKILL.md"), skillContent("rg:plan", await pluginDescription("skills/rg-plan/SKILL.md")))
-    await fs.mkdir(path.join(codexRoot, "skills", "rg:plan-beta"), { recursive: true })
-    await fs.writeFile(path.join(codexRoot, "skills", "rg:plan-beta", "SKILL.md"), skillContent("rg:plan-beta", historicalSkillDescription("rg:plan-beta")))
+    await fs.writeFile(path.join(codexRoot, "skills", "rg-plan", "SKILL.md"), skillContent("rg-plan", historicalSkillDescription("rg-plan")))
+    if (process.platform !== "win32") {
+      await fs.mkdir(path.join(codexRoot, "skills", "rg:plan"), { recursive: true })
+      await fs.writeFile(path.join(codexRoot, "skills", "rg:plan", "SKILL.md"), skillContent("rg:plan", await pluginDescription("skills/rg-prep-plan/SKILL.md")))
+      await fs.mkdir(path.join(codexRoot, "skills", "rg:plan-beta"), { recursive: true })
+      await fs.writeFile(path.join(codexRoot, "skills", "rg:plan-beta", "SKILL.md"), skillContent("rg:plan-beta", historicalSkillDescription("rg:plan-beta")))
+    }
     await fs.mkdir(path.join(codexRoot, "skills", "repo-research-analyst"), { recursive: true })
     await fs.writeFile(path.join(codexRoot, "skills", "repo-research-analyst", "SKILL.md"), skillContent("repo-research-analyst", historicalAgentDescription("rg-repo-research-analyst")))
     await fs.mkdir(path.join(codexRoot, "skills", "reproduce-bug"), { recursive: true })
@@ -415,14 +419,16 @@ describe("writeCodexBundle", () => {
     await writeCodexBundle(codexRoot, bundle)
 
     expect(await exists(path.join(codexRoot, "skills", "rg-plan"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "skills", "rg:plan"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "skills", "rg:plan-beta"))).toBe(false)
+    if (process.platform !== "win32") {
+      expect(await exists(path.join(codexRoot, "skills", "rg:plan"))).toBe(false)
+      expect(await exists(path.join(codexRoot, "skills", "rg:plan-beta"))).toBe(false)
+    }
     expect(await exists(path.join(codexRoot, "skills", "repo-research-analyst"))).toBe(false)
     expect(await exists(path.join(codexRoot, "skills", "reproduce-bug"))).toBe(false)
     expect(await exists(path.join(codexRoot, "skills", "bug-reproduction-validator"))).toBe(false)
     expect(await exists(path.join(codexRoot, "prompts", "reproduce-bug.md"))).toBe(false)
     expect(await exists(path.join(codexRoot, "prompts", "report-bug.md"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "rg-engineering", "legacy-backup"))).toBe(true)
+    expect(await exists(path.join(codexRoot, "rg-worldbuilding", "legacy-backup"))).toBe(true)
   })
 
   test("sweeps removed CE flat skills while preserving unrelated user skills", async () => {
@@ -465,7 +471,7 @@ describe("writeCodexBundle", () => {
     expect(await exists(path.join(userDebugDir, "SKILL.md"))).toBe(true)
     expect(await exists(path.join(userCleanBranchesDir, "SKILL.md"))).toBe(true)
 
-    const backupRoot = path.join(codexRoot, "rg-engineering", "legacy-backup")
+    const backupRoot = path.join(codexRoot, "rg-worldbuilding", "legacy-backup")
     expect(await exists(backupRoot)).toBe(true)
     let backedNames: string[] = []
     if (await exists(backupRoot)) {
@@ -549,8 +555,8 @@ describe("writeCodexBundle", () => {
 
     // Simulate the tree produced by a native Codex plugin install: active
     // namespaced skills under `.codex/skills/<plugin>/<skill>/SKILL.md`.
-    const namespacedSkillsRoot = path.join(codexRoot, "skills", "rg-engineering")
-    for (const skillName of ["rg-plan", "rg-debug", "rg-brainstorm"]) {
+    const namespacedSkillsRoot = path.join(codexRoot, "skills", "rg-worldbuilding")
+    for (const skillName of ["rg-prep-plan", "rg-patch-plothole", "rg-flesh-out"]) {
       await fs.mkdir(path.join(namespacedSkillsRoot, skillName), { recursive: true })
       await fs.writeFile(
         path.join(namespacedSkillsRoot, skillName, "SKILL.md"),
@@ -570,18 +576,18 @@ describe("writeCodexBundle", () => {
     // does advertise the current skill names so cleanup preserves them.
     expect(bundle.skillDirs).toEqual([])
     expect(bundle.generatedSkills).toEqual([])
-    expect(bundle.externallyManagedSkillNames).toContain("rg-plan")
-    expect(bundle.externallyManagedSkillNames).toContain("rg-debug")
+    expect(bundle.externallyManagedSkillNames).toContain("rg-prep-plan")
+    expect(bundle.externallyManagedSkillNames).toContain("rg-patch-plothole")
 
     await writeCodexBundle(codexRoot, bundle)
 
     // Currently-active skills survive an agents-only re-install.
-    expect(await exists(path.join(namespacedSkillsRoot, "rg-plan", "SKILL.md"))).toBe(true)
-    expect(await exists(path.join(namespacedSkillsRoot, "rg-debug", "SKILL.md"))).toBe(true)
-    expect(await exists(path.join(namespacedSkillsRoot, "rg-brainstorm", "SKILL.md"))).toBe(true)
+    expect(await exists(path.join(namespacedSkillsRoot, "rg-prep-plan", "SKILL.md"))).toBe(true)
+    expect(await exists(path.join(namespacedSkillsRoot, "rg-patch-plothole", "SKILL.md"))).toBe(true)
+    expect(await exists(path.join(namespacedSkillsRoot, "rg-flesh-out", "SKILL.md"))).toBe(true)
 
     // And none of them were silently relocated into legacy-backup.
-    const backupRoot = path.join(codexRoot, "rg-engineering", "legacy-backup")
+    const backupRoot = path.join(codexRoot, "rg-worldbuilding", "legacy-backup")
     if (await exists(backupRoot)) {
       const timestamps = await fs.readdir(backupRoot)
       for (const ts of timestamps) {

@@ -19,17 +19,17 @@ Proof is a collaborative document editor for humans and agents. It supports two 
 
 Every write to a Proof doc must be attributed. Two fields carry the agent's identity:
 
-- **Machine ID (`by` on every op, `X-Agent-Id` header):** `ai:rg-engineering` — stable, lowercase-hyphenated, machine-parseable. Appears in marks, events, and the API response.
-- **Display name (`name` on `POST /presence`):** `RG Engineering` — human-readable, shown in Proof's presence chips and comment-author badges.
+- **Machine ID (`by` on every op, `X-Agent-Id` header):** `ai:rg-worldbuilding` — stable, lowercase-hyphenated, machine-parseable. Appears in marks, events, and the API response.
+- **Display name (`name` on `POST /presence`):** `RG Worldbuilding` — human-readable, shown in Proof's presence chips and comment-author badges.
 
-Set the display name once per doc session by posting to presence with the `X-Agent-Id` header; Proof binds the name to that agent ID for the session. These values are the defaults for any caller of this skill; a caller may pass a different `identity` pair if a distinct sub-agent should own the doc. Do not use `ai:compound` or other ad-hoc variants — identity stays uniform unless a caller explicitly overrides it.
+Set the display name once per doc session by posting to presence with the `X-Agent-Id` header; Proof binds the name to that agent ID for the session. These values are the defaults for any caller of this skill; a caller may pass a different `identity` pair if a distinct sub-agent should own the doc. Identity stays uniform unless a caller explicitly overrides it.
 
 ## Publish Mode
 
-The primary use is one-way publishing: take an existing local markdown file (a brainstorm, a unified plan, a learning, a draft), read its full contents and post them as the new doc's body (see "Workflow: Create and Share a New Document" for the source-file recipe — never publish placeholder content), and hand the user a shareable URL. The local file stays canonical — publishing does not sync anything back to disk. The user can open the link to read, comment, and share with others; the agent can also participate via the edit APIs below when given the URL. Two entry points, identical mechanics (see "Workflow: Create and Share a New Document"):
+The primary use is one-way publishing: take an existing local markdown file (a player handout, campaign framework, session recap, or lore primer), read its full contents and post them as the new doc's body (see "Workflow: Create and Share a New Document" for the source-file recipe — never publish placeholder content), and hand the user a shareable URL. The local file stays canonical — publishing does not sync anything back to disk. The user can open the link to read, comment, and share with players; the agent can also participate via the edit APIs below when given the URL. Two entry points, identical mechanics (see "Workflow: Create and Share a New Document"):
 
-- **Direct user request** — a bare user phrase naming a local markdown file and asking to share it via Proof: "share this to proof", "publish this to proof", "open this in proof editor so I can review", "get me a proof link for this doc". The file is whichever markdown the user just created, edited, or referenced; if ambiguous, ask which file. This is a first-class entry point — do not require an upstream caller.
-- **Upstream skill handoff** — `rg-brainstorm`, `rg-ideate`, or `rg-plan` finishes a draft and hands it off to publish for human review, passing the file path and title explicitly.
+- **Direct user request** — a bare user phrase naming a local markdown file and asking to share it via Proof: "share this handout to proof", "publish this recap to proof", "open this in proof editor so my players can review", "get me a proof link for this lore doc". The file is whichever markdown the user just created, edited, or referenced; if ambiguous, ask which file. This is a first-class entry point — do not require an upstream caller.
+- **Upstream skill handoff** — `rg-handout`, `rg-lore-primer`, or `rg-teaser` finishes a draft and hands it off to publish for human review, passing the file path and title explicitly.
 
 Only publish markdown. If the source is an HTML unified plan, do not upload it
 to Proof; return the local browser/open path instead. When publishing a unified

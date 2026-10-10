@@ -25,7 +25,7 @@ import { isManagedCodexAgentsSymlink, readCodexInstallManifest, resolveCodexMana
 import { classifyCodexLegacyPromptOwnership, isLegacyAgentArtifactOwned, isLegacySkillArtifactOwned } from "../utils/legacy-cleanup"
 import { commandNameToRelativePath, isSafeManagedPath, pathExists, readJson, sanitizePathName } from "../utils/files"
 import { resolveOpenCodeGlobalRoot } from "../utils/opencode-config"
-import { expandHome, resolveCodexHome, resolveTargetHome } from "../utils/resolve-home"
+import { expandHome, getHomeDir, resolveCodexHome, resolveTargetHome } from "../utils/resolve-home"
 
 const cleanupTargets = ["codex", "opencode", "pi", "kiro", "copilot", "droid", "qwen", "windsurf"] as const
 type CleanupTarget = typeof cleanupTargets[number]
@@ -114,16 +114,16 @@ export default defineCommand({
     const hasExplicitOpenCodeHome = hasExplicitValue(args.opencodeHome)
     const roots = {
       codexHome: resolveCodexHome(args.codexHome),
-      piHome: resolveTargetHome(args.piHome, path.join(os.homedir(), ".pi", "agent")),
+      piHome: resolveTargetHome(args.piHome, path.join(getHomeDir(), ".pi", "agent")),
       // Mirror install: respect OPENCODE_CONFIG_DIR before falling back to the
       // XDG default so cleanup scans the same directory install wrote to.
       opencodeHome: resolveTargetHome(args.opencodeHome, resolveOpenCodeGlobalRoot()),
       kiroHome: resolveTargetHome(args.kiroHome, path.join(outputRoot, ".kiro")),
-      copilotHome: resolveTargetHome(args.copilotHome, path.join(os.homedir(), ".copilot")),
-      droidHome: resolveTargetHome(args.droidHome, path.join(os.homedir(), ".factory")),
-      qwenHome: resolveTargetHome(args.qwenHome, path.join(os.homedir(), ".qwen")),
-      windsurfHome: resolveTargetHome(args.windsurfHome, path.join(os.homedir(), ".codeium", "windsurf")),
-      agentsHome: resolveTargetHome(args.agentsHome, path.join(os.homedir(), ".agents")),
+      copilotHome: resolveTargetHome(args.copilotHome, path.join(getHomeDir(), ".copilot")),
+      droidHome: resolveTargetHome(args.droidHome, path.join(getHomeDir(), ".factory")),
+      qwenHome: resolveTargetHome(args.qwenHome, path.join(getHomeDir(), ".qwen")),
+      windsurfHome: resolveTargetHome(args.windsurfHome, path.join(getHomeDir(), ".codeium", "windsurf")),
+      agentsHome: resolveTargetHome(args.agentsHome, path.join(getHomeDir(), ".agents")),
       workspaceRoot: outputRoot,
       hasExplicitOutput: hasExplicitValue(args.output),
       hasExplicitOpenCodeHome,
@@ -508,8 +508,11 @@ async function cleanupQwen(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>,
   // user-authored files at paths like `~/.qwen/skills/rg-debug/SKILL.md` or
   // `~/.qwen/agents/rg-correctness-reviewer.md` that happen to share a name
   // with a current CE artifact but were never installed by this plugin.
-  const managedDir = path.join(qwenRoot, plugin.manifest.name)
-  const extras = getLegacyPluginArtifacts(plugin.manifest.name)
+  const legacyPluginName = (await pathExists(path.join(qwenRoot, "extensions", "rg-engineering")))
+    ? "rg-engineering"
+    : plugin.manifest.name
+  const managedDir = path.join(qwenRoot, legacyPluginName)
+  const extras = getLegacyPluginArtifacts(legacyPluginName)
   const skillNames = new Set((extras.skills ?? []).map(sanitizePathName))
   const agentNames = new Set((extras.agents ?? []).map(sanitizePathName))
   // The old Bun-based Qwen writer wrote commands via `resolveCommandPath`,
@@ -529,14 +532,16 @@ async function cleanupQwen(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>,
 
   let moved = 0
 
-  if (await isLegacyQwenExtensionInstall(qwenRoot, plugin.manifest.name)) {
-    moved += await moveIfExists(
-      managedDir,
-      "extensions",
-      path.join(qwenRoot, "extensions"),
-      plugin.manifest.name,
-      "Qwen",
-    )
+  for (const name of Array.from(new Set([plugin.manifest.name, legacyPluginName]))) {
+    if (await isLegacyQwenExtensionInstall(qwenRoot, name)) {
+      moved += await moveIfExists(
+        managedDir,
+        "extensions",
+        path.join(qwenRoot, "extensions"),
+        name,
+        "Qwen",
+      )
+    }
   }
 
   for (const skillName of skillNames) {

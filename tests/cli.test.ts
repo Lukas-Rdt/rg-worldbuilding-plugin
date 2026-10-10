@@ -193,7 +193,7 @@ describe("CLI", () => {
     }
   })
 
-  test("cleanup backs up legacy Codex artifacts on demand", async () => {
+  test.skipIf(process.platform === "win32")("cleanup backs up legacy Codex artifacts on demand", async () => {
     const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cli-cleanup-codex-"))
     const codexRoot = path.join(tempRoot, ".codex")
     const agentsRoot = path.join(tempRoot, ".agents")
@@ -363,7 +363,7 @@ describe("CLI", () => {
     expect(await exists(path.join(piRoot, "rg-engineering", "legacy-backup"))).toBe(true)
   })
 
-  test("cleanup only backs up CE-owned symlinks under ~/.agents/skills", async () => {
+  test.skipIf(process.platform === "win32")("cleanup only backs up CE-owned symlinks under ~/.agents/skills", async () => {
     // Regression coverage for PR #609 review: `~/.agents/skills/` is a shared
     // cross-plugin store, so a name collision alone is NOT sufficient signal
     // that CE installed an entry. CE only ever emits symlinks into this tree
@@ -464,31 +464,31 @@ describe("CLI", () => {
       "rg-adversarial-reviewer",  // same
     ]
     for (const skillName of staleAgentSkills) {
-      const dir = path.join(codexRoot, "skills", "rg-engineering", skillName)
+      const dir = path.join(codexRoot, "skills", "rg-worldbuilding", skillName)
       await fs.mkdir(dir, { recursive: true })
       await fs.writeFile(path.join(dir, "SKILL.md"), `stale agent-as-skill ${skillName}`)
     }
     // A current-named skill the prior install also tracked.
-    await fs.mkdir(path.join(codexRoot, "skills", "rg-engineering", "rg-plan"), { recursive: true })
+    await fs.mkdir(path.join(codexRoot, "skills", "rg-worldbuilding", "rg-prep-plan"), { recursive: true })
     await fs.writeFile(
-      path.join(codexRoot, "skills", "rg-engineering", "rg-plan", "SKILL.md"),
+      path.join(codexRoot, "skills", "rg-worldbuilding", "rg-prep-plan", "SKILL.md"),
       "current namespaced skill",
     )
     // Stale prompt from the prior install.
     await fs.mkdir(path.join(codexRoot, "prompts"), { recursive: true })
-    await fs.writeFile(path.join(codexRoot, "prompts", "rg-plan.md"), "stale prompt from prior CE version")
+    await fs.writeFile(path.join(codexRoot, "prompts", "rg-prep-plan.md"), "stale prompt from prior CE version")
 
     // Install manifest listing all the prior-install artifacts.
-    const managedDir = path.join(codexRoot, "rg-engineering")
+    const managedDir = path.join(codexRoot, "rg-worldbuilding")
     await fs.mkdir(managedDir, { recursive: true })
     await fs.writeFile(
       path.join(managedDir, "install-manifest.json"),
       JSON.stringify(
         {
           version: 1,
-          pluginName: "rg-engineering",
-          skills: [...staleAgentSkills, "rg-plan"],
-          prompts: ["rg-plan.md"],
+          pluginName: "rg-worldbuilding",
+          skills: [...staleAgentSkills, "rg-prep-plan"],
+          prompts: ["rg-prep-plan.md"],
           agents: [],
         },
         null,
@@ -523,14 +523,14 @@ describe("CLI", () => {
 
     // Stale agent-skills migrated to legacy-backup.
     for (const skillName of staleAgentSkills) {
-      expect(await exists(path.join(codexRoot, "skills", "rg-engineering", skillName))).toBe(false)
+      expect(await exists(path.join(codexRoot, "skills", "rg-worldbuilding", skillName))).toBe(false)
     }
     // Current-named namespaced skill survives (it's in the current bundle).
-    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "rg-plan"))).toBe(true)
-    // Stale prompt migrated (rg-plan is a skill now, not a command/prompt in current CE).
-    expect(await exists(path.join(codexRoot, "prompts", "rg-plan.md"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg-worldbuilding", "rg-prep-plan"))).toBe(true)
+    // Stale prompt migrated (rg-prep-plan is a skill now, not a command/prompt in current CE).
+    expect(await exists(path.join(codexRoot, "prompts", "rg-prep-plan.md"))).toBe(false)
     // Backup tree created.
-    expect(await exists(path.join(codexRoot, "rg-engineering", "legacy-backup"))).toBe(true)
+    expect(await exists(path.join(codexRoot, "rg-worldbuilding", "legacy-backup"))).toBe(true)
   })
 
   test("cleanup backs up legacy OpenCode artifacts on demand", async () => {
@@ -1099,10 +1099,10 @@ describe("CLI", () => {
     expect(stdout).toContain("Installed rg-engineering")
     // OpenCode global config lives at ~/.config/opencode per XDG spec
     expect(await exists(path.join(tempRoot, ".config", "opencode", "opencode.json"))).toBe(true)
-    expect(await exists(path.join(tempRoot, ".config", "opencode", "skills", "rg-plan", "SKILL.md"))).toBe(true)
+    expect(await exists(path.join(tempRoot, ".config", "opencode", "skills", "skill-one", "SKILL.md"))).toBe(true)
   })
 
-  test("install uses bundled rg-engineering plugin for codex output", async () => {
+  test("install uses bundled rg-worldbuilding plugin for codex output", async () => {
     const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cli-bundled-codex-home-"))
     const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cli-bundled-codex-workspace-"))
     const projectRoot = path.join(import.meta.dir, "..")
@@ -1113,7 +1113,7 @@ describe("CLI", () => {
       "run",
       path.join(projectRoot, "src", "index.ts"),
       "install",
-      "rg-engineering",
+      "rg-worldbuilding",
       "--to",
       "codex",
       "--include-skills",
@@ -1137,10 +1137,10 @@ describe("CLI", () => {
       throw new Error(`CLI failed (exit ${exitCode}).\nstdout: ${stdout}\nstderr: ${stderr}`)
     }
 
-    expect(stdout).toContain("Installed rg-engineering")
+    expect(stdout).toContain("Installed rg-worldbuilding")
     expect(stdout).toContain(codexRoot)
-    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "rg-plan", "SKILL.md"))).toBe(true)
-    expect(await exists(path.join(tempRoot, ".agents", "skills", "rg-plan"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg-worldbuilding", "rg-prep-plan", "SKILL.md"))).toBe(true)
+    expect(await exists(path.join(tempRoot, ".agents", "skills", "rg-prep-plan"))).toBe(false)
     expect(await exists(path.join(codexRoot, "AGENTS.md"))).toBe(true)
   })
 
@@ -1155,7 +1155,7 @@ describe("CLI", () => {
       "run",
       path.join(projectRoot, "src", "index.ts"),
       "install",
-      "rg-engineering",
+      "rg-worldbuilding",
       "--to",
       "codex",
     ], {
@@ -1178,13 +1178,13 @@ describe("CLI", () => {
       throw new Error(`CLI failed (exit ${exitCode}).\nstdout: ${stdout}\nstderr: ${stderr}`)
     }
 
-    expect(stdout).toContain("Installed rg-engineering")
+    expect(stdout).toContain("Installed rg-worldbuilding")
     // Default omits skills; they're expected from native Codex plugin install.
-    expect(await exists(path.join(codexRoot, "skills", "rg-plan", "SKILL.md"))).toBe(false)
-    expect(await exists(path.join(codexRoot, "skills", "rg-engineering", "rg-plan", "SKILL.md"))).toBe(false)
-    // RG Engineering no longer ships standalone agents, so the default
-    // Codex converter followup has no CE payload to emit.
-    expect(await exists(path.join(codexRoot, "agents", "rg-engineering"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg-prep-plan", "SKILL.md"))).toBe(false)
+    expect(await exists(path.join(codexRoot, "skills", "rg-worldbuilding", "rg-prep-plan", "SKILL.md"))).toBe(false)
+    // RG Worldbuilding does not ship standalone agents, so the default
+    // Codex converter followup has no payload to emit.
+    expect(await exists(path.join(codexRoot, "agents", "rg-worldbuilding"))).toBe(false)
     // AGENTS.md is emitted because --to codex always ensures a root AGENTS.md
     // exists for Codex's discovery chain.
     expect(await exists(path.join(codexRoot, "AGENTS.md"))).toBe(true)

@@ -26,7 +26,7 @@ const cliEntry = path.join(repoRoot, "src", "index.ts")
 const IMPLEMENTED_TARGETS = ["opencode", "codex", "pi", "antigravity"] as const
 type Target = (typeof IMPLEMENTED_TARGETS)[number]
 
-const PLUGIN_NAMES = ["rg-engineering"] as const
+const PLUGIN_NAMES = ["rg-worldbuilding"] as const
 type PluginName = (typeof PLUGIN_NAMES)[number]
 
 // Note on skill body size: an "8KB Codex skill body cap" circulates in
@@ -84,7 +84,7 @@ function walkFiles(dir: string): string[] {
 }
 
 function loadSourceInventory(pluginName: PluginName): SourceInventory {
-  const pluginRoot = pluginName === "rg-engineering" ? repoRoot : path.join(repoRoot, "plugins", pluginName)
+  const pluginRoot = pluginName === "rg-worldbuilding" ? repoRoot : path.join(repoRoot, "plugins", pluginName)
   const agents = listFileBasenames(path.join(pluginRoot, "agents"), ".md")
   const commands = listFileBasenames(path.join(pluginRoot, "commands"), ".md")
   const skills: SourceInventory["skills"] = []
@@ -203,7 +203,7 @@ async function runConvert(pluginName: PluginName, target: Target, tempRoot: stri
     "run",
     cliEntry,
     "convert",
-    pluginName === "rg-engineering" ? repoRoot : path.join(repoRoot, "plugins", pluginName),
+    pluginName === "rg-worldbuilding" ? repoRoot : path.join(repoRoot, "plugins", pluginName),
     "--to",
     target,
     ...args,

@@ -47,7 +47,7 @@ const HISTORICAL_AGENT_DESCRIPTIONS: Record<string, string> = {
   "rg-security-sentinel":
     "Performs security audits for vulnerabilities, input validation, auth/authz, hardcoded secrets, and OWASP compliance. Use when reviewing code for security issues or before deployment.",
   "rg-session-historian":
-    "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `ce-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/ce-sessions` (or another caller that runs the full discovery + extract pipeline first).",
+    "Synthesizes findings from prior coding-agent sessions about the same problem or topic. Receives pre-extracted skeleton/error file paths from a `rg-sessions` orchestrator and returns prose findings — investigation journey, what didn't work, key decisions, related context. Not intended for direct dispatch — use `/rg-sessions` (or another caller that runs the full discovery + extract pipeline first).",
   "rg-slack-researcher":
     "Searches Slack for organizational context -- decisions, constraints, and discussions that may not be documented elsewhere. Use when the user explicitly asks to search Slack for context during ideation, planning, or brainstorming.",
 }
@@ -103,14 +103,14 @@ describe("cleanupStaleSkillDirs", () => {
       path.join(root, "setup"),
       skillContent(
         "setup",
-        await pluginDescription("skills/rg-setup/SKILL.md"),
+        await pluginDescription("skills/rg-init/SKILL.md"),
       ),
     )
     await createDir(
       path.join(root, "document-review"),
       skillContent(
         "document-review",
-        await pluginDescription("skills/rg-doc-review/SKILL.md"),
+        await pluginDescription("skills/rg-arc-review/SKILL.md"),
       ),
     )
 
@@ -142,14 +142,14 @@ describe("cleanupStaleSkillDirs", () => {
       path.join(root, "rg-review"),
       skillContent(
         "rg-review",
-        await pluginDescription("skills/rg-code-review/SKILL.md"),
+        await pluginDescription("skills/rg-lore-audit/SKILL.md"),
       ),
     )
     await createDir(
       path.join(root, "rg-document-review"),
       skillContent(
         "rg-document-review",
-        await pluginDescription("skills/rg-doc-review/SKILL.md"),
+        await pluginDescription("skills/rg-arc-review/SKILL.md"),
       ),
     )
 
@@ -446,6 +446,13 @@ description: |
       ),
     )
     await createDir(
+      path.join(root, "rg-optimize"),
+      skillContent(
+        "rg-optimize",
+        "Run metric-driven optimization loops. Use when improving measurable outcomes such as search relevance, clustering quality, build performance, prompt quality, or scored behavior through experiments.",
+      ),
+    )
+    await createDir(
       path.join(root, "rg-worktree"),
       skillContent(
         "rg-worktree",
@@ -455,10 +462,11 @@ description: |
 
     const removed = await cleanupStaleSkillDirs(root)
 
-    expect(removed).toBe(6)
+    expect(removed).toBe(7)
     expect(await exists(path.join(root, "rg-commit"))).toBe(false)
     expect(await exists(path.join(root, "rg-commit-push-pr"))).toBe(false)
     expect(await exists(path.join(root, "rg-dogfood"))).toBe(false)
+    expect(await exists(path.join(root, "rg-optimize"))).toBe(false)
     expect(await exists(path.join(root, "rg-test-browser"))).toBe(false)
     expect(await exists(path.join(root, "rg-test-xcode"))).toBe(false)
     expect(await exists(path.join(root, "rg-worktree"))).toBe(false)
@@ -664,21 +672,21 @@ describe("cleanupStalePrompts", () => {
       path.join(root, "ce-plan.md"),
       promptWrapperContent(
         "ce-plan",
-        await pluginDescription("skills/rg-plan/SKILL.md"),
+        await pluginDescription("skills/rg-prep-plan/SKILL.md"),
       ),
     )
     await createFile(
       path.join(root, "ce-review.md"),
       promptWrapperContent(
         "ce-code-review",
-        await pluginDescription("skills/rg-code-review/SKILL.md"),
+        await pluginDescription("skills/rg-lore-audit/SKILL.md"),
       ),
     )
     await createFile(
       path.join(root, "ce-brainstorm.md"),
       promptWrapperContent(
         "ce-brainstorm",
-        await pluginDescription("skills/rg-brainstorm/SKILL.md"),
+        await pluginDescription("skills/rg-flesh-out/SKILL.md"),
       ),
     )
 
@@ -719,7 +727,7 @@ describe("cleanupStalePrompts", () => {
       path.join(root, "ce-plan.md"),
       legacyWorkflowPromptContent(
         "ce:plan",
-        (await pluginDescription("skills/rg-plan/SKILL.md"))
+        (await pluginDescription("skills/rg-prep-plan/SKILL.md"))
           .replaceAll("rg-", "ce:"),
       ),
     )
@@ -727,7 +735,7 @@ describe("cleanupStalePrompts", () => {
       path.join(root, "ce-work.md"),
       legacyWorkflowPromptContent(
         "ce:work",
-        (await pluginDescription("skills/rg-work/SKILL.md"))
+        (await pluginDescription("skills/rg-craft/SKILL.md"))
           .replaceAll("rg-", "ce:"),
       ),
     )

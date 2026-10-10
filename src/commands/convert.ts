@@ -5,7 +5,7 @@ import { loadClaudePlugin } from "../parsers/claude"
 import { targets, validateScope } from "../targets"
 import type { ClaudeToOpenCodeOptions, PermissionMode } from "../converters/claude-to-opencode"
 import { ensureCodexAgentsFile } from "../utils/codex-agents"
-import { expandHome, resolveCodexHome, resolveTargetHome } from "../utils/resolve-home"
+import { expandHome, getHomeDir, resolveCodexHome, resolveTargetHome } from "../utils/resolve-home"
 import { resolveOpenCodeWriteScope, resolveTargetOutputRoot } from "../utils/resolve-output"
 import { detectInstalledTools } from "../utils/detect-tools"
 
@@ -84,7 +84,7 @@ export default defineCommand({
     const outputRoot = resolveOutputRoot(args.output)
     const hasExplicitOutput = Boolean(args.output && String(args.output).trim())
     const codexHome = resolveCodexHome(args.codexHome)
-    const piHome = resolveTargetHome(args.piHome, path.join(os.homedir(), ".pi", "agent"))
+    const piHome = resolveTargetHome(args.piHome, path.join(getHomeDir(), ".pi", "agent"))
 
     const options: ClaudeToOpenCodeOptions = {
       agentMode: String(args.agentMode) === "primary" ? "primary" : "subagent",

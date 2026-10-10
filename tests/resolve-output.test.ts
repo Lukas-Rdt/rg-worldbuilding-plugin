@@ -51,7 +51,7 @@ describe("resolveTargetOutputRoot", () => {
     test("respects OPENCODE_CONFIG_DIR when set", () => {
       process.env.OPENCODE_CONFIG_DIR = "/custom/opencode"
       const result = resolveTargetOutputRoot({ ...baseOptions, targetName: "opencode" })
-      expect(result).toBe("/custom/opencode")
+      expect(result).toBe(path.resolve("/custom/opencode"))
     })
   })
 })
@@ -70,13 +70,13 @@ describe("resolveCodexHome", () => {
   test("uses CODEX_HOME when no explicit --codex-home is provided", () => {
     process.env.CODEX_HOME = "/tmp/custom-codex-profile"
 
-    expect(resolveCodexHome(undefined)).toBe("/tmp/custom-codex-profile")
+    expect(resolveCodexHome(undefined)).toBe(path.resolve("/tmp/custom-codex-profile"))
   })
 
   test("lets explicit --codex-home override CODEX_HOME", () => {
     process.env.CODEX_HOME = "/tmp/custom-codex-profile"
 
-    expect(resolveCodexHome("/tmp/explicit-codex")).toBe("/tmp/explicit-codex")
+    expect(resolveCodexHome("/tmp/explicit-codex")).toBe(path.resolve("/tmp/explicit-codex"))
   })
 })
 

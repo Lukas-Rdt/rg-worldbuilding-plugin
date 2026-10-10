@@ -15,15 +15,14 @@ const SHARED_CACHE_ASSETS = [
 ]
 
 const CONSUMER_SKILLS = [
-  "rg-pov",
-  "rg-plan",
-  "rg-optimize",
-  "rg-ideate",
-  "rg-brainstorm",
-  "rg-code-review",
-  "rg-compound",
-  "rg-debug",
-  "rg-explain",
+  "rg-ruling-pov",
+  "rg-prep-plan",
+  "rg-spark",
+  "rg-flesh-out",
+  "rg-lore-audit",
+  "rg-compound-canon",
+  "rg-patch-plothole",
+  "rg-lore-primer",
 ]
 
 describe("repo-profile-cache shared-asset parity", () => {
