@@ -9,14 +9,14 @@ import type {
 } from "./types"
 
 const RELEASE_COMPONENTS: ReleaseComponent[] = [
-  "rg-engineering",
+  "rg-worldbuilding",
   "marketplace",
   "cursor-marketplace",
 ]
 
 const FILE_COMPONENT_MAP: Array<{ component: ReleaseComponent; prefixes: string[] }> = [
   {
-    component: "rg-engineering",
+    component: "rg-worldbuilding",
     prefixes: [
       "skills/",
       "plugin.json",
@@ -47,8 +47,10 @@ const FILE_COMPONENT_MAP: Array<{ component: ReleaseComponent; prefixes: string[
 ]
 
 const SCOPES_TO_COMPONENTS: Record<string, ReleaseComponent> = {
-  compound: "rg-engineering",
-  "rg-engineering": "rg-engineering",
+  compound: "rg-worldbuilding",
+  worldbuilding: "rg-worldbuilding",
+  "rg-worldbuilding": "rg-worldbuilding",
+  "rg-engineering": "rg-worldbuilding",
   marketplace: "marketplace",
   "cursor-marketplace": "cursor-marketplace",
 }
@@ -201,7 +203,7 @@ export async function loadCurrentVersions(cwd = process.cwd()): Promise<VersionS
   }
 
   return {
-    "rg-engineering": ce.version,
+    "rg-worldbuilding": ce.version,
     marketplace: marketplace.metadata.version,
     "cursor-marketplace": cursorMarketplace.metadata.version,
   }

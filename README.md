@@ -1,177 +1,113 @@
-# RG Engineering
+# RG Worldbuilding
 
-[![Build Status](https://github.com/Lukas-Rdt/rg-engineering-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/Lukas-Rdt/rg-engineering-plugin/actions/workflows/ci.yml)
+[![Build Status](https://github.com/Lukas-Rdt/rg-worldbuilding-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/Lukas-Rdt/rg-worldbuilding-plugin/actions/workflows/ci.yml)
 
 > [!IMPORTANT]
 > **Private Distribution & Installation**
-> This repository is a private fork of the RG Engineering plugin.
-> Since it is hosted privately, choose one of the following methods to install it:
+> Dieses Repository ist ein privater Fork für das **RG Worldbuilding Plugin** (D&D / TTRPG), optimiert für bestehende **Obsidian Vaults**.
 > 
-> **Option 1: Direct Private Git Import (For users with GitHub access)**
-> 1. In Claude Code, run:
->    ```text
->    /plugin marketplace add Lukas-Rdt/rg-engineering-plugin
->    /plugin install rg-engineering
->    ```
->    *Note: Your terminal session must be authenticated with GitHub (e.g. via SSH or `gh auth login`).*
+> **Option 1: Direct Private Git Import (Claude Code)**
+> ```text
+> /plugin marketplace add Lukas-Rdt/rg-worldbuilding-plugin
+> /plugin install rg-worldbuilding
+> ```
 > 
-> **Option 2: Local Checkout Install (Alternative)**
-> 1. Clone this repository locally:
+> **Option 2: Local Checkout Install**
+> 1. Repository klonen:
 >    ```bash
->    git clone https://github.com/Lukas-Rdt/rg-engineering-plugin.git
+>    git clone https://github.com/Lukas-Rdt/rg-worldbuilding-plugin.git
 >    ```
-> 2. In Claude Code, install from the local folder:
+> 2. Im jeweiligen Agenten installieren:
 >    ```text
->    /plugin install /path/to/rg-engineering-plugin
+>    /plugin install /path/to/rg-worldbuilding-plugin
 >    ```
 > 
-> For other targets (OpenCode, Antigravity, etc.), please see [Installing for OpenCode](.opencode/INSTALL.md) or [Installing for Antigravity](.agy/INSTALL.md).
+> Für weitere Agenten (OpenCode, Antigravity, Cursor, etc.), siehe [Installation](#install).
 
 ---
 
-# RG Engineering (Original)
+# RG Worldbuilding
 
-AI skills that make each unit of engineering work easier than the last.
+AI skills that compound tabletop worldbuilding and campaign prep.
 
-## Philosophy
+## Philosophie: Compound Worldbuilding
 
-**Each unit of engineering work should make subsequent units easier -- not harder.**
+> *"Jede Einheit Worldbuilding- und Vorbereitungsarbeit muss nachfolgende Einheiten leichter machen — nicht schwerer."*
 
-Traditional development accumulates technical debt. Every feature adds complexity. Every bug fix leaves behind a little more local knowledge that someone has to rediscover later. The codebase gets larger, the context gets harder to hold, and the next change becomes slower.
+Klassische Kampagnenvorbereitung leidet unter wachsenden **Lore- und Prep-Schulden (Lore Debt)**:
+Spontane Improvisationen, unstrukturierte Notizen und widersprüchliche NSC-Entscheidungen häufen sich an, bis Spielleiter (DMs) vor jeder Session stundenlang nach alten Notizen suchen oder unbemerkt Kontinuitätsbrüche erzeugen.
 
-Compound engineering inverts this. 80% is in planning and review, 20% is in execution:
+**Das RG-Worldbuilding-Plugin invertiert dies:**
+1. **Fundierte Vorbereitung vor der Sitzung:** Strukturierte Vorbereitung nach bewährten Frameworks (z. B. Sly Flourish's *Lazy DM* und Justin Alexander's *Node-Based Design*).
+2. **Multi-Agent Review:** Automatische Plausibilitäts-, Balance- und Plothole-Checks durch 6 spezialisierte Agenten-Personas vor dem Spielabend.
+3. **At-the-Table Usability:** Automatische Destillation von Fließtext in bullet-point-basierte, spielfertige Schnellreferenzen mit sensorischen Details und hervorgehobenen DCs.
+4. **Post-Session Compounding:** Gespielte Ereignisse, getroffene Entscheidungen und Retcons werden nach jeder Sitzung erfasst und kanonisiert (`WORLD_CANON.md`), sodass nachfolgende Vorbereitungen direkt darauf aufbauen.
 
-- Plan thoroughly before writing code with `/rg-brainstorm` and `/rg-plan` using one readiness-based plan artifact
-- Review to catch issues and calibrate judgment with `/rg-code-review` and `/rg-doc-review`
-- Codify knowledge so it is reusable with `/rg-compound`
-- Keep quality high so future changes are easy
+---
 
-The point is not ceremony. The point is leverage. A good brainstorm makes the plan sharper. A good plan makes execution smaller. A good review catches the pattern, not just the bug. A good compound note means the next agent does not have to learn the same lesson from scratch.
+## Obsidian-First & No-Git Integration
 
-**Learn more**
+Das Plugin arbeitet direkt in einem **bestehenden Obsidian Vault**:
+* **Schutz bestehender Daten (Non-Destructive):** Kein starres Ordnerlayout aufgezwungen; das Plugin scannt und adaptiert vorhandene Strukturen (`01 Kampagne/`, `NSCs/`, `Orte/`, etc.).
+* **Kanon-Erkennung & Verlinkung:** Erkennt existierende Lore und nutzt standardmäßig Obsidian-`[[WikiLinks]]` und Dataview-Frontmatter.
+* **No-Branching / No-Git:** Da in Obsidian automatische Backup- oder Git-Plugins laufen, entfallen alle Git-, Branch-, Worktree- und PR-Mechaniken. Änderungen geschehen direkt in Zieldateien oder mit Status-Frontmatter (`status: draft` vs. `status: ready`).
 
-- [Skill documentation catalog](docs/skills/README.md)
-- [Compound engineering: how Every codes with agents](https://every.to/chain-of-thought/rg-engineering-how-every-codes-with-agents)
-- [The story behind compounding engineering](https://every.to/source-code/my-ai-had-already-fixed-the-code-before-i-saw-it)
+---
 
-## Workflow
+## Workflow-Zyklus
 
-The core loop is six steps: **brainstorm** the requirements, **plan** the implementation, **work** through the plan, **simplify** what you wrote, **review** the result, then **compound** the learning -- and repeat with better context.
+Der Kernzyklus verbindet Ideenfindung, Vorbereitung, Plausibilitätsprüfung und Kanonisierung:
 
-| Skill | Purpose |
-|-------|---------|
-| [`/rg-brainstorm`](docs/skills/rg-brainstorm.md) | Interactive Q&A to think through a feature or problem and write a requirements-only unified plan before planning |
-| [`/rg-plan`](docs/skills/rg-plan.md) | Enrich feature ideas or requirements-only plans into implementation-ready plans |
-| [`/rg-work`](docs/skills/rg-work.md) | Execute implementation-ready plans with worktrees and task tracking |
-| [`/rg-simplify-code`](docs/skills/rg-simplify-code.md) | Refine the freshly written code for clarity and reuse before review |
-| [`/rg-code-review`](docs/skills/rg-code-review.md) | Multi-agent review against the plan before merging |
-| [`/rg-compound`](docs/skills/rg-compound.md) | Capture the learning into `docs/solutions/` so the next loop starts smarter |
+| Skill | Zweck & Schwerpunkt |
+|-------|----------------------|
+| [`/rg-init`](skills/rg-init/SKILL.md) | **Onboarding:** Scannt das bestehende Vault, führt Konfigurations-Interview, schreibt `.rg-worldbuilding/config.local.yaml`. |
+| [`/rg-premise`](skills/rg-premise/SKILL.md) | Erstellt & pflegt `CAMPAIGN_FRAMEWORK.md`: Tonalität, Setting, Pillars, Safety Tools, Hausregeln. |
+| [`/rg-spark`](skills/rg-spark/SKILL.md) | Generiert 10+ kreative Ansätze für Quests, Fraktionen, Wendungen oder Monster; filtert Klischees heraus. |
+| [`/rg-flesh-out`](skills/rg-flesh-out/SKILL.md) | Interaktives Interview zur detaillierten Ausarbeitung eines Elements (NSC, Artefakt, Kult, Dungeon). |
+| [`/rg-prep-plan`](skills/rg-prep-plan/SKILL.md) | Strukturierte Session-Vorbereitung (Lazy DM / Node-Based): Starker Auftakt, Szenen, 10 Geheimnisse & Hinweise, Schauplätze. |
+| [`/rg-craft`](skills/rg-craft/SKILL.md) | Systematische Erstellung & Verlinkung der vorbereiteten Dokumente, Szenen und Encounter direkt im Vault (ohne Git). |
+| [`/rg-distill`](skills/rg-distill/SKILL.md) | **At-the-Table Usability:** Kürzt Fließtext auf Stichpunkte, hebt Schlüsselwörter hervor (**DC 14 Investigation**), extrahiert Sinneswahrnehmungen. |
+| [`/rg-lore-audit`](skills/rg-lore-audit/SKILL.md) | **Multi-Agent Review:** 6 Personas prüfen Entwürfe auf Kanon, 5e-Regeln, Spieler-Agency, Plotholes und Sicherheit. |
+| [`/rg-compound-canon`](skills/rg-compound-canon/SKILL.md) | **Post-Session Loop:** Erfasst Session-Ergebnisse, aktualisiert NSC-Zustände, passt Uhren an und schreibt Fakten in `WORLD_CANON.md`. |
 
-Each cycle compounds: `/rg-compound` writes learnings that the next `/rg-brainstorm` and `/rg-plan` read as grounding -- brainstorms sharpen plans, plans inform future plans, reviews catch more issues, patterns get documented. That return arrow is the whole point.
+---
 
-### Additional skills
+## Multi-Agent Lore-Audit
 
-These sit around the loop or get reached for on demand -- not every cycle needs them.
+Das Herzstück der Qualitätssicherung (`/rg-lore-audit`): 6 spezialisierte TTRPG-Personas prüfen Vorbereitungen vor dem Spielabend:
 
-| Skill | When to reach for it |
-|-------|---------|
-| [`/rg-ideate`](docs/skills/rg-ideate.md) | *Before the loop*, when you don't yet know what to build -- generates and critically ranks grounded ideas, then routes the strongest one into `/rg-brainstorm` |
-| [`/rg-strategy`](docs/skills/rg-strategy.md) | *Upstream anchor* -- creates and maintains `STRATEGY.md`, read as grounding by ideate, brainstorm, and plan so strategy choices flow into every feature |
-| [`/rg-product-pulse`](docs/skills/rg-product-pulse.md) | *Outer loop* -- a time-windowed report on what users actually experienced (usage, performance, errors), saved to `docs/pulse-reports/`; its follow-ups feed back into ideation and brainstorming |
-| [`/rg-debug`](docs/skills/rg-debug.md) | *Instead of brainstorm -> plan -> work* when the input is a bug rather than a feature -- reproduce, trace root cause, fix, then polish/review before PR handoff when warranted |
-| [`/rg-pov`](docs/skills/rg-pov.md) | *On demand, before you commit* -- a decisive, project-grounded verdict on whether to adopt, switch to, or revisit an external technology, library, pattern, or platform; works cold or mid-session, and proposes the next step (`/rg-plan`, `/rg-brainstorm`, or a spike) from the verdict |
-| [`/rg-explain`](docs/skills/rg-explain.md) | *On demand, to keep learning* -- turns a concept, a diff, an idea, or "what did I do this week?" into a dense, visual explainer written for you personally, with an optional check-in (predict-then-reveal for diffs, corrected exercises) that makes it stick |
+```mermaid
+flowchart TD
+    Draft["Session Prep / Dungeon / Lore-Notiz"] --> Chronicler["the-chronicler.md<br/>(Lore- & Zeitleisten-Konsistenz)"]
+    Draft --> Rules["the-rules-lawyer.md<br/>(Regelmechanik, Balance & CR)"]
+    Draft --> Player["the-player-advocate.md<br/>(Spieler-Agency & 3-Clues)"]
+    Draft --> Murderhobo["the-murderhobo-exploit.md<br/>(Chaos, Zauber-Exploits & Sabotage)"]
+    Draft --> Sensory["the-sensory-immersionist.md<br/>(Atmosphäre & 5 Sinne)"]
+    Draft --> Safety["the-safety-officer.md<br/>(Lines & Veils / Trigger)"]
 
-For the full catalog and how each skill chains together, see [docs/skills](docs/skills/README.md). The complete inventory is [below](#full-skill-inventory).
-
-## Quick Example
-
-**Finding a direction** -- when you don't have a specific idea yet, ideate first, then carry the strongest survivor into the loop:
-
-```text
-/rg-ideate new drawing tools
-/rg-ideate surprise me
-/rg-ideate github issues   # ground ideas in your open issues instead of a prompt
+    Chronicler --> Report["Konsolidierter Audit-Report"]
+    Rules --> Report
+    Player --> Report
+    Murderhobo --> Report
+    Sensory --> Report
+    Safety --> Report
 ```
 
-`/rg-ideate` does the homework first (codebase, past learnings, prior art on the web, optionally your issue tracker), then hands you a ranked set of grounded candidates to take into `/rg-brainstorm`.
+1. **`the-chronicler`**: Prüft Konsistenz mit `WORLD_CANON.md`, Zeitleisten und etablierten NSC-Beziehungen.
+2. **`the-rules-lawyer`**: Validiert Regeln, Action Economy, DCs und CR-Balancing.
+3. **`the-player-advocate`**: Prüft Spieler-Freiheit (Agency), Three-Clue Rule und verhindert Frust & Railroading.
+4. **`the-murderhobo-exploit`**: Simuliert Chaos-Spieler und Zauber-Exploits (*Pass without Trace*, *Fly*, Angriffe auf Questgeber).
+5. **`the-sensory-immersionist`**: Prüft Vorlesetexte (Boxed Text) auf max. 3–4 Sätze und Einbindung mehrerer Sinneskanäle.
+6. **`the-safety-officer`**: Gleicht Inhalte mit den festgelegten Lines & Veils der Kampagne ab.
 
-**Standard feature loop** -- turn a rough idea into shipped, reviewed code:
+---
 
-```text
-/rg-brainstorm make background job retries safer
-/rg-plan
-/rg-work
-/rg-simplify-code
-/rg-code-review
-/rg-compound
-```
+## TTRPG-Spezialskills
 
-**Simplifying code** -- use it after fresh implementation work, or point it at code that keeps slowing changes down:
-
-```text
-/rg-simplify-code
-/rg-simplify-code simplify the code in my most-churned file
-```
-
-The first pass tightens recent branch changes before review. The targeted pass is useful when one file keeps absorbing unrelated fixes, follow-ups, or merge conflicts.
-
-**Debugging a bug** -- when you start from broken behavior instead of a feature:
-
-```text
-/rg-debug the checkout webhook sometimes creates duplicate invoices
-/rg-code-review
-/rg-compound
-```
-
-**Autonomous** -- hand off a feature and let the agent run the whole pipeline:
-
-```text
-/rg-brainstorm describe the feature
-/lfg
-```
-
-`/lfg` runs the loop hands-off: it plans, works through the plan, simplifies, runs code review and applies the fixes, runs browser tests, commits, pushes, opens a PR, then watches CI and repairs failures until it's green. Start it after `/rg-brainstorm` so it plans against real requirements rather than a one-line prompt. It's the autopilot version of the standard loop -- neat when you want to step away and come back to an open, green PR.
-
-## Getting Started
-
-After installing, run `/rg-setup` in any project. It checks repo-local config, reports optional tool capabilities, and helps keep machine-local CE settings safely gitignored.
-
-The `rg-engineering` plugin currently ships 29 skills and 0 standalone agents. Specialist review, research, and workflow behavior lives inside the owning skills as skill-local prompt assets.
-
-### Full Skill Inventory
-
-| Skill | Purpose |
-|-------|---------|
-| [`/rg-strategy`](docs/skills/rg-strategy.md) | Create or maintain `STRATEGY.md` |
-| [`/rg-ideate`](docs/skills/rg-ideate.md) | Generate and critically evaluate grounded ideas |
-| [`/rg-pov`](docs/skills/rg-pov.md) | Form a decisive, project-grounded verdict on an external input |
-| [`/rg-explain`](docs/skills/rg-explain.md) | Explain a concept, diff, idea, or window of your own work as a personal learning artifact |
-| [`/rg-brainstorm`](docs/skills/rg-brainstorm.md) | Explore requirements and write a right-sized requirements doc |
-| [`/rg-plan`](docs/skills/rg-plan.md) | Create structured implementation plans |
-| [`/rg-work`](docs/skills/rg-work.md) | Execute implementation plans systematically |
-| [`/rg-code-review`](docs/skills/rg-code-review.md) | Review code with skill-local reviewer personas |
-| [`/rg-doc-review`](docs/skills/rg-doc-review.md) | Review requirements and plan documents |
-| [`/rg-debug`](docs/skills/rg-debug.md) | Reproduce failures, trace root cause, fix bugs, and prepare non-trivial fixes for PR |
-| [`/rg-compound`](docs/skills/rg-compound.md) | Document solved problems to compound team knowledge |
-| [`/rg-compound-refresh`](docs/skills/rg-compound-refresh.md) | Refresh stale or drifting learnings |
-| [`/rg-optimize`](docs/skills/rg-optimize.md) | Run iterative optimization loops |
-| [`/rg-product-pulse`](docs/skills/rg-product-pulse.md) | Generate time-windowed product pulse reports |
-| [`/rg-riffrec-feedback-analysis`](docs/skills/rg-riffrec-feedback-analysis.md) | Convert Riffrec recordings or notes into structured feedback |
-| [`/rg-sweep`](docs/skills/rg-sweep.md) | Sweep feedback sources, track item lifecycles, and emit an `/lfg`-ready plan |
-| [`/rg-resolve-pr-feedback`](docs/skills/rg-resolve-pr-feedback.md) | Resolve PR review feedback |
-| [`/rg-commit`](docs/skills/rg-commit.md) | Create a git commit with a clear message |
-| [`/rg-commit-push-pr`](docs/skills/rg-commit-push-pr.md) | Commit, push, and open a PR with related work references preserved |
-| [`/rg-worktree`](docs/skills/rg-worktree.md) | Ensure work happens in an isolated git worktree |
-| [`/rg-promote`](docs/skills/rg-promote.md) | Draft user-facing announcement copy |
-| [`/rg-test-browser`](docs/skills/rg-test-browser.md) | Run browser tests on PR-affected pages |
-| [`/rg-test-xcode`](docs/skills/rg-test-xcode.md) | Build and test iOS apps on simulator |
-| [`/rg-setup`](docs/skills/rg-setup.md) | Diagnose optional tool capabilities and project config |
-| [`/rg-simplify-code`](docs/skills/rg-simplify-code.md) | Simplify recent code changes |
-| [`/rg-polish`](docs/skills/rg-polish.md) | Start a dev server and iterate on UX polish |
-| [`/rg-proof`](docs/skills/rg-proof.md) | Create, edit, and share Proof documents |
-| [`/rg-dogfood`](docs/skills/rg-dogfood.md) | Hands-off diff-scoped browser QA of the active branch, with autonomous fixes |
-| [`/lfg`](docs/skills/lfg.md) | Full autonomous engineering workflow |
+* [`/rg-statblock`](skills/rg-statblock/SKILL.md): Mathematisch korrekte D&D 5e / PF2e Monster- und NSC-Werteblöcke (CR-Berechnung, Trefferwürfel, Zauberplätze, Obsidian-5e-Syntax).
+* [`/rg-rolltable`](skills/rg-rolltable/SKILL.md): Stimmungsvolle, ausgewogene Zufallstabellen (d6, d8, d10, d20, d100).
+* [`/rg-handout`](skills/rg-handout/SKILL.md): Diegetische In-Game-Materialien (Briefe, Tagebucheinträge, Steckbriefe, alte Kartenlegenden).
+* [`/rg-map-spec`](skills/rg-map-spec/SKILL.md): Strukturierte Raumkataloge für Dungeons und Schauplätze (Grid, Beleuchtung, Fallen, Taktik, Map-Prompts).
 
 ---
 
@@ -180,331 +116,51 @@ The `rg-engineering` plugin currently ships 29 skills and 0 standalone agents. S
 ### Claude Code
 
 ```text
-/plugin marketplace add Lukas-Rdt/rg-engineering-plugin
-/plugin install rg-engineering
+/plugin marketplace add Lukas-Rdt/rg-worldbuilding-plugin
+/plugin install rg-worldbuilding
 ```
-
-> **Already have RG Engineering installed?** RG Engineering moved to a root-native layout. You must refresh the marketplace *before* updating — see [Existing Installs](#existing-installs). Running `/plugin update` alone keeps you on the old version.
 
 ### Cursor
 
-In Cursor Agent chat, install from the plugin marketplace:
+Im Cursor Agent Chat:
 
 ```text
-/add-plugin rg-engineering
+/add-plugin rg-worldbuilding
 ```
-
-Or search for "compound engineering" in the plugin marketplace.
-
-### Codex App
-
-RG Engineering is not listed in Codex's built-in plugin marketplace yet. Add it as a custom marketplace:
-
-1. In the Codex app, open **Plugins** from the sidebar.
-2. Click **Add** / **Add plugin marketplace**.
-3. Enter:
-
-   | Field | Value |
-   | --- | --- |
-   | Source | `Lukas-Rdt/rg-engineering-plugin` |
-   | Git ref | `main` |
-   | Sparse paths | leave blank |
-
-4. Click **Add marketplace**.
-5. Select **RG Engineering**, install **rg-engineering**, then restart Codex.
-
-The Codex app install is self-contained for RG Engineering. Specialist reviewer and research behavior lives inside the skills as local prompt assets; no separate custom-agent install step is required.
 
 ### Codex CLI
 
-Register the marketplace, then install the plugin.
-
-1. **Register the marketplace with Codex:**
-
-   ```bash
-   codex plugin marketplace add Lukas-Rdt/rg-engineering-plugin
-   ```
-
-2. **Install the plugin:**
-
-   ```bash
-   codex plugin add rg-engineering@rg-engineering-plugin
-   ```
-
-   You can also launch `codex`, run `/plugins`, find the **RG Engineering** marketplace, select the **rg-engineering** plugin, and choose **Install**. Restart Codex after install completes.
-
-The native Codex plugin install is self-contained for RG Engineering. Specialist reviewer and research behavior lives inside the skills as local prompt assets; no separate custom-agent install step is required.
-
-For a non-default Codex profile, run every Codex-related step against the same `CODEX_HOME`. This example installs CE into a `work` profile:
-
 ```bash
-CODEX_HOME="$HOME/.codex/profiles/work" codex plugin marketplace add Lukas-Rdt/rg-engineering-plugin
-CODEX_HOME="$HOME/.codex/profiles/work" codex plugin add rg-engineering@rg-engineering-plugin
-```
-
-The marketplace step only makes the plugin available; the plugin install is what activates the native CE skills for that profile.
-
-### Kimi Code CLI
-
-Kimi Code CLI can install RG Engineering directly from this repository because the repo ships a native `.kimi-plugin/plugin.json` manifest:
-
-```text
-/plugins install https://github.com/Lukas-Rdt/rg-engineering-plugin
-```
-
-You can also browse it through Kimi's custom marketplace flow:
-
-```text
-/plugins marketplace https://raw.githubusercontent.com/Lukas-Rdt/rg-engineering-plugin/main/.kimi-plugin/marketplace.json
-```
-
-After installing or updating, run `/reload` or start a new Kimi session so the plugin skills are loaded.
-
-### GitHub Copilot
-
-For **VS Code Copilot Agent Plugins**:
-
-1. Run `Chat: Install Plugin from Source` from the VS Code command palette
-2. Use `Lukas-Rdt/rg-engineering-plugin` for the repo
-3. Select `rg-engineering` when VS Code shows the plugins in this repository
-
-For **Copilot CLI**, use:
-
-Inside Copilot CLI:
-
-```text
-/plugin marketplace add Lukas-Rdt/rg-engineering-plugin
-/plugin install rg-engineering@rg-engineering-plugin
-```
-
-From a shell with the `copilot` binary:
-
-```bash
-copilot plugin marketplace add Lukas-Rdt/rg-engineering-plugin
-copilot plugin install rg-engineering@rg-engineering-plugin
-```
-
-Copilot CLI reads the existing Claude-compatible plugin manifests, so no separate Bun install step is needed.
-
-### Factory Droid
-
-From a shell with the `droid` binary:
-
-```bash
-droid plugin marketplace add https://github.com/Lukas-Rdt/rg-engineering-plugin
-droid plugin install rg-engineering@rg-engineering-plugin
-```
-
-Droid uses `plugin@marketplace` plugin IDs; here `rg-engineering` is the plugin and `rg-engineering-plugin` is the marketplace name. Droid installs the existing Claude Code-compatible plugin and translates the format automatically, so no Bun install step is needed.
-
-### Qwen Code
-
-```bash
-qwen extensions install Lukas-Rdt/rg-engineering-plugin:rg-engineering
-```
-
-Qwen Code installs Claude Code-compatible plugins directly from GitHub and converts the plugin format during install, so no Bun install step is needed.
-
-### OpenCode
-
-Add RG Engineering to the `plugin` array in your global or project `opencode.json`:
-
-```json
-{
-  "plugin": ["rg-engineering@git+https://github.com/Lukas-Rdt/rg-engineering-plugin.git"]
-}
-```
-
-Restart OpenCode after changing the config. The OpenCode plugin registers the RG Engineering skills directory directly; no Bun installer or generated skill copy is required. See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for pinning examples.
-
-### Pi
-
-Install RG Engineering as a Pi package from this repository:
-
-```bash
-pi install git:github.com/Lukas-Rdt/rg-engineering-plugin
-```
-
-Required companion for CE workflows that dispatch reviewer, research, or implementation subagents:
-
-```bash
-pi install npm:pi-subagents
-```
-
-Recommended companion for richer blocking questions:
-
-```bash
-pi install npm:pi-ask-user
+codex plugin marketplace add Lukas-Rdt/rg-worldbuilding-plugin
+codex plugin add rg-worldbuilding@rg-worldbuilding-plugin
 ```
 
 ### Antigravity CLI (`agy`)
 
-Google has replaced the consumer Gemini CLI with [Antigravity CLI](https://antigravity.google) (`agy`), which still runs on Gemini models. Install RG Engineering directly from GitHub — no clone step required:
-
 ```bash
-agy plugin install https://github.com/Lukas-Rdt/rg-engineering-plugin
+agy plugin install https://github.com/Lukas-Rdt/rg-worldbuilding-plugin
 ```
 
-Verify with `agy plugin list`. The repository root is the plugin package (`plugin.json` plus `skills/`).
+### OpenCode
 
-For a local checkout or pinned release:
+In `opencode.json`:
 
-```bash
-git clone https://github.com/Lukas-Rdt/rg-engineering-plugin
-agy plugin install ./rg-engineering-plugin
-```
-
-The bundled `.agy/` directory remains a compatibility entry point (`agy plugin install ./rg-engineering-plugin/.agy`). `agy` also loads `GEMINI.md` workspace context from the checkout.
-
-See [`.agy/INSTALL.md`](.agy/INSTALL.md) for pinning, local development, uninstall, and legacy Gemini import.
-
-### Existing Installs
-
-RG Engineering moved to a root-native, skills-only layout. An existing marketplace install keeps a **cached** marketplace snapshot that still points at the old `plugins/rg-engineering` path, so updating the plugin on its own reads that stale snapshot and leaves you on the previous version. Refresh the cached marketplace **first**, then update the plugin — order matters.
-
-**Claude Code**
-
-```text
-/plugin marketplace update rg-engineering-plugin
-/plugin update rg-engineering
-```
-
-**Codex CLI**
-
-```bash
-codex plugin marketplace upgrade rg-engineering-plugin
-codex plugin add rg-engineering@rg-engineering-plugin
-```
-
-There is no `codex plugin update`; re-running `add` reinstalls from the refreshed snapshot. For a non-default profile, run both commands against the same `CODEX_HOME`.
-
-**Codex App**
-
-Refresh the marketplace from the **Plugins** panel (remove and re-add the `Lukas-Rdt/rg-engineering-plugin` marketplace if there is no refresh control), then reinstall **rg-engineering** and restart Codex.
-
-If you configured a host with a direct path or sparse path under `plugins/rg-engineering`, edit or reinstall that source so it points at the repository root with no sparse path.
-
-If a previous Bun-installed copy is still shadowing native plugin skills, run the current cleanup command from a checkout of this repository:
-
-```bash
-git clone https://github.com/Lukas-Rdt/rg-engineering-plugin.git /tmp/rg-engineering-plugin-cleanup
-cd /tmp/rg-engineering-plugin-cleanup
-bun install
-bun run cleanup --target all
+```json
+{
+  "plugin": ["rg-worldbuilding@git+https://github.com/Lukas-Rdt/rg-worldbuilding-plugin.git"]
+}
 ```
 
 ---
 
-## Local Development
+## Entwicklung & Validierung
 
 ```bash
 bun install
-bun test
-bun run release:validate
+bun test                  # Test-Suite ausführen
+bun run release:validate  # Release- und Metadaten-Konsistenz prüfen
 ```
 
-### From your local checkout
-
-For active development, load this checkout directly in the harness you want to test.
-
-**Claude Code**
-
-```bash
-claude --plugin-dir "$PWD"
-```
-
-**Codex App**
-
-In the app's **Add plugin marketplace** form, use this checkout as the source:
-
-| Field | Value |
-| --- | --- |
-| Source | `/path/to/rg-engineering-plugin` |
-| Git ref | current branch, or leave blank for a local folder |
-| Sparse paths | leave blank |
-
-**Codex CLI**
-
-```bash
-codex plugin marketplace add "$PWD"
-codex plugin add rg-engineering@rg-engineering-plugin
-```
-
-Use a separate `CODEX_HOME` when you want to keep local testing isolated from your normal Codex profile. The Codex marketplace entry points at the public Git plugin source so root-shaped plugin repos install correctly; use a temporary marketplace catalog with a `source.url` plus `ref` when testing unpublished plugin-content changes end to end.
-
-**Kimi Code CLI**
-
-Inside Kimi Code CLI:
-
-```text
-/plugins install /path/to/rg-engineering-plugin
-```
-
-To test the local marketplace catalog instead, pass the catalog path:
-
-```text
-/plugins marketplace /path/to/rg-engineering-plugin/.kimi-plugin/marketplace.json
-```
-
-**OpenCode**
-
-```json
-{
-  "plugin": ["/path/to/rg-engineering-plugin"]
-}
-```
-
-Restart OpenCode after changing `opencode.json`.
-
-**Pi**
-
-```bash
-pi -e "$PWD"
-```
-
-**Antigravity CLI (`agy`)**
-
-```bash
-agy plugin install "$PWD"
-agy plugin validate "$PWD"
-```
-
-Or install the bundled `.agy/` entry point:
-
-```bash
-agy plugin install "$PWD/.agy"
-```
-
-See [`.agy/INSTALL.md`](.agy/INSTALL.md) for remote install and pinning examples.
-
-## Limitations
-
-OpenCode and Pi use native package/plugin loading from this repository. The Bun CLI remains for repository development and converter maintenance, not normal installation.
-
-Release versions are owned by release automation. Routine feature PRs should not hand-bump plugin or marketplace manifest versions.
-
-## FAQ
-
-### Do I need Bun to install RG Engineering?
-
-No. Bun is only needed for repo development tasks and converter maintenance.
-
-### Where do I see all available skills?
-
-The skill inventory is in this README, and the deeper skill catalog is in [`docs/skills/README.md`](docs/skills/README.md). Each skill's authoritative runtime spec lives in `skills/<skill>/SKILL.md`.
-
-### Where is release history?
-
-GitHub Releases are the canonical release-notes surface. The root [`CHANGELOG.md`](CHANGELOG.md) points to that history.
-
-## Contributing
-
-Contributions are welcome. Issues, bug reports, and pull requests all help make this better, and we genuinely appreciate them — bug reports especially.
-
-A note on what to expect: RG Engineering is opinionated by design. It's maintained by [@kieranklaassen](https://github.com/kieranklaassen) and [@tmchow](https://github.com/tmchow), and its direction reflects a specific point of view about how AI-assisted engineering should work. So while we welcome help, we can't promise to accept every change — some proposals won't fit that vision even when they're good ideas on their own.
-
-Open an issue or send a PR, and we'll fold in what moves the plugin in the right direction. We just want to be upfront that not everything will land.
-
-## License
+## Lizenz
 
 [MIT](LICENSE)

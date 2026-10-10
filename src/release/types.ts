@@ -1,4 +1,4 @@
-export type ReleaseComponent = "rg-engineering" | "marketplace" | "cursor-marketplace"
+export type ReleaseComponent = "rg-worldbuilding" | "marketplace" | "cursor-marketplace"
 
 export type BumpLevel = "patch" | "minor" | "major"
 

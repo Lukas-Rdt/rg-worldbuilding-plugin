@@ -2,9 +2,9 @@
   "version": "2",
   "plugins": [
     {
-      "id": "rg-engineering",
-      "displayName": "RG Engineering",
-      "source": "https://github.com/Lukas-Rdt/rg-engineering-plugin"
+      "id": "rg-worldbuilding",
+      "displayName": "RG Worldbuilding",
+      "source": "https://github.com/Lukas-Rdt/rg-worldbuilding-plugin"
     }
   ]
 }

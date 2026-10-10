@@ -1,6 +1,6 @@
 # Agent Instructions
 
-This repository is the root of the `rg-engineering` coding-agent plugin and the marketplace/catalog metadata used to distribute it.
+This repository is the root of the `rg-worldbuilding` tabletop RPG (D&D / TTRPG) worldbuilding and campaign prep plugin and the marketplace/catalog metadata used to distribute it.
 
 It also contains:
 - the Bun/TypeScript CLI that converts Claude Code plugins into other agent platform formats
@@ -18,23 +18,21 @@ bun run release:validate  # check plugin/marketplace consistency
 
 ## Working Agreement
 
-- **Branching:** Create a feature branch for any non-trivial change. If already on the correct branch for the task, keep using it; do not create additional branches or worktrees unless explicitly requested.
-- **Merge policy:** All changes to `main` go through pull requests. Direct pushes and direct merges are not allowed; branch protection on `main` enforces this by requiring the `test` status check to pass. The direct path bypasses `release:validate`, the test suite, and PR title validation — past direct merges have caused version drift requiring multi-PR recovery (see `docs/solutions/workflow/release-please-version-drift-recovery.md`).
+- **Target Ecosystem: Existing Obsidian Vaults:** Skills operate directly on Markdown notes inside existing Obsidian vaults (with `[[WikiLinks]]`, Dataview tags, and YAML frontmatter).
+- **No-Branching / No-Git Paradigma in Skills:** In an Obsidian vault, automated sync and backup mechanisms (e.g. Obsidian Git, Obsidian Sync, cloud storage) are common. Skills must NEVER execute git commands (`git checkout -b`, `git branch`, `git worktree`, `git commit`, `git push`, `gh pr create`). Work is done directly in the vault (in-place or using `status: draft` vs `status: ready` in frontmatter).
+- **Non-Destructive Integration:** Skills never force a rigid folder hierarchy or overwrite existing structures. They respect established notes, scan the vault before creating entities to link existing lore via `[[Name|Alias]]`, and preserve existing YAML frontmatter properties.
+- **Skill Naming Convention:** All skills retain the **`rg-`** prefix (e.g., `rg-init`, `rg-premise`, `rg-spark`, `rg-flesh-out`, `rg-prep-plan`, `rg-craft`, `rg-distill`, `rg-lore-audit`, `rg-compound-canon`).
 - **Safety:** Do not delete or overwrite user data. Avoid destructive commands.
 - **Testing:** Run `bun test` after changes that affect parsing, conversion, or output.
-- **Release versioning:** Releases are prepared by release automation, not normal feature PRs. The repo has one root plugin/package release component (`rg-engineering`) plus marketplace components (`marketplace`, `cursor-marketplace`). GitHub release PRs and GitHub Releases are the canonical release-notes surface for new releases; root `CHANGELOG.md` is only a pointer to that history. Use conventional titles such as `feat:` and `fix:` so release automation can classify change intent, but do not hand-bump release-owned versions or hand-author release notes in routine PRs.
+- **Release versioning:** Releases are prepared by release automation, not normal feature PRs. The repo has one root plugin/package release component (`rg-worldbuilding`) plus marketplace components (`marketplace`, `cursor-marketplace`). GitHub release PRs and GitHub Releases are the canonical release-notes surface for new releases; root `CHANGELOG.md` is only a pointer to that history. Use conventional titles such as `feat:` and `fix:` so release automation can classify change intent, but do not hand-bump release-owned versions or hand-author release notes in routine PRs.
 - **Output Paths:** Keep OpenCode output at `opencode.json` and `.opencode/{agents,skills,plugins}`. For OpenCode, commands go to `~/.config/opencode/commands/<name>.md`; `opencode.json` is deep-merged (never overwritten wholesale).
 - **Scratch Space:** Default to OS temp. Use `.context/` only when explicitly justified by the rules below.
   - **Default: OS temp** — covers most scratch, including per-run throwaway AND cross-invocation reusable, regardless of whether a repo is present or whether other skills may read the files. A stable OS-temp prefix handles cross-skill and cross-invocation coordination equally well as an in-repo path; repo-adjacency is rarely the relevant property.
-    - **Per-run throwaway**: `mktemp -d -t <prefix>-XXXXXX` (OS handles cleanup). Use for files consumed once and discarded — captured screenshots, stitched GIFs, intermediate build outputs, recordings, delegation prompts/results, single-run checkpoints. The resulting path is opaque (on macOS it resolves under `$TMPDIR`/`/var/folders/...`) — that is appropriate for throwaway files users are not meant to access.
-    - **Cross-invocation reusable**: stable path `/tmp/rg-engineering/<skill-name>/<run-id>/` — **not** `mktemp -d` — so later invocations of the same skill can discover sibling run-ids. Use `/tmp` directly rather than `$TMPDIR` so paths stay accessible: `$TMPDIR` on macOS resolves to `/var/folders/64/.../T/`, which is hostile for users who want to inspect checkpoints, grep them, or copy them out. The per-user isolation `$TMPDIR` provides is not valuable for cross-invocation reusable scratch where users are the intended audience. Use for caches keyed by session, checkpoints meant to survive context compaction within a loose session, or any state where later runs of the same skill need to locate prior outputs.
-  - **Exception: `.context/`** — use only when the artifact is genuinely bound to the CWD repo AND meets at least one of:
-    - (a) **User-curated**: the user is expected to inspect, manipulate, or manually curate the artifact outside the skill (e.g., a per-repo TODO database, a per-spec optimization log that survives across sessions on the same checkout).
-    - (b) **Repo+branch-inseparable**: the artifact's meaning is inseparable from this specific repo or branch (e.g., branch-specific resume state that a user expects to pick up again in the same checkout).
-    - (c) **Path is core UX**: surfacing the artifact path back to the user is a core part of the skill's output and that path is easier to communicate as a repo-relative location than an OS-temp one.
-    Namespace under `.context/rg-engineering/<workflow-or-skill-name>/`, add a per-run subdirectory when concurrent runs are plausible, and decide cleanup behavior per the artifact's lifecycle (per-run scratch clears on success; user-curated state persists). "Shared between skills" is not by itself sufficient — OS temp handles that equally well.
-  - **Durable outputs** (plans, specs, learnings, docs, final deliverables) belong in `docs/` or another repo-tracked location, not in either scratch tier.
-  - **Cross-platform note:** `/tmp` is writable on macOS (symlink to `/private/tmp`), Linux, and WSL. `mktemp -d -t <prefix>-XXXXXX` also works on all three. Skills authored here assume Unix-like shells; native Windows is not a current target.
+    - **Per-run throwaway**: `mktemp -d -t <prefix>-XXXXXX` (OS handles cleanup). Use for files consumed once and discarded.
+    - **Cross-invocation reusable**: stable path `/tmp/rg-worldbuilding/<skill-name>/<run-id>/` — **not** `mktemp -d` — so later invocations of the same skill can discover sibling run-ids.
+  - **Exception: `.context/`** — use only when the artifact is genuinely bound to the CWD vault/repo and user-curated.
+    Namespace under `.context/rg-worldbuilding/<workflow-or-skill-name>/`.
+  - **Durable outputs** (campaign framework, world canon, session plans, handouts, distillations) belong in the user's Obsidian vault notes or `docs/`.
 - **Character encoding:**
   - **Identifiers** (file names, agent names, command names): ASCII only -- converters and regex patterns depend on it.
   - **Markdown tables:** Use pipe-delimited (`| col | col |`), never box-drawing characters.
@@ -44,7 +42,7 @@ bun run release:validate  # check plugin/marketplace consistency
 
 ```
 src/              CLI entry point, parsers, converters, target writers
-skills/           RG Engineering plugin skills
+skills/           RG Worldbuilding plugin skills
 .claude-plugin/   Claude plugin manifest and marketplace catalog metadata
 .codex-plugin/    Codex plugin manifest
 .cursor-plugin/   Cursor plugin manifest and marketplace catalog metadata
@@ -159,7 +157,7 @@ Skill content carried from trigger time rides in every subsequent message — ev
 
 - **Prefix is based on intent, not file type.** Use conventional prefixes (`feat:`, `fix:`, `docs:`, `refactor:`, etc.) but classify by what the change does, not the file extension. Files under `skills/` and plugin manifests are product code even though they are Markdown or JSON. Reserve `docs:` for files whose sole purpose is documentation (`README.md`, `docs/`, `CHANGELOG.md`).
 - **Type selection — classify by intent, not diff shape.** Where `fix:` and `feat:` could both seem to fit, default to `fix:`: a change that remedies broken or missing behavior is `fix:` even when implemented by adding code, and net additions do not turn a fix into a `feat:`. Reserve `feat:` for capabilities the user could not previously accomplish where nothing was broken. Other conventional types (`chore:`, `refactor:`, `docs:`, `perf:`, `test:`, `ci:`, `build:`, `style:`) remain primary when they describe the change more precisely than either. Heuristic: if a regression test you could write today would have failed *before* the change, it's `fix:`. The user may override this default for a specific change.
-- **Include a component scope.** The scope appears verbatim in the changelog. Pick the narrowest useful label: skill/agent name (`document-review`, `learnings-researcher`), CLI or marketplace area (`cli`, `marketplace`), or shared area when cross-cutting (`review`, `research`, `converters`). Never use `rg-engineering` — it's the entire plugin and tells the reader nothing. Omit scope only when no single label adds clarity.
+- **Include a component scope.** The scope appears verbatim in the changelog. Pick the narrowest useful label: skill/agent name (`lore-audit`, `flesh-out`), CLI or marketplace area (`cli`, `marketplace`), or shared area when cross-cutting (`review`, `research`, `converters`). Never use `rg-worldbuilding` — it's the entire plugin and tells the reader nothing. Omit scope only when no single label adds clarity.
 - **Never use `!` or a `BREAKING CHANGE:` footer without explicit user confirmation.** These markers trigger release-please's automatic major version bump — a decision the user may not want even when a change is technically breaking. If a change appears breaking, surface that to the user and let them decide whether to apply the marker.
 
 ## Adding a New Target Provider
@@ -190,13 +188,13 @@ Only add a provider when the target format is stable, documented, and has a clea
 
 ## Specialist Prompt Assets in Skills
 
-The rg-engineering plugin no longer ships standalone agent definitions under `agents/`. When a skill needs a specialist persona, store it inside that skill directory, usually under `references/agents/` or `references/personas/`, and have the calling skill dispatch a generic subagent with that file's contents in the prompt.
+The rg-worldbuilding plugin ships specialist TTRPG personas (such as `the-chronicler.md`, `the-rules-lawyer.md`, `the-player-advocate.md`, `the-murderhobo-exploit.md`, `the-sensory-immersionist.md`, `the-safety-officer.md`) stored inside skill directories, usually under `references/personas/` or `references/agents/`. The calling skill dispatches a generic subagent with that file's contents in the prompt.
 
 Internal prompt asset file names should be descriptive and unprefixed because they are not externally exposed agent names.
 
 Example:
-- `references/agents/learnings-researcher.md` (correct)
-- `references/agents/rg-learnings-researcher.md` (wrong for an internal prompt asset)
+- `references/personas/the-chronicler.md` (correct)
+- `references/personas/rg-the-chronicler.md` (wrong for an internal prompt asset)
 
 These prompt assets must not include YAML frontmatter. Model selection, tool constraints, and dispatch policy belong in the calling skill's `SKILL.md`, not in the prompt asset.
 
@@ -207,8 +205,8 @@ Each skill directory is a self-contained unit. A SKILL.md file must only referen
 Broken patterns:
 
 - `../other-skill/references/schema.yaml` — relative traversal into a sibling skill
-- `/home/user/rg-engineering-plugin/skills/other-skill/file.md` — absolute path to another skill
-- `~/.claude/plugins/cache/marketplace/rg-engineering/1.0.0/skills/other-skill/file.md` — absolute path to an installed plugin location
+- `/home/user/rg-worldbuilding-plugin/skills/other-skill/file.md` — absolute path to another skill
+- `~/.claude/plugins/cache/marketplace/rg-worldbuilding/1.0.0/skills/other-skill/file.md` — absolute path to an installed plugin location
 
 Why this matters:
 
@@ -222,7 +220,7 @@ If two skills need the same supporting file, duplicate it into each skill's dire
 
 ## Shared Repo-Grounding Profile Cache
 
-Repo-grounding skills (`rg-pov`, `rg-plan`, `rg-optimize`, `rg-ideate`, `rg-brainstorm`, `rg-code-review`, plus lighter consumers `rg-compound` — which still derives **and persists** on a miss — and `rg-debug`, which only opportunistically reads `conventions.testing` and never derives/persists) reuse one cached **question-agnostic project profile** (stack, deps, conventions, structure) instead of each re-deriving it. The profile is git-keyed and stored at `/tmp/rg-engineering/repo-profile/<root-sha>/<head-sha>.json`.
+Repo-grounding skills reuse cached project profiles stored at `/tmp/rg-worldbuilding/repo-profile/<root-sha>/<head-sha>.json`.
 
 The mechanism is three **byte-duplicated** assets per consuming skill (the plugin has no cross-skill import — see "File References in Skills"):
 
@@ -292,4 +290,4 @@ This repo builds a plugin *for* developers. Categorize solutions from the perspe
 - **`integrations/`** — Issues where plugin output doesn't work correctly on a target platform or OS. Cross-platform bugs, target writer output problems, and converter compatibility issues go here.
 - **`workflow/`**, **`skill-design/`** — Plugin skill and agent design patterns, workflow improvements.
 
-When in doubt: if the bug affects someone running `bun install rg-engineering` or `bun convert`, it's an integration or product issue, not developer-experience.
+When in doubt: if the bug affects someone running `bun install rg-worldbuilding` or `bun convert`, it's an integration or product issue, not developer-experience.

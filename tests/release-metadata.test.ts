@@ -56,7 +56,7 @@ async function makeFixtureRoot(): Promise<string> {
     path.join(root, ".codex-plugin", "plugin.json"),
     JSON.stringify(
       {
-        name: "rg-engineering",
+        name: "rg-worldbuilding",
         version: "2.42.0",
         description: "old",
         skills: "./skills/",
@@ -69,7 +69,7 @@ async function makeFixtureRoot(): Promise<string> {
     path.join(root, ".kimi-plugin", "plugin.json"),
     JSON.stringify(
       {
-        name: "rg-engineering",
+        name: "rg-worldbuilding",
         version: "2.42.0",
         description: "old",
         skills: "./skills/",
@@ -80,15 +80,15 @@ async function makeFixtureRoot(): Promise<string> {
   )
   await writeFile(
     path.join(root, "plugin.json"),
-    JSON.stringify({ name: "rg-engineering", version: "2.42.0" }, null, 2),
+    JSON.stringify({ name: "rg-worldbuilding", version: "2.42.0" }, null, 2),
   )
   await mkdir(path.join(root, ".agy"), { recursive: true })
   await writeFile(
     path.join(root, ".agents", "plugins", "marketplace.json"),
     JSON.stringify(
       {
-        name: "rg-engineering-plugin",
-        plugins: [{ name: "rg-engineering" }],
+        name: "rg-worldbuilding-plugin",
+        plugins: [{ name: "rg-worldbuilding" }],
       },
       null,
       2,
@@ -101,9 +101,9 @@ async function makeFixtureRoot(): Promise<string> {
         version: "2",
         plugins: [
           {
-            id: "rg-engineering",
-            displayName: "RG Engineering",
-            source: "https://github.com/Lukas-Rdt/rg-engineering-plugin",
+            id: "rg-worldbuilding",
+            displayName: "RG Worldbuilding",
+            source: "https://github.com/Lukas-Rdt/rg-worldbuilding-plugin",
           },
         ],
       },
@@ -117,7 +117,7 @@ async function makeFixtureRoot(): Promise<string> {
       {
         metadata: { version: "1.0.0", description: "marketplace" },
         plugins: [
-          { name: "rg-engineering", version: "2.41.0", description: "old" },
+          { name: "rg-worldbuilding", version: "2.41.0", description: "old" },
         ],
       },
       null,
@@ -130,7 +130,7 @@ async function makeFixtureRoot(): Promise<string> {
       {
         metadata: { version: "1.0.0", description: "marketplace" },
         plugins: [
-          { name: "rg-engineering", version: "2.41.0", description: "old" },
+          { name: "rg-worldbuilding", version: "2.41.0", description: "old" },
         ],
       },
       null,
@@ -152,11 +152,11 @@ describe("release metadata", () => {
     })
   })
 
-  test("builds a stable rg-engineering manifest description", async () => {
+  test("builds a stable rg-worldbuilding manifest description", async () => {
     const description = await buildCompoundEngineeringDescription(process.cwd())
 
     expect(description).toBe(
-      "Brainstorm, plan, debug, review, and compound learnings with AI agents",
+      "AI skills that compound tabletop worldbuilding and campaign prep.",
     )
   })
 
@@ -292,7 +292,7 @@ describe("release metadata", () => {
 
     const afterContents = JSON.parse(await Bun.file(codexPath).text())
     expect(afterContents.description).toBe(
-      "Brainstorm, plan, debug, review, and compound learnings with AI agents",
+      "AI skills that compound tabletop worldbuilding and campaign prep.",
     )
   })
 
@@ -328,24 +328,24 @@ describe("release metadata", () => {
 
     expect(
       result.errors.some((err) =>
-        err.includes('name "wrong-name" does not match expected "rg-engineering"'),
+        err.includes('name "wrong-name" does not match expected "rg-worldbuilding"'),
       ),
     ).toBe(true)
   })
 
   test("reports missing skills field on Codex manifest as structural error", async () => {
     const root = await makeFixtureRoot()
-    // Drop the `skills` field entirely from the rg-engineering Codex manifest.
+    // Drop the `skills` field entirely from the rg-worldbuilding Codex manifest.
     await writeFile(
       path.join(root, ".codex-plugin", "plugin.json"),
-      JSON.stringify({ name: "rg-engineering", version: "2.42.0" }, null, 2),
+      JSON.stringify({ name: "rg-worldbuilding", version: "2.42.0" }, null, 2),
     )
     const result = await syncReleaseMetadata({ root, write: false })
 
     expect(
       result.errors.some(
         (err) =>
-          err.includes("rg-engineering") &&
+          err.includes("rg-worldbuilding") &&
           err.includes("missing required field") &&
           err.includes("skills"),
       ),
@@ -356,7 +356,7 @@ describe("release metadata", () => {
     const root = await makeFixtureRoot()
     await writeFile(
       path.join(root, ".kimi-plugin", "plugin.json"),
-      JSON.stringify({ name: "rg-engineering", version: "2.42.0" }, null, 2),
+      JSON.stringify({ name: "rg-worldbuilding", version: "2.42.0" }, null, 2),
     )
     const result = await syncReleaseMetadata({ root, write: false })
 
@@ -372,7 +372,7 @@ describe("release metadata", () => {
 
   test("reports missing skills directory when Codex manifest declares one", async () => {
     const root = await makeFixtureRoot()
-    // Remove rg-engineering's skills dir but keep the skills declaration.
+    // Remove rg-worldbuilding's skills dir but keep the skills declaration.
     await Bun.$`rm -rf ${path.join(root, "skills")}`.quiet()
     const result = await syncReleaseMetadata({ root, write: false })
 
@@ -391,7 +391,7 @@ describe("release metadata", () => {
       path.join(root, ".agents", "plugins", "marketplace.json"),
       JSON.stringify(
         {
-          name: "rg-engineering-plugin",
+          name: "rg-worldbuilding-plugin",
           plugins: [],
         },
         null,
@@ -413,9 +413,9 @@ describe("release metadata", () => {
       path.join(root, ".agents", "plugins", "marketplace.json"),
       JSON.stringify(
         {
-          name: "rg-engineering-plugin",
+          name: "rg-worldbuilding-plugin",
           plugins: [
-            { name: "rg-engineering" },
+            { name: "rg-worldbuilding" },
             { name: "rogue-plugin" },
           ],
         },
@@ -438,10 +438,10 @@ describe("release metadata", () => {
       path.join(root, ".agents", "plugins", "marketplace.json"),
       JSON.stringify(
         {
-          name: "rg-engineering-plugin",
+          name: "rg-worldbuilding-plugin",
           plugins: [
             {
-              name: "rg-engineering",
+              name: "rg-worldbuilding",
               source: {
                 source: "local",
                 path: "./",
@@ -459,7 +459,7 @@ describe("release metadata", () => {
       result.errors.some(
         (err) =>
           err.includes(".agents/plugins/marketplace.json") &&
-          err.includes("rg-engineering") &&
+          err.includes("rg-worldbuilding") &&
           err.includes('source.path "./"'),
       ),
     ).toBe(true)
@@ -494,7 +494,7 @@ describe("release metadata", () => {
       JSON.stringify(
         {
           version: "1",
-          plugins: [{ id: "rg-engineering" }],
+          plugins: [{ id: "rg-worldbuilding" }],
         },
         null,
         2,
@@ -516,7 +516,7 @@ describe("release metadata", () => {
       JSON.stringify(
         {
           version: "2",
-          plugins: [{ id: "rg-engineering", source: "./" }],
+          plugins: [{ id: "rg-worldbuilding", source: "./" }],
         },
         null,
         2,
@@ -528,7 +528,7 @@ describe("release metadata", () => {
       result.errors.some(
         (err) =>
           err.includes(".kimi-plugin/marketplace.json") &&
-          err.includes("rg-engineering") &&
+          err.includes("rg-worldbuilding") &&
           err.includes('source "./"'),
       ),
     ).toBe(true)
@@ -541,7 +541,7 @@ describe("release metadata", () => {
       JSON.stringify(
         {
           version: "2",
-          plugins: [{ id: "rg-engineering" }],
+          plugins: [{ id: "rg-worldbuilding" }],
         },
         null,
         2,
@@ -553,7 +553,7 @@ describe("release metadata", () => {
       result.errors.some(
         (err) =>
           err.includes(".kimi-plugin/marketplace.json") &&
-          err.includes("rg-engineering") &&
+          err.includes("rg-worldbuilding") &&
           err.includes("missing required field") &&
           err.includes("source"),
       ),
@@ -571,7 +571,7 @@ describe("release metadata", () => {
       path.join(root, ".codex-plugin", "plugin.json"),
       JSON.stringify(
         {
-          name: "rg-engineering",
+          name: "rg-worldbuilding",
           version: "2.42.0",
           description: "aligned description",
           skills: "./skills/",

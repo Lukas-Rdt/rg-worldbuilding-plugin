@@ -7,7 +7,7 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "package-name": "rg-engineering",
+      "package-name": "rg-worldbuilding",
       "changelog-sections": [
         {
           "type": "feat",

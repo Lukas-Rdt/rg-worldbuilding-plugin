@@ -4,7 +4,7 @@ import { fileURLToPath } from "url"
 const pluginDir = path.dirname(fileURLToPath(import.meta.url))
 const skillsDir = path.resolve(pluginDir, "../../skills")
 
-export const RgEngineeringPlugin = async () => ({
+export const RgWorldbuildingPlugin = async () => ({
   config: async (config) => {
     config.skills = config.skills || {}
     config.skills.paths = config.skills.paths || []
@@ -14,4 +14,4 @@ export const RgEngineeringPlugin = async () => ({
   },
 })
 
-export default RgEngineeringPlugin
+export default RgWorldbuildingPlugin

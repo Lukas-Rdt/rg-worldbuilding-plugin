@@ -93,10 +93,10 @@ export type RGEngineeringCounts = {
 }
 
 const COMPOUND_ENGINEERING_DESCRIPTION =
-  "Brainstorm, plan, debug, review, and compound learnings with AI agents"
+  "AI skills that compound tabletop worldbuilding and campaign prep."
 
 const COMPOUND_ENGINEERING_MARKETPLACE_DESCRIPTION =
-  "Brainstorm, plan, debug, review, and compound learnings with AI agents"
+  "AI skills that compound tabletop worldbuilding and campaign prep."
 
 function resolveExpectedVersion(
   explicitVersion: string | undefined,
@@ -229,7 +229,7 @@ export async function syncReleaseMetadata(options: SyncOptions = {}): Promise<Me
   const marketplaceClaude = await readJson<MarketplaceManifest>(marketplaceClaudePath)
   const marketplaceCursor = await readJson<MarketplaceManifest>(marketplaceCursorPath)
   const expectedCompoundVersion = resolveExpectedVersion(
-    versions["rg-engineering"],
+    versions["rg-worldbuilding"],
     compoundClaude.version,
   )
 
@@ -286,7 +286,7 @@ export async function syncReleaseMetadata(options: SyncOptions = {}): Promise<Me
   }
 
   for (const plugin of marketplaceClaude.plugins) {
-    if (plugin.name === "rg-engineering") {
+    if (plugin.name === "rg-worldbuilding") {
       if (plugin.description !== compoundMarketplaceDescription) {
         plugin.description = compoundMarketplaceDescription
         changed = true
@@ -307,7 +307,7 @@ export async function syncReleaseMetadata(options: SyncOptions = {}): Promise<Me
   }
 
   for (const plugin of marketplaceCursor.plugins) {
-    if (plugin.name === "rg-engineering") {
+    if (plugin.name === "rg-worldbuilding") {
       if (plugin.description !== compoundMarketplaceDescription) {
         plugin.description = compoundMarketplaceDescription
         changed = true
@@ -338,7 +338,7 @@ export async function syncReleaseMetadata(options: SyncOptions = {}): Promise<Me
       claudePath: compoundClaudePath,
       claude: compoundClaude,
       codexPath: compoundCodexPath,
-      expectedName: "rg-engineering",
+      expectedName: "rg-worldbuilding",
     },
   ]
 
@@ -424,14 +424,14 @@ export async function syncReleaseMetadata(options: SyncOptions = {}): Promise<Me
       kimiManifestMissing = true
       errors.push(`${compoundKimiPath} is missing but ${compoundClaudePath} exists. Kimi manifest parity required.`)
       updates.push({ path: compoundKimiPath, changed: false })
-      kimi = { name: "rg-engineering", version: compoundClaude.version }
+      kimi = { name: "rg-worldbuilding", version: compoundClaude.version }
     } else {
       throw err
     }
   }
 
-  if (kimi.name !== "rg-engineering") {
-    errors.push(`${compoundKimiPath}: name "${kimi.name}" does not match expected "rg-engineering"`)
+  if (kimi.name !== "rg-worldbuilding") {
+    errors.push(`${compoundKimiPath}: name "${kimi.name}" does not match expected "rg-worldbuilding"`)
   }
 
   let kimiChanged = false
@@ -442,7 +442,7 @@ export async function syncReleaseMetadata(options: SyncOptions = {}): Promise<Me
     kimi.description = compoundClaude.description
     kimiChanged = true
   }
-  await validateDeclaredSkillsPath(compoundKimiPath, "rg-engineering", "Kimi", kimi.skills, errors)
+  await validateDeclaredSkillsPath(compoundKimiPath, "rg-worldbuilding", "Kimi", kimi.skills, errors)
   updates.push({ path: compoundKimiPath, changed: kimiChanged })
   if (write && kimiChanged && !kimiManifestMissing) await writeJson(compoundKimiPath, kimi)
 

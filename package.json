@@ -1,20 +1,20 @@
 {
-  "name": "rg-engineering",
+  "name": "rg-worldbuilding",
   "version": "3.18.0",
-  "description": "Official RG Engineering skills plugin for coding agents",
+  "description": "AI skills that compound tabletop worldbuilding and campaign prep.",
   "type": "module",
   "private": true,
-  "main": ".opencode/plugins/rg-engineering.js",
+  "main": ".opencode/plugins/rg-worldbuilding.js",
   "pi": {
     "extensions": [
-      "./.pi/extensions/rg-engineering.ts"
+      "./.pi/extensions/rg-worldbuilding.ts"
     ],
     "skills": [
       "./skills"
     ]
   },
-  "homepage": "https://github.com/Lukas-Rdt/rg-engineering-plugin",
-  "repository": "https://github.com/Lukas-Rdt/rg-engineering-plugin",
+  "homepage": "https://github.com/Lukas-Rdt/rg-worldbuilding-plugin",
+  "repository": "https://github.com/Lukas-Rdt/rg-worldbuilding-plugin",
   "scripts": {
     "dev": "bun run src/index.ts",
     "convert": "bun run src/index.ts convert",

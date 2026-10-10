@@ -1,7 +1,6 @@
-# RG Engineering
+# RG Worldbuilding
 
-This Gemini extension provides the RG Engineering skill set for planning,
-review, implementation, debugging, and release workflows.
+This Gemini / Antigravity extension provides the RG Worldbuilding skill set for tabletop RPG worldbuilding, campaign preparation, note distillation, lore audits, and compound canon management directly within Obsidian vaults.
 
 Use the installed skills when they match the user's request. Treat this file as
 runtime context for extension users, not contributor guidance for this source

@@ -14,7 +14,7 @@ describe("release component detection", () => {
       "skills/rg-plan/SKILL.md",
     ])
 
-    expect(components.get("rg-engineering")).toEqual([
+    expect(components.get("rg-worldbuilding")).toEqual([
       "skills/rg-plan/SKILL.md",
     ])
     expect(components.get("marketplace")).toEqual([])
@@ -26,7 +26,7 @@ describe("release component detection", () => {
       ".claude-plugin/plugin.json",
     ])
 
-    expect(components.get("rg-engineering")).toEqual([
+    expect(components.get("rg-worldbuilding")).toEqual([
       "src/commands/install.ts",
       ".claude-plugin/plugin.json",
     ])
@@ -36,20 +36,20 @@ describe("release component detection", () => {
     const components = detectComponentsFromFiles([".claude-plugin/marketplace.json"])
     expect(components.get("marketplace")).toEqual([".claude-plugin/marketplace.json"])
     expect(components.get("cursor-marketplace")).toEqual([])
-    expect(components.get("rg-engineering")).toEqual([])
+    expect(components.get("rg-worldbuilding")).toEqual([])
   })
 
   test("maps cursor marketplace metadata to cursor-marketplace component", () => {
     const components = detectComponentsFromFiles([".cursor-plugin/marketplace.json"])
     expect(components.get("cursor-marketplace")).toEqual([".cursor-plugin/marketplace.json"])
     expect(components.get("marketplace")).toEqual([])
-    expect(components.get("rg-engineering")).toEqual([])
+    expect(components.get("rg-worldbuilding")).toEqual([])
   })
 
   test("maps Antigravity root plugin.json to root plugin component", () => {
     const components = detectComponentsFromFiles(["plugin.json", ".agy/INSTALL.md"])
 
-    expect(components.get("rg-engineering")).toEqual(["plugin.json", ".agy/INSTALL.md"])
+    expect(components.get("rg-worldbuilding")).toEqual(["plugin.json", ".agy/INSTALL.md"])
     expect(components.get("marketplace")).toEqual([])
     expect(components.get("cursor-marketplace")).toEqual([])
   })
@@ -60,7 +60,7 @@ describe("release component detection", () => {
       ".kimi-plugin/marketplace.json",
     ])
 
-    expect(components.get("rg-engineering")).toEqual([".kimi-plugin/plugin.json"])
+    expect(components.get("rg-worldbuilding")).toEqual([".kimi-plugin/plugin.json"])
     expect(components.get("marketplace")).toEqual([])
     expect(components.get("cursor-marketplace")).toEqual([])
   })

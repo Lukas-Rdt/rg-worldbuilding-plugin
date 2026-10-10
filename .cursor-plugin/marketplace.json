@@ -1,19 +1,19 @@
 {
-  "name": "rg-engineering",
+  "name": "rg-worldbuilding",
   "owner": {
     "name": "Lukas-Rdt",
     "email": "",
     "url": "https://github.com/Lukas-Rdt"
   },
   "metadata": {
-    "description": "Cursor plugin marketplace for RG Engineering plugins",
+    "description": "Cursor plugin marketplace for RG Worldbuilding plugins",
     "version": "1.0.2"
   },
   "plugins": [
     {
-      "name": "rg-engineering",
+      "name": "rg-worldbuilding",
       "source": ".",
-      "description": "Brainstorm, plan, debug, review, and compound learnings with AI agents"
+      "description": "AI skills that compound tabletop worldbuilding and campaign prep."
     }
   ]
 }

@@ -1,25 +1,27 @@
 {
-  "name": "rg-engineering",
+  "name": "rg-worldbuilding",
   "version": "3.18.0",
-  "description": "Brainstorm, plan, debug, review, and compound learnings with AI agents",
+  "description": "AI skills that compound tabletop worldbuilding and campaign prep.",
   "keywords": [
-    "brainstorming",
-    "code-review",
-    "rg-engineering",
-    "debugging",
-    "ideation",
-    "workflows",
-    "workflow-automation"
+    "worldbuilding",
+    "ttrpg",
+    "dnd",
+    "dnd5e",
+    "campaign-prep",
+    "obsidian",
+    "lore",
+    "storytelling",
+    "rg-worldbuilding"
   ],
   "author": "Lukas-Rdt",
-  "homepage": "https://github.com/Lukas-Rdt/rg-engineering-plugin",
+  "homepage": "https://github.com/Lukas-Rdt/rg-worldbuilding-plugin",
   "license": "MIT",
   "skills": "./skills/",
   "interface": {
-    "displayName": "RG Engineering",
-    "shortDescription": "Brainstorm, plan, debug, review, and compound learnings with AI agents",
-    "longDescription": "RG Engineering guides AI agents through the full engineering loop: strategy, ideation, requirements, planning, execution, debugging, review, PR feedback, and captured learnings that make future work easier.",
+    "displayName": "RG Worldbuilding",
+    "shortDescription": "AI skills that compound tabletop worldbuilding and campaign prep.",
+    "longDescription": "RG Worldbuilding guides AI agents through the full tabletop worldbuilding and campaign preparation loop: campaign premise, spark ideas, flesh out entities, prep plans, craft notes, lore audit, and compound canon.",
     "developerName": "Lukas-Rdt",
-    "websiteURL": "https://github.com/Lukas-Rdt/rg-engineering-plugin"
+    "websiteURL": "https://github.com/Lukas-Rdt/rg-worldbuilding-plugin"
   }
 }

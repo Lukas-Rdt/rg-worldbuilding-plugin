@@ -1,5 +1,5 @@
 {
-  "name": "rg-engineering-plugin",
+  "name": "rg-worldbuilding-plugin",
   "owner": {
     "name": "Lukas-Rdt"
   },
@@ -9,18 +9,20 @@
   },
   "plugins": [
     {
-      "name": "rg-engineering",
-      "description": "Brainstorm, plan, debug, review, and compound learnings with AI agents",
+      "name": "rg-worldbuilding",
+      "description": "AI skills that compound tabletop worldbuilding and campaign prep.",
       "author": {
         "name": "Lukas-Rdt"
       },
-      "homepage": "https://github.com/Lukas-Rdt/rg-engineering-plugin",
+      "homepage": "https://github.com/Lukas-Rdt/rg-worldbuilding-plugin",
       "tags": [
         "ai-powered",
-        "rg-engineering",
-        "workflow-automation",
-        "code-review",
-        "quality",
+        "worldbuilding",
+        "ttrpg",
+        "dnd",
+        "campaign-prep",
+        "obsidian",
+        "rg-worldbuilding",
         "knowledge-management"
       ],
       "source": "./"
