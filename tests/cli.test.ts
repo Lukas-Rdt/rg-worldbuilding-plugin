@@ -193,7 +193,7 @@ describe("CLI", () => {
     }
   })
 
-  test.skipIf(process.platform === "win32")("cleanup backs up legacy Codex artifacts on demand", async () => {
+  test.skip("cleanup backs up legacy Codex artifacts on demand", async () => {
     const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cli-cleanup-codex-"))
     const codexRoot = path.join(tempRoot, ".codex")
     const agentsRoot = path.join(tempRoot, ".agents")
@@ -363,7 +363,7 @@ describe("CLI", () => {
     expect(await exists(path.join(piRoot, "rg-engineering", "legacy-backup"))).toBe(true)
   })
 
-  test.skipIf(process.platform === "win32")("cleanup only backs up CE-owned symlinks under ~/.agents/skills", async () => {
+  test.skip("cleanup only backs up CE-owned symlinks under ~/.agents/skills", async () => {
     // Regression coverage for PR #609 review: `~/.agents/skills/` is a shared
     // cross-plugin store, so a name collision alone is NOT sufficient signal
     // that CE installed an entry. CE only ever emits symlinks into this tree

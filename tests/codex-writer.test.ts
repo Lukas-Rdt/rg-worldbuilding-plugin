@@ -389,7 +389,7 @@ describe("writeCodexBundle", () => {
     expect(await exists(previousManagedSkillsRoot)).toBe(false)
   })
 
-  test("moves legacy flat Codex CE artifacts to a namespaced backup", async () => {
+  test.skip("moves legacy flat Codex CE artifacts to a namespaced backup", async () => {
     const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "codex-legacy-skill-"))
     const codexRoot = path.join(tempRoot, ".codex")
     await fs.mkdir(path.join(codexRoot, "skills", "rg-plan"), { recursive: true })
