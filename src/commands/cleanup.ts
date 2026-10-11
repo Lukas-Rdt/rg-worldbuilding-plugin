@@ -231,18 +231,20 @@ async function cleanupCodex(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>
   ])
   const currentPrompts = new Set(bundle.prompts.map((prompt) => `${sanitizePathName(prompt.name)}.md`))
   const currentAgents = new Set((bundle.agents ?? []).map((agent) => `${sanitizePathName(agent.name)}.toml`))
-  const managedDir = path.join(codexRoot, plugin.manifest.name)
+  const defaultManagedDir = path.join(codexRoot, "rg-engineering")
   let moved = 0
   for (const skillName of artifacts.skills) {
-    moved += await moveLegacySkillIfOwned(managedDir, "skills", path.join(codexRoot, "skills"), skillName, "Codex")
+    moved += await moveLegacySkillIfOwned(defaultManagedDir, "skills", path.join(codexRoot, "skills"), skillName, "Codex")
     if (!currentNamespacedSkills.has(skillName)) {
-      moved += await moveIfExists(
-        managedDir,
-        "skills",
-        path.join(codexRoot, "skills", plugin.manifest.name),
-        skillName,
-        "Codex",
-      )
+      for (const legacyPluginName of Array.from(new Set([plugin.manifest.name, "rg-engineering"]))) {
+        moved += await moveIfExists(
+          path.join(codexRoot, legacyPluginName),
+          "skills",
+          path.join(codexRoot, "skills", legacyPluginName),
+          skillName,
+          "Codex",
+        )
+      }
     }
   }
   for (const promptFile of artifacts.prompts) {
@@ -259,17 +261,19 @@ async function cleanupCodex(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>
     const promptPath = path.join(codexRoot, "prompts", promptFile)
     const ownership = await classifyCodexLegacyPromptOwnership(promptPath)
     if (ownership === "foreign") continue
-    moved += await moveIfExists(managedDir, "prompts", path.join(codexRoot, "prompts"), promptFile, "Codex")
+    moved += await moveIfExists(defaultManagedDir, "prompts", path.join(codexRoot, "prompts"), promptFile, "Codex")
   }
   for (const agentFile of artifacts.agents ?? []) {
-    moved += await moveIfExists(
-      managedDir,
-      "agents",
-      path.join(codexRoot, "agents", plugin.manifest.name),
-      agentFile,
-      "Codex",
-    )
-    moved += await moveLegacyAgentIfOwned(managedDir, "agents", path.join(codexRoot, "agents"), agentFile, "Codex", ".toml")
+    for (const legacyPluginName of Array.from(new Set([plugin.manifest.name, "rg-engineering"]))) {
+      moved += await moveIfExists(
+        path.join(codexRoot, legacyPluginName),
+        "agents",
+        path.join(codexRoot, "agents", legacyPluginName),
+        agentFile,
+        "Codex",
+      )
+    }
+    moved += await moveLegacyAgentIfOwned(defaultManagedDir, "agents", path.join(codexRoot, "agents"), agentFile, "Codex", ".toml")
   }
 
   // Manifest-driven migration: read the previous install's manifest and
@@ -280,31 +284,34 @@ async function cleanupCodex(plugin: Awaited<ReturnType<typeof loadClaudePlugin>>
   // TOML custom agents under `agents/<plugin>/<name>.toml`). The historical
   // allow-list only covers renamed/removed names — it does not cover
   // current-named artifacts that moved locations.
-  const installedManifest = await readCodexInstallManifest(codexRoot, plugin.manifest.name)
-  if (installedManifest) {
-    for (const skillName of installedManifest.skills) {
-      if (currentNamespacedSkills.has(skillName)) continue
-      moved += await moveIfExists(
-        managedDir,
-        "skills",
-        path.join(codexRoot, "skills", plugin.manifest.name),
-        skillName,
-        "Codex",
-      )
-    }
-    for (const promptFile of installedManifest.prompts) {
-      if (currentPrompts.has(promptFile)) continue
-      moved += await moveIfExists(managedDir, "prompts", path.join(codexRoot, "prompts"), promptFile, "Codex")
-    }
-    for (const agentFile of installedManifest.agents) {
-      if (currentAgents.has(agentFile)) continue
-      moved += await moveIfExists(
-        managedDir,
-        "agents",
-        path.join(codexRoot, "agents", plugin.manifest.name),
-        agentFile,
-        "Codex",
-      )
+  for (const legacyPluginName of Array.from(new Set([plugin.manifest.name, "rg-engineering"]))) {
+    const installedManifest = await readCodexInstallManifest(codexRoot, legacyPluginName)
+    if (installedManifest) {
+      const manifestBackupDir = path.join(codexRoot, legacyPluginName)
+      for (const skillName of installedManifest.skills) {
+        if (currentNamespacedSkills.has(skillName)) continue
+        moved += await moveIfExists(
+          manifestBackupDir,
+          "skills",
+          path.join(codexRoot, "skills", legacyPluginName),
+          skillName,
+          "Codex",
+        )
+      }
+      for (const promptFile of installedManifest.prompts) {
+        if (currentPrompts.has(promptFile)) continue
+        moved += await moveIfExists(manifestBackupDir, "prompts", path.join(codexRoot, "prompts"), promptFile, "Codex")
+      }
+      for (const agentFile of installedManifest.agents) {
+        if (currentAgents.has(agentFile)) continue
+        moved += await moveIfExists(
+          manifestBackupDir,
+          "agents",
+          path.join(codexRoot, "agents", legacyPluginName),
+          agentFile,
+          "Codex",
+        )
+      }
     }
   }
 

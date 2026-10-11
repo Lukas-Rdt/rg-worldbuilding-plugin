@@ -195,14 +195,14 @@ describe("cleanupStaleSkillDirs", () => {
       path.join(root, "rg:plan"),
       skillContent(
         "rg:plan",
-        await pluginDescription("skills/rg-plan/SKILL.md"),
+        await pluginDescription("skills/rg-prep-plan/SKILL.md"),
       ),
     )
     await createDir(
       path.join(root, "workflows:review"),
       skillContent(
         "workflows:review",
-        await pluginDescription("skills/rg-code-review/SKILL.md"),
+        await pluginDescription("skills/rg-lore-audit/SKILL.md"),
       ),
     )
     await createDir(

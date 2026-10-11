@@ -7,8 +7,8 @@ on:
         description: "Conventional title to evaluate (defaults to the latest commit title on this ref)"
         required: false
         type: string
-      rg_engineering_bump:
-        description: "rg-engineering bump override"
+      rg_worldbuilding_bump:
+        description: "rg-worldbuilding bump override"
         required: false
         type: choice
         options: [auto, patch, minor, major]
@@ -76,7 +76,7 @@ jobs:
             args+=(--file "$file")
           done
 
-          args+=(--override "rg-engineering=${{ github.event.inputs.rg_engineering_bump || 'auto' }}")
+          args+=(--override "rg-worldbuilding=${{ github.event.inputs.rg_worldbuilding_bump || 'auto' }}")
           args+=(--override "marketplace=${{ github.event.inputs.marketplace_bump || 'auto' }}")
           args+=(--override "cursor-marketplace=${{ github.event.inputs.cursor_marketplace_bump || 'auto' }}")
 

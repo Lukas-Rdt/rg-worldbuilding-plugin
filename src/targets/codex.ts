@@ -468,10 +468,14 @@ export async function resolveCodexManagedRoots(
   codexRoot: string,
   pluginName: string,
 ): Promise<string[]> {
-  const rawManagedRoots = [
-    path.join(codexRoot, pluginName),
-    path.join(codexRoot, "skills", pluginName),
-  ]
+  const pluginNames =
+    pluginName === "rg-worldbuilding"
+      ? ["rg-worldbuilding", "rg-engineering"]
+      : [pluginName]
+  const rawManagedRoots = pluginNames.flatMap((name) => [
+    path.join(codexRoot, name),
+    path.join(codexRoot, "skills", name),
+  ])
   return [
     ...rawManagedRoots,
     ...(await Promise.all(rawManagedRoots.map((root) => canonicalizePath(root)))),
